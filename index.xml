@@ -5,6 +5,16 @@
     <link>https://pseonghoon.github.io/</link>
     <description>Recent content on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://pseonghoon.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Fri, 25 Sep 2020 12:54:04 +0900</lastBuildDate><atom:link href="https://pseonghoon.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Test</title>
+      <link>https://pseonghoon.github.io/posts/test/</link>
+      <pubDate>Fri, 25 Sep 2020 12:54:04 +0900</pubDate>
+      
+      <guid>https://pseonghoon.github.io/posts/test/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
