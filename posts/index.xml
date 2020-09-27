@@ -8,12 +8,13 @@
     <language>en-us</language>
     <lastBuildDate>Fri, 25 Sep 2020 12:54:04 +0900</lastBuildDate><atom:link href="https://pseonghoon.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Test 해보자구 ABC 가나</title>
+      <title>Test 해보자구 123 DevOps</title>
       <link>https://pseonghoon.github.io/posts/test/</link>
       <pubDate>Fri, 25 Sep 2020 12:54:04 +0900</pubDate>
       
       <guid>https://pseonghoon.github.io/posts/test/</guid>
-      <description>가나다라 마바사 888</description>
+      <description>가나다라 마바사 888
+export A=100 </description>
     </item>
     
   </channel>
