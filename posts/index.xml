@@ -5,16 +5,16 @@
     <link>https://pseonghoon.github.io/posts/</link>
     <description>Recent content in Posts on seonghoon@gmail.com</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 25 Sep 2020 12:54:04 +0900</lastBuildDate><atom:link href="https://pseonghoon.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://pseonghoon.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Test 해보자구 123 DevOps</title>
-      <link>https://pseonghoon.github.io/posts/test/</link>
-      <pubDate>Fri, 25 Sep 2020 12:54:04 +0900</pubDate>
+      <title>L4 DSR과 Linux kernel parameter</title>
+      <link>https://pseonghoon.github.io/posts/linux-parameters-for-l4-dsr/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://pseonghoon.github.io/posts/test/</guid>
-      <description>가나다라 마바사 888
-export A=100 </description>
+      <guid>https://pseonghoon.github.io/posts/linux-parameters-for-l4-dsr/</guid>
+      <description>목적 L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 real server 역할을 하는 Linux 서버에서 arp_ignore , arp_announce kernel parameter 를 설정해야 한다. 이 parameter의 의미에 대해서 명확히 설명하는 문서를 찾기 힘들었기 때문에 여기서 정리해보려 한다.
+두 parameter에 대한 공식적인 설명은 아래 문서에서 찾을 수 있다. https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
+설정 방법 요약 </description>
     </item>
     
   </channel>
