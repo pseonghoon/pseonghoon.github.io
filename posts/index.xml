@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Seonghoon Park</title>
+    <title>Posts on seonghoon@gmail.com</title>
     <link>https://pseonghoon.github.io/posts/</link>
-    <description>Recent content in Posts on Seonghoon Park</description>
+    <description>Recent content in Posts on seonghoon@gmail.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 25 Sep 2020 12:54:04 +0900</lastBuildDate><atom:link href="https://pseonghoon.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Test</title>
+      <title>Test 해보자구 ABC 가나</title>
       <link>https://pseonghoon.github.io/posts/test/</link>
       <pubDate>Fri, 25 Sep 2020 12:54:04 +0900</pubDate>
       
       <guid>https://pseonghoon.github.io/posts/test/</guid>
-      <description></description>
+      <description>가나다라 마바사 888</description>
     </item>
     
   </channel>
