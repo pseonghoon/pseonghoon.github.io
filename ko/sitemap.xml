@@ -3,58 +3,58 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://psenghoon.github.io/ko/categories/</loc>
+    <loc>https://pseonghoon.github.io/ko/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://psenghoon.github.io/categories/"
+                href="https://pseonghoon.github.io/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://psenghoon.github.io/ko/categories/"
+                href="https://pseonghoon.github.io/ko/categories/"
                 />
   </url>
   
   <url>
-    <loc>https://psenghoon.github.io/ko/</loc>
+    <loc>https://pseonghoon.github.io/ko/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://psenghoon.github.io/"
+                href="https://pseonghoon.github.io/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://psenghoon.github.io/ko/"
+                href="https://pseonghoon.github.io/ko/"
                 />
   </url>
   
   <url>
-    <loc>https://psenghoon.github.io/ko/series/</loc>
+    <loc>https://pseonghoon.github.io/ko/series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://psenghoon.github.io/series/"
+                href="https://pseonghoon.github.io/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://psenghoon.github.io/ko/series/"
+                href="https://pseonghoon.github.io/ko/series/"
                 />
   </url>
   
   <url>
-    <loc>https://psenghoon.github.io/ko/tags/</loc>
+    <loc>https://pseonghoon.github.io/ko/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://psenghoon.github.io/tags/"
+                href="https://pseonghoon.github.io/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://psenghoon.github.io/ko/tags/"
+                href="https://pseonghoon.github.io/ko/tags/"
                 />
   </url>
   
