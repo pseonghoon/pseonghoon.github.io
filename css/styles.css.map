@@ -1,19 +1,19 @@
 {
 	"version": 3,
 	"file": "styles.css",
-	"sourceRoot": "/Users/replica/Library/Mobile Documents/com~apple~CloudDocs/git-icloud/blog",
+	"sourceRoot": "/Users/replica/blog-clarity",
 	"sources": [
-		"themes/clarity/assets/sass/main.sass",
-		"themes/clarity/assets/sass/_variables.sass",
-		"themes/clarity/assets/sass/_variables.sass",
-		"themes/clarity/assets/sass/_fonts.sass",
-		"themes/clarity/assets/sass/_base.sass",
-		"themes/clarity/assets/sass/_components.sass",
-		"themes/clarity/assets/sass/_utils.sass",
-		"themes/clarity/assets/sass/_mobile.sass",
-		"themes/clarity/assets/sass/_syntax.sass",
-		"themes/clarity/assets/sass/_custom.sass",
-		"themes/clarity/assets/sass/_custom.sass"
+		"themes/hugo-clarity/assets/sass/main.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_variables.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_variables.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_fonts.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_base.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_components.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_utils.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_mobile.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_syntax.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_custom.sass",
+		"../../../../../blog-clarity/themes/hugo-clarity/assets/sass/_custom.sass"
 	],
 	"sourcesContent": [
 		"@import 'variables';\n@import '../../assets/sass/variables';\n@import 'fonts';\n@import 'base';\n@import 'components';\n@import 'utils';\n@import 'mobile';\n@import 'syntax';\n@import 'custom';\n@import '../../assets/sass/custom';\n",
