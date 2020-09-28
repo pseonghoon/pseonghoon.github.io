@@ -53,22 +53,7 @@
   </url>
   
   <url>
-    <loc>https://pseonghoon.github.io/tags/destacado/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://pseonghoon.github.io/tags/featured/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pseonghoon.github.io/post/markdown-syntax.pt/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pseonghoon.github.io/series/guia-de-temas/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -103,11 +88,6 @@
   </url>
   
   <url>
-    <loc>https://pseonghoon.github.io/categories/sintaxe/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://pseonghoon.github.io/categories/syntax/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
@@ -125,16 +105,6 @@
                 hreflang="en"
                 href="https://pseonghoon.github.io/tags/"
                 />
-  </url>
-  
-  <url>
-    <loc>https://pseonghoon.github.io/tags/temas/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pseonghoon.github.io/categories/temas/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
