@@ -3,58 +3,58 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://example.com/ko/categories/</loc>
+    <loc>https://psenghoon.github.io/ko/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/categories/"
+                href="https://psenghoon.github.io/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://example.com/ko/categories/"
+                href="https://psenghoon.github.io/ko/categories/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/ko/</loc>
+    <loc>https://psenghoon.github.io/ko/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/"
+                href="https://psenghoon.github.io/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://example.com/ko/"
+                href="https://psenghoon.github.io/ko/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/ko/series/</loc>
+    <loc>https://psenghoon.github.io/ko/series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/series/"
+                href="https://psenghoon.github.io/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://example.com/ko/series/"
+                href="https://psenghoon.github.io/ko/series/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/ko/tags/</loc>
+    <loc>https://psenghoon.github.io/ko/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/tags/"
+                href="https://psenghoon.github.io/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
-                href="https://example.com/ko/tags/"
+                href="https://psenghoon.github.io/ko/tags/"
                 />
   </url>
   
