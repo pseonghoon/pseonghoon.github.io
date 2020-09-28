@@ -22,10 +22,9 @@
       <pubDate>Sun, 27 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</guid>
-      <description>L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 대상 Linux 서버에서 아래 두 kernel parameter를 설정해야 한다
- arp_ignore arp_announce  두 parameter에 대한 공식적인 설명은 아래 문서에서 찾을 수 있다.
-https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
-설정 방법 요약 </description>
+      <description>&lt;p&gt;arp_ignore, arp_announce&lt;/p&gt;
+&lt;p&gt;L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하는 Linux kernel parameter이다.
+이 parameter의 의미에 대해 널리 잘못 알려진 내용을 제대로 알아보자&lt;/p&gt;</description>
     </item>
     
     <item>
