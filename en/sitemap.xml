@@ -3,13 +3,8 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://pseonghoon.github.io/about/</loc>
-    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://pseonghoon.github.io/</loc>
-    <lastmod>2020-09-27T00:00:00+00:00</lastmod>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
@@ -23,12 +18,47 @@
   </url>
   
   <url>
-    <loc>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</loc>
-    <lastmod>2020-09-27T00:00:00+00:00</lastmod>
+    <loc>https://pseonghoon.github.io/about/</loc>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://pseonghoon.github.io/post/</loc>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://pseonghoon.github.io/tags/privacy/</loc>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://pseonghoon.github.io/post/test-b/</loc>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://pseonghoon.github.io/tags/shortcodes/</loc>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://pseonghoon.github.io/tags/</loc>
+    <lastmod>2020-09-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ko"
+                href="https://pseonghoon.github.io/ko/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://pseonghoon.github.io/tags/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</loc>
     <lastmod>2020-09-27T00:00:00+00:00</lastmod>
   </url>
   
@@ -93,21 +123,6 @@
   </url>
   
   <url>
-    <loc>https://pseonghoon.github.io/tags/</loc>
-    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ko"
-                href="https://pseonghoon.github.io/ko/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://pseonghoon.github.io/tags/"
-                />
-  </url>
-  
-  <url>
     <loc>https://pseonghoon.github.io/tags/themes/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
@@ -123,17 +138,7 @@
   </url>
   
   <url>
-    <loc>https://pseonghoon.github.io/tags/privacy/</loc>
-    <lastmod>2019-03-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://pseonghoon.github.io/post/rich-content/</loc>
-    <lastmod>2019-03-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pseonghoon.github.io/tags/shortcodes/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
   </url>
   

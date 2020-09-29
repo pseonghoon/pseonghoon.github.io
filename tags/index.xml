@@ -6,7 +6,25 @@
     <description>Recent content in Tags on PSH</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
-    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>privacy</title>
+      <link>https://pseonghoon.github.io/tags/privacy/</link>
+      <pubDate>Mon, 28 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/privacy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shortcodes</title>
+      <link>https://pseonghoon.github.io/tags/shortcodes/</link>
+      <pubDate>Mon, 28 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/shortcodes/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>css</title>
       <link>https://pseonghoon.github.io/tags/css/</link>
@@ -49,24 +67,6 @@
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/tags/themes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>privacy</title>
-      <link>https://pseonghoon.github.io/tags/privacy/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/privacy/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>shortcodes</title>
-      <link>https://pseonghoon.github.io/tags/shortcodes/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/shortcodes/</guid>
       <description></description>
     </item>
     
