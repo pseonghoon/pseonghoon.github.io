@@ -1,24 +1,20 @@
 
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
-  <head>  <title>L4 DSR과 arp_ignore, arp_announce | psh</title>
+  <head>  <title>L4 DSR과 arp_ignore, arp_announce | PSH</title>
   <meta charset='utf-8'>
   <meta name="generator" content="Hugo 0.75.1" />
   <meta name = 'viewport' content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
   <meta http-equiv = 'X-UA-Compatible' content = 'IE=edge'>
 <meta property = "og:locale" content = "en_US" />
 <meta property="og:type" content="article">
-<meta name="description" content="arp_ignore, arp_announce
-L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하는 Linux kernel parameter이다.
-이 parameter의 의미에 대해 널리 잘못 알려진 내용을 제대로 알아보자">
+<meta name="description" content="L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때, 대상 Linux host의 kernel parameter로 arp_ignore,arp_announce를 설정한다. load balancer VIP에 대한 ARP request 에 서버가 응 …">
 <meta name = "twitter:card" content = "summary" />
 <meta name = "twitter:creator" content = "">
 <meta name = "twitter:title" content = "L4 DSR과 arp_ignore, arp_announce" />
 <meta property = "og:url" content = "https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" />
 <meta property = "og:title" content = "L4 DSR과 arp_ignore, arp_announce" />
-<meta property = "og:description" content = "arp_ignore, arp_announce
-L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하는 Linux kernel parameter이다.
-이 parameter의 의미에 대해 널리 잘못 알려진 내용을 제대로 알아보자" />
+<meta property = "og:description" content = "L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때, 대상 Linux host의 kernel parameter로 arp_ignore,arp_announce를 설정한다. load balancer VIP에 대한 ARP request 에 서버가 응 …" />
 <meta property = "og:image" content = "https://pseonghoon.github.io/images/linux.png" />
 <link rel='apple-touch-icon' sizes='180x180' href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel='icon' type='image/png' sizes='32x32' href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
@@ -34,12 +30,12 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
 
     
     
-    <link rel="preload" href="https://pseonghoon.github.io/css/styles.dc3c6045b4de8851945e27796084a5bef3df67329d489bce83e84fa9c25b993f5a299459bfb37169f44de1328bdf85a0b24b41e5d11d3ca920f756e1a0662888.css" integrity = "sha512-3DxgRbTeiFGUXid5YISlvvPfZzKdSJvOg&#43;hPqcJbmT9aKZRZv7NxafRN4TKL34WgsktB5dEdPKkg91bhoGYoiA==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/css/styles.2b35d1431689722059c9f20fed39a4670fa021eb4b7e7c94e6adde58a78f18ffa1e47c7eb4099a5c286e857f7aa6a587e866441d71faf3964d0b89c4cabdb2bf.css" integrity = "sha512-KzXRQxaJciBZyfIP7TmkZw&#43;gIetLfnyU5q3eWKePGP&#43;h5Hx&#43;tAmaXChuhX96pqWH6GZEHXH685ZNC4nEyr2yvw==" as="style" crossorigin="anonymous">
     <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.459292dbf4e341be0eeb6066a7192809ae4656a1cf64d18c96df744a3a36c848f8f0a22077b0d95a8ed685dd64e10a992eb7a3300832e281fde3351ee041e2b0.js" as="script" integrity=
     "sha512-RZKS2/TjQb4O62BmpxkoCa5GVqHPZNGMlt90Sjo2yEj48KIgd7DZWo7Whd1k4QqZLrejMAgy4oH94zUe4EHisA==" crossorigin="anonymous">
 
     
-    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.dc3c6045b4de8851945e27796084a5bef3df67329d489bce83e84fa9c25b993f5a299459bfb37169f44de1328bdf85a0b24b41e5d11d3ca920f756e1a0662888.css" integrity="sha512-3DxgRbTeiFGUXid5YISlvvPfZzKdSJvOg&#43;hPqcJbmT9aKZRZv7NxafRN4TKL34WgsktB5dEdPKkg91bhoGYoiA==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.2b35d1431689722059c9f20fed39a4670fa021eb4b7e7c94e6adde58a78f18ffa1e47c7eb4099a5c286e857f7aa6a587e866441d71faf3964d0b89c4cabdb2bf.css" integrity="sha512-KzXRQxaJciBZyfIP7TmkZw&#43;gIetLfnyU5q3eWKePGP&#43;h5Hx&#43;tAmaXChuhX96pqWH6GZEHXH685ZNC4nEyr2yvw==" crossorigin="anonymous">
 	  
   </head>
   
@@ -51,7 +47,7 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
 <header class = 'nav_header' >
   <nav class = 'nav'>
     <a href='https://pseonghoon.github.io/' class = 'nav_brand nav_item'>
-        psh
+        PSH
       <div class = 'nav_close'>
         <div>
           <svg class="icon">
@@ -78,16 +74,16 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
         <div class = 'nav_sub'>
           
           <a href = 'https://pseonghoon.github.io/' class = 'nav_child nav_item'></a>
-          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
+          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc000564000), params:map[string]interface {}{&#34;author&#34;:&#34;Park,Seonghoon&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
-   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
+   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc000564000), params:map[string]interface {}{&#34;author&#34;:&#34;Park,Seonghoon&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
  </div>
           
           <a href = 'https://pseonghoon.github.io/ko/' class = 'nav_child nav_item'></a>
-          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
+          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc000564000), params:map[string]interface {}{&#34;author&#34;:&#34;Park,Seonghoon&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
-   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
+   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc000564000), params:map[string]interface {}{&#34;author&#34;:&#34;Park,Seonghoon&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
  </div>
           
@@ -126,6 +122,10 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
   </svg>
   <span class="post_date">
     Sep 27, 2020</span>
+  <a href = 'https://pseonghoon.github.io/tags/linux' class = 'post_tag button button_translucent'>linux
+  </a>
+  <a href = 'https://pseonghoon.github.io/tags/tcp/ip' class = 'post_tag button button_translucent'>tcp/ip
+  </a>
 </div>
 
     <div class='post_share'>
@@ -159,22 +159,8 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
 </div>
 
     
-    
-    <h2>Overview</h2>
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#설정-방법-요약">설정 방법 요약</a></li>
-    <li><a href="#arg_ignore">arg_ignore</a></li>
-    <li><a href="#arp_announce">arp_announce</a></li>
-    <li><a href="#arp_ignore-가-0으로-설정된-real-server의--동작을-확인하는-테스트-방법">arp_ignore 가 0으로 설정된 real server의  동작을 확인하는 테스트 방법</a></li>
-    <li><a href="#참고-문서">참고 문서</a></li>
-  </ul>
-</nav>
-    <p>arp_ignore, arp_announce</p>
-<p>L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하는 Linux kernel parameter이다.</p>
-<p>이 parameter의 의미에 대해 널리 잘못 알려진 내용을 제대로 알아보자</p>
-<p>두 parameter에 대한 공식적인  설명은 아래  문서에서 찾을 수 있다.</p>
-<p><a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt</a></p>
+    <p>L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때, 대상 Linux host의 kernel parameter로 arp_ignore,arp_announce를 설정한다. load balancer VIP에 대한 ARP request 에 서버가 응답하지 않게 하기 위해서다.</p>
+<p>이 parameter들을 설정하는 방법에 대해 잘못된 정보가 널리 알려져 있는데, 그 정확한 의미를 알아보자</p>
 <h1 id="설정-방법-요약">설정 방법 요약</h1>
 <p>DSR 로 L4 virtual server를 설정할 때 real server 의 loopback interface에  virtual server의 VIP를 추가해야 한다.</p>
 <p>VIP의 주인은 real server가 아니라 L4 스위치이지만 DSR 모드로 L4가 real server에 forwarding한 패킷의 destination IP 가 VIP이기 때문에 이 것을 real server가 수신하게 하기 위한 것이다.</p>
@@ -210,14 +196,12 @@ ARP request는 loopback이  아니라 실제 통신이 일어나는 interface에
 <h1 id="arp_announce">arp_announce</h1>
 <p>ARP request를 보낼 때 &lsquo;sender IP 주소&rsquo;를 어떻게 설정할지를 정하는 parameter.
 여기서 sender IP 주소는 IP header 의 src IP가 아니라 ARP request 내용 (payload) 의  일부분임 . ARP는 L2 (Ethernet 등)로  통신하는 protocol 이기 때문에 IP헤더가 없다.</p>
-<p>참고: ARP 패킷의 구조</p>
+<h4 id="arp-패킷의-구조">ARP 패킷의 구조</h4>
 <figure>
-    <img src="arp.gif"/> <figcaption>
-            <h4>ARP 패킷의 구조</h4>
-        </figcaption>
+    <img src="/images/arp.gif"/> 
 </figure>
 
-<p>설정값의 의미</p>
+<h4 id="설정값의-의미">설정값의 의미</h4>
 <ul>
 <li>0 (default) : 시스템에 설정된 어떤 IP든 사용할 수 있음.</li>
 <li>2 : ARP request 를 발생하게 한 IP packet (이 패킷의 dst IP 에 해당하는 MAC 주소를 알기 위해 ARP request 가 전송됨) 의 src IP를 무시하고  실제로 ARP request가 전송되는 interface에 설정된 IP를  가능하면 사용 . (실제 기준은 좀 더 복잡하니 문서의 초반에 공유된 링크를 참고 )</li>
@@ -241,8 +225,8 @@ host A , B  모두  eth0 으로 10.41.66.0/24  네트웍으로 통신하고 있�
 </code></pre></div><p>위의 결과에서 보다시피 host A 는 lookback에 설정된 10.41.66.100 에 대한 ARP request를 받았을 때도 자신의 MAC 주소로 응답한다.</p>
 <h1 id="참고-문서">참고 문서</h1>
 <ul>
-<li>ARP 패킷의 구조(그림) : <a href="http://aftabsiddiqui.com/wp-content/uploads/2013/06/ARP-Packet.jpg">http://aftabsiddiqui.com/wp-content/uploads/2013/06/ARP-Packet.jpg</a></li>
-<li>ARP request 를 받고 ARP cache를 업데이트 하는 것에 대한 설명 : <a href="http://www.pcvr.nl/tcpip/arp_addr.htm#4_7">http://www.pcvr.nl/tcpip/arp_addr.htm#4_7</a>  ( &ldquo;A little known fact of the ARP protocol ..&rdquo;  로 시작하는 부분)</li>
+<li><a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt</a></li>
+<li><a href="https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469">TCP/IP Illustrated, Volume 1</a>. Chapter 4: ARP</li>
 </ul>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
@@ -268,9 +252,9 @@ host A , B  모두  eth0 으로 10.41.66.0/24  네트웍으로 통신하고 있�
   </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
-    <h2>Seonghoon Park</h2>
+    <h2>Park,Seonghoon</h2>
     <div>
-      seonghoon@gmail.com
+      
     </div>
     <a href = 'https://pseonghoon.github.io/about/' class="button mt-1" role="button">Read More</a>
     <h2 class="mt-4">Featured Posts</h2>
@@ -292,6 +276,16 @@ host A , B  모두  eth0 으로 10.41.66.0/24  네트웍으로 통신하고 있�
       <nav class="tags_nav">
         <a href='https://pseonghoon.github.io/tags/index/' class=" post_tag button button_translucent">
           INDEX
+          <span class='button_tally'>1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/linux/' class=" post_tag button button_translucent">
+          LINUX
+          <span class='button_tally'>1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/tcp/ip/' class=" post_tag button button_translucent">
+          TCP/IP
           <span class='button_tally'>1</span>
         </a>
         
