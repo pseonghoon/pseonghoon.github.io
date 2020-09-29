@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
-  <head>  <title>L4 DSR과 arp_ignore, arp_announce | PSH</title>
+  <head>  <title>L4 DSR과 arp_ignore, arp_announce | psh</title>
   <meta charset='utf-8'>
   <meta name="generator" content="Hugo 0.75.1" />
   <meta name = 'viewport' content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
@@ -34,12 +34,12 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
 
     
     
-    <link rel="preload" href="https://pseonghoon.github.io/css/styles.d8b712dc749fd22167a2d6eb9e2425b574a130b0af9c2af72d6015b755df4738dba846197ce4cd35686e3ab06305b0f0bd9f734fb0813d441de841024eff96ec.css" integrity = "sha512-2LcS3HSf0iFnotbrniQltXShMLCvnCr3LWAVt1XfRzjbqEYZfOTNNWhuOrBjBbDwvZ9zT7CBPUQd6EECTv&#43;W7A==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/css/styles.dc3c6045b4de8851945e27796084a5bef3df67329d489bce83e84fa9c25b993f5a299459bfb37169f44de1328bdf85a0b24b41e5d11d3ca920f756e1a0662888.css" integrity = "sha512-3DxgRbTeiFGUXid5YISlvvPfZzKdSJvOg&#43;hPqcJbmT9aKZRZv7NxafRN4TKL34WgsktB5dEdPKkg91bhoGYoiA==" as="style" crossorigin="anonymous">
     <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.459292dbf4e341be0eeb6066a7192809ae4656a1cf64d18c96df744a3a36c848f8f0a22077b0d95a8ed685dd64e10a992eb7a3300832e281fde3351ee041e2b0.js" as="script" integrity=
     "sha512-RZKS2/TjQb4O62BmpxkoCa5GVqHPZNGMlt90Sjo2yEj48KIgd7DZWo7Whd1k4QqZLrejMAgy4oH94zUe4EHisA==" crossorigin="anonymous">
 
     
-    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.d8b712dc749fd22167a2d6eb9e2425b574a130b0af9c2af72d6015b755df4738dba846197ce4cd35686e3ab06305b0f0bd9f734fb0813d441de841024eff96ec.css" integrity="sha512-2LcS3HSf0iFnotbrniQltXShMLCvnCr3LWAVt1XfRzjbqEYZfOTNNWhuOrBjBbDwvZ9zT7CBPUQd6EECTv&#43;W7A==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.dc3c6045b4de8851945e27796084a5bef3df67329d489bce83e84fa9c25b993f5a299459bfb37169f44de1328bdf85a0b24b41e5d11d3ca920f756e1a0662888.css" integrity="sha512-3DxgRbTeiFGUXid5YISlvvPfZzKdSJvOg&#43;hPqcJbmT9aKZRZv7NxafRN4TKL34WgsktB5dEdPKkg91bhoGYoiA==" crossorigin="anonymous">
 	  
   </head>
   
@@ -51,7 +51,7 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
 <header class = 'nav_header' >
   <nav class = 'nav'>
     <a href='https://pseonghoon.github.io/' class = 'nav_brand nav_item'>
-        PSH
+        psh
       <div class = 'nav_close'>
         <div>
           <svg class="icon">
@@ -77,17 +77,17 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
         <a href="#" class = 'nav_item'></a>
         <div class = 'nav_sub'>
           
-          <a href = 'https://pseonghoon.github.io/' class = 'nav_child nav_item'>English</a>
-          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;English&#34;, LanguageDirection:&#34;&#34;, Title:&#34;PSH&#34;, Weight:1, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc0009e3e60), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;languagename&#34;:&#34;English&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;title&#34;:&#34;PSH&#34;, &#34;twitter&#34;:&#34;&#34;, &#34;weight&#34;:1}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;languagename&#34;:&#34;English&#34;, &#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;title&#34;:&#34;PSH&#34;, &#34;weight&#34;:1}}
+          <a href = 'https://pseonghoon.github.io/' class = 'nav_child nav_item'></a>
+          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
-   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;Korean&#34;, LanguageDirection:&#34;&#34;, Title:&#34;PSH&#34;, Weight:1, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc0009e3e60), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;languagename&#34;:&#34;Korean&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;title&#34;:&#34;PSH&#34;, &#34;twitter&#34;:&#34;&#34;, &#34;weight&#34;:1}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;languagename&#34;:&#34;Korean&#34;, &#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;title&#34;:&#34;PSH&#34;, &#34;weight&#34;:1}}
+   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
  </div>
           
-          <a href = 'https://pseonghoon.github.io/ko/' class = 'nav_child nav_item'>Korean</a>
-          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;English&#34;, LanguageDirection:&#34;&#34;, Title:&#34;PSH&#34;, Weight:1, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc0009e3e60), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;languagename&#34;:&#34;English&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;title&#34;:&#34;PSH&#34;, &#34;twitter&#34;:&#34;&#34;, &#34;weight&#34;:1}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;languagename&#34;:&#34;English&#34;, &#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;title&#34;:&#34;PSH&#34;, &#34;weight&#34;:1}}
+          <a href = 'https://pseonghoon.github.io/ko/' class = 'nav_child nav_item'></a>
+          <div style="display: none;">    &amp;langs.Language{Lang:&#34;en&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
-   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;Korean&#34;, LanguageDirection:&#34;&#34;, Title:&#34;PSH&#34;, Weight:1, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc0009e3e60), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;languagename&#34;:&#34;Korean&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;title&#34;:&#34;PSH&#34;, &#34;twitter&#34;:&#34;&#34;, &#34;weight&#34;:1}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;languagename&#34;:&#34;Korean&#34;, &#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;title&#34;:&#34;PSH&#34;, &#34;weight&#34;:1}}
+   &amp;langs.Language{Lang:&#34;ko&#34;, LanguageName:&#34;&#34;, LanguageDirection:&#34;&#34;, Title:&#34;&#34;, Weight:0, Disabled:false, ContentDir:&#34;&#34;, Cfg:(*viper.Viper)(0xc00027dd40), params:map[string]interface {}{&#34;author&#34;:&#34;Seonghoon Park&#34;, &#34;centerlogo&#34;:false, &#34;codelinenumbers&#34;:false, &#34;codemaxlines&#34;:7, &#34;enforcedarkmode&#34;:false, &#34;enforcelightmode&#34;:true, &#34;fallbackogimage&#34;:&#34;images/thumbnail.png&#34;, &#34;figurepositionlabel&#34;:&#34;Figure&#34;, &#34;figurepositionshow&#34;:false, &#34;introdescription&#34;:&#34;seonghoon@gmail.com&#34;, &#34;largetwittercard&#34;:false, &#34;mainsections&#34;:[]interface {}{&#34;post&#34;}, &#34;menus&#34;:maps.Params{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}, &#34;mobilenavigation&#34;:&#34;left&#34;, &#34;numberoftagsshown&#34;:5, &#34;twitter&#34;:&#34;&#34;}, paramsMu:sync.Mutex{state:0, sema:0x0}, paramsSet:true, settings:map[string]interface {}{&#34;menus&#34;:map[string]interface {}{&#34;main&#34;:[]map[string]interface {}{map[string]interface {}{&#34;name&#34;:&#34;Home&#34;, &#34;url&#34;:&#34;/&#34;, &#34;weight&#34;:-110}, map[string]interface {}{&#34;name&#34;:&#34;About&#34;, &#34;url&#34;:&#34;/about/&#34;, &#34;weight&#34;:-107}}}}}
 
  </div>
           
@@ -171,21 +171,23 @@ L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하�
   </ul>
 </nav>
     <p>arp_ignore, arp_announce</p>
-<p>L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하는 Linux kernel parameter이다.
-이 parameter의 의미에 대해 널리 잘못 알려진 내용을 제대로 알아보자</p>
+<p>L4 load balancer를 DSR(Direct Server Return) 모드로 구성할 때 설정하는 Linux kernel parameter이다.</p>
+<p>이 parameter의 의미에 대해 널리 잘못 알려진 내용을 제대로 알아보자</p>
 <p>두 parameter에 대한 공식적인  설명은 아래  문서에서 찾을 수 있다.</p>
 <p><a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt</a></p>
 <h1 id="설정-방법-요약">설정 방법 요약</h1>
-<p>DSR 로 L4 virtual server를 설정할 때 real server 의 loopback interface에  virtual server의 VIP를 추가해야 한다.
-VIP의 주인은 real server가 아니라 L4 스위치이지만 DSR 모드로 L4가 real server에 forwarding한 패킷의 destination IP 가 VIP이기 때문에 이 것을 real server가 수신하게 하기 위한 것이다.
-loopback interface 에 VIP를 추가한 후에는  arp_ignore, arp_announce 이 두 가지  kernel parameter도 적절히 설정을 해줘야한다.<br>
-이 parameter 들의 이름은  net.ipv4.conf.&lt;target interface|all|default&gt;.arp_ignore  ,  net.ipv4.conf.&lt;target interface|all|default&gt;.arp_announce 의 형태이고
+<p>DSR 로 L4 virtual server를 설정할 때 real server 의 loopback interface에  virtual server의 VIP를 추가해야 한다.</p>
+<p>VIP의 주인은 real server가 아니라 L4 스위치이지만 DSR 모드로 L4가 real server에 forwarding한 패킷의 destination IP 가 VIP이기 때문에 이 것을 real server가 수신하게 하기 위한 것이다.</p>
+<p>loopback interface 에 VIP를 추가한 후에는  arp_ignore, arp_announce 이 두 가지  kernel parameter도 적절히 설정을 해줘야한다.</p>
+<p>이 parameter 들의 이름은  net.ipv4.conf.&lt;target interface|all|default&gt;.arp_ignore  ,  net.ipv4.conf.&lt;target interface|all|default&gt;.arp_announce 의 형태이고
 /etc/sysyctl.conf 을 아래처럼 설정하는 것을 권장한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>#/etc/sysctl.conf
-<span class="ln">2</span>net.ipv4.conf.default.arp_ignore = 1
-<span class="ln">3</span>net.ipv4.conf.lo.arp_ignore = 0 #loopback interface 의 설정은 어떤 값이든 상관없으나 의미를 명확하게 하기 위함
-<span class="ln">4</span>net.ipv4.conf.default.arp_announce = 2
-<span class="ln">5</span>net.ipv4.conf.lo.arp_announce = 0 #loopback interface 의 설정은 어떤 값이든 상관없으나 의미를 명확하게 하기 위함
+<div class="highlight"><pre class="chroma"><code class="language-ini" data-lang="ini"><span class="ln">1</span><span class="c1">#/etc/sysctl.conf </span>
+<span class="ln">2</span><span class="na">net.ipv4.conf.default.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
+<span class="ln">3</span><span class="na">net.ipv4.conf.default.arp_announce</span> <span class="o">=</span> <span class="s">2</span>
+<span class="ln">4</span>
+<span class="ln">5</span><span class="c1">#loopback interface 의 설정은 할 필요가 없지만 아래처럼 하는 것이 명확하다</span>
+<span class="ln">6</span><span class="na">net.ipv4.conf.lo.arp_ignore</span> <span class="o">=</span> <span class="s">0 </span>
+<span class="ln">7</span><span class="na">net.ipv4.conf.lo.arp_announce</span> <span class="o">=</span> <span class="s">0 </span>
 </code></pre></div><ul>
 <li>/etc/rc.local 에 스크립트로 설정하는 방식을 쓰면 안되고 /etc/sysctl.conf에 설정해야 한다. /etc/rc.local은 시스템 초기화 과정의 후반부에 실행되기 때문에 interface 가 올라오면서  Gratuitous ARP 가 전송 될 때는 해당 설정이 반영되지 않는다.</li>
 <li>&lsquo;default&rsquo; 대신 &lsquo;all&rsquo;을 써도 원하는 결과를 얻을 수 있으나  all로 설정하면 개별 interface마다 다른 설정을 넣을 수가 없으니 default가 더 유연하다</li>
@@ -210,7 +212,7 @@ ARP request는 loopback이  아니라 실제 통신이 일어나는 interface에
 여기서 sender IP 주소는 IP header 의 src IP가 아니라 ARP request 내용 (payload) 의  일부분임 . ARP는 L2 (Ethernet 등)로  통신하는 protocol 이기 때문에 IP헤더가 없다.</p>
 <p>참고: ARP 패킷의 구조</p>
 <figure>
-    <img src="../arp.gif"/> <figcaption>
+    <img src="arp.gif"/> <figcaption>
             <h4>ARP 패킷의 구조</h4>
         </figcaption>
 </figure>
@@ -228,14 +230,14 @@ ARP request를 받았을 때도 패킷의 내용 (payload) 에 포함된  sender
 <p>loopback interface 에 설정한 VIP 에 대해  ARP relay를 전송하는 현상을 확인하는 방법이다.
 host A , B  모두  eth0 으로 10.41.66.0/24  네트웍으로 통신하고 있을 때 아래처럼 확인할 수 있다. host A 가 real server 역할이고 10.41.66.100 이 VIP인 셈이다.</p>
 <p>host A</p>
-<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ sudo sysctl -w net.ipv4.conf.eth0.arp_ignore = 0  
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ sudo sysctl -w net.ipv4.conf.eth0.arp_ignore <span class="o">=</span> <span class="m">0</span>  
 <span class="ln">2</span>$ sudo ifconfig lo:0 10.41.66.100 netmask 255.255.255.255
 </code></pre></div><p>host B</p>
-<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ sudo arping -I eth0 -b 10.41.66.100
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ sudo arping -I eth0 -b 10.41.66.100
 <span class="ln">2</span>ARPING 10.41.66.100 from 10.41.66.45 eth0
-<span class="ln">3</span>Unicast reply from 10.41.66.100 [00:22:19:BA:D1:DF]  0.641ms   =&gt; 00:22:19:BA:D1:DF 은  host A 의 interface의 MAC 주소
-<span class="ln">4</span>Unicast reply from 10.41.66.100 [00:22:19:BA:D1:DF]  0.609ms
-<span class="ln">5</span>Unicast reply from 10.41.66.100 [00:22:19:BA:D1:DF]  0.614ms
+<span class="ln">3</span>Unicast reply from 10.41.66.100 <span class="o">[</span>00:22:19:BA:D1:DF<span class="o">]</span>  0.641ms   <span class="o">=</span>&gt; 00:22:19:BA:D1:DF 은  host A 의 interface의 MAC 주소
+<span class="ln">4</span>Unicast reply from 10.41.66.100 <span class="o">[</span>00:22:19:BA:D1:DF<span class="o">]</span>  0.609ms
+<span class="ln">5</span>Unicast reply from 10.41.66.100 <span class="o">[</span>00:22:19:BA:D1:DF<span class="o">]</span>  0.614ms
 </code></pre></div><p>위의 결과에서 보다시피 host A 는 lookback에 설정된 10.41.66.100 에 대한 ARP request를 받았을 때도 자신의 MAC 주소로 응답한다.</p>
 <h1 id="참고-문서">참고 문서</h1>
 <ul>
@@ -278,140 +280,21 @@ host A , B  모두  eth0 으로 10.41.66.0/24  네트웍으로 통신하고 있�
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       
-      <li>
-        <a href="https://pseonghoon.github.io/post/test-b/" class="nav-link">Rich Content 2</a>
-      </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/markdown-syntax/" class="nav-link">Markdown Syntax Guide</a>
-      </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/rich-content/" class="nav-link">Rich Content</a>
-      </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/placeholder-text/" class="nav-link">Placeholder Text</a>
-      </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/math-typesetting/" class="nav-link">Math Typesetting</a>
-      </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/emoji-support/" class="nav-link">Emoji Support</a>
-      </li>
     </ul> 
     
     
-    <div>
-      <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
-      <nav class="tags_nav">
-        <a href='https://pseonghoon.github.io/categories/syntax/' class=" post_tag button button_translucent">
-          SYNTAX
-          <span class='button_tally'>1</span>
-        </a>
-        
-        <a href='https://pseonghoon.github.io/categories/themes/' class=" post_tag button button_translucent">
-          THEMES
-          <span class='button_tally'>1</span>
-        </a>
-        
-        
-      </nav>
-    </div>
     
-    
-    
-    <div>
-      <h2 class="mt-4 taxonomy" id="series-section">Series</h2>
-      <nav class="tags_nav">
-        <a href='https://pseonghoon.github.io/series/themes-guide/' class=" post_tag button button_translucent">
-          THEMES-GUIDE
-          <span class='button_tally'>1</span>
-        </a>
-        
-        
-      </nav>
-    </div>
     
     
     
     <div>
       <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
       <nav class="tags_nav">
-        <a href='https://pseonghoon.github.io/tags/markdown/' class=" post_tag button button_translucent">
-          MARKDOWN
-          <span class='button_tally'>2</span>
-        </a>
-        
-        <a href='https://pseonghoon.github.io/tags/privacy/' class=" post_tag button button_translucent">
-          PRIVACY
-          <span class='button_tally'>2</span>
-        </a>
-        
-        <a href='https://pseonghoon.github.io/tags/shortcodes/' class=" post_tag button button_translucent">
-          SHORTCODES
-          <span class='button_tally'>2</span>
-        </a>
-        
-        <a href='https://pseonghoon.github.io/tags/css/' class=" post_tag button button_translucent">
-          CSS
+        <a href='https://pseonghoon.github.io/tags/index/' class=" post_tag button button_translucent">
+          INDEX
           <span class='button_tally'>1</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/emoji/' class=" post_tag button button_translucent">
-          EMOJI
-          <span class='button_tally'>1</span>
-        </a>
-        
-        
-        <br>
-        <div class="post_tags_toggle button">All Tags</div>
-        <div class="post_tags">
-          <div class="tags_list">
-            
-            <a href='https://pseonghoon.github.io/tags/css/' class=" post_tag button button_translucent" data-position=1>CSS<span class='button_tally'>1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/emoji/' class=" post_tag button button_translucent" data-position=1>EMOJI<span class='button_tally'>1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/featured/' class=" post_tag button button_translucent" data-position=1>FEATURED<span class='button_tally'>1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/html/' class=" post_tag button button_translucent" data-position=1>HTML<span class='button_tally'>1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/index/' class=" post_tag button button_translucent" data-position=1>INDEX<span class='button_tally'>1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/markdown/' class=" post_tag button button_translucent" data-position=2>MARKDOWN<span class='button_tally'>2</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/privacy/' class=" post_tag button button_translucent" data-position=2>PRIVACY<span class='button_tally'>2</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/shortcodes/' class=" post_tag button button_translucent" data-position=2>SHORTCODES<span class='button_tally'>2</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/text/' class=" post_tag button button_translucent" data-position=1>TEXT<span class='button_tally'>1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/themes/' class=" post_tag button button_translucent" data-position=1>THEMES<span class='button_tally'>1</span>
-            </a>
-            
-            <div class="tags_sort"><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span>
-            </div>
-            <span class="tags_hide"><svg class="icon">
-            <use xlink:href="#closeme"></use>
-          </svg></span>
-          </div>
-        </div>
         
       </nav>
     </div>
