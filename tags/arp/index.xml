@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ARP on PSH</title>
+    <link>https://pseonghoon.github.io/tags/arp/</link>
+    <description>Recent content in ARP on PSH</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>2020</copyright>
+    <lastBuildDate>Sun, 04 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/arp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>L4 DSR 에서 arp_ignore, arp_announce의 정확한 설정 방법</title>
+      <link>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</link>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</guid>
+      <description>&lt;p&gt;on-premise 환경에서 L4 스위치를 DSR(Direct Server Return) 모드로 구성할 때, real server의 Linux kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.&lt;/p&gt;
+&lt;p&gt;이 포스트에서 그 parameter들에 관해 잘못 알려진 정보를 바로잡고, 그 정확한 의미를 정리했다. &lt;br&gt;
+ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -5,13 +5,86 @@
     <link>https://pseonghoon.github.io/tags/</link>
     <description>Recent content in Tags on PSH</description>
     <generator>Hugo -- gohugo.io</generator>
-    <copyright>2020</copyright><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>2020</copyright>
+    <lastBuildDate>Mon, 05 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Automation</title>
+      <link>https://pseonghoon.github.io/tags/automation/</link>
+      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/automation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://pseonghoon.github.io/tags/devops/</link>
+      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>IaC</title>
+      <link>https://pseonghoon.github.io/tags/iac/</link>
+      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/iac/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ARP</title>
+      <link>https://pseonghoon.github.io/tags/arp/</link>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/arp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DSR</title>
+      <link>https://pseonghoon.github.io/tags/dsr/</link>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/dsr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>https://pseonghoon.github.io/tags/linux/</link>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Oracle</title>
+      <link>https://pseonghoon.github.io/tags/oracle/</link>
+      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/oracle/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>index</title>
       <link>https://pseonghoon.github.io/tags/index/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/tags/index/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tcp/ip</title>
+      <link>https://pseonghoon.github.io/tags/tcp/ip/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/tcp/ip/</guid>
       <description></description>
     </item>
     

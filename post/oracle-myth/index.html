@@ -1,0 +1,550 @@
+
+<!DOCTYPE html>
+<html lang="en" data-figures="" class="page" data-mode="lit">
+  <head>  <title>다시 생각하는 오라클 데이터베이스 운영 | PSH</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.75.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta property="og:locale" content="en" />
+
+<meta property="og:type" content="article">
+<meta name="description" content="이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 원고를 다듬은 것이다
+DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유 …">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="">
+<meta name="twitter:title" content="다시 생각하는 오라클 데이터베이스 운영" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/oracle-myth/" />
+<meta property="og:title" content="다시 생각하는 오라클 데이터베이스 운영" />
+<meta property="og:description" content="이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 원고를 다듬은 것이다
+DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유 …" />
+<meta property="og:image" content="https://pseonghoon.github.io/images/thumbnail.png" />
+<link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
+<link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
+<link rel="icon" type="image/png" sizes="16x16" href='https://pseonghoon.github.io/icons/favicon-16x16.png'>
+<link rel="manifest" href='https://pseonghoon.github.io/icons/site.webmanifest'>
+<link rel="mask-icon" href='https://pseonghoon.github.io/safari-pinned-tab.svg' color="#002538">
+<meta name="msapplication-TileColor" content="#002538">
+<meta name="theme-color" content="#002538">
+
+  <link rel="canonical" href="https://pseonghoon.github.io/post/oracle-myth/">
+
+    
+
+    
+    
+    <link rel="preload" href="https://pseonghoon.github.io/css/styles.d14f6044c8182f20be0f3f902da6f8a3e80d2e02f38b0b284d4ca8dc793ea23bdd410dcc0e8816b91cf4768e76a5ae918101c2ac856ea9eca9ed5a7129e30dee.css" integrity = "sha512-0U9gRMgYLyC&#43;Dz&#43;QLab4o&#43;gNLgLziwsoTUyo3Hk&#43;ojvdQQ3MDogWuRz0do52pa6RgQHCrIVuqeyp7VpxKeMN7g==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.1b1d30171a32fe4a27d28c8f3e7432da6678b444979e87f792d822649b720b1a0d16893101d1faf5f95bb4a5f29b3ee7502a6d4befd040d1672f0518e4e13e05.js" as="script" integrity=
+    "sha512-Gx0wFxoy/kon0oyPPnQy2mZ4tESXnof3ktgiZJtyCxoNFokxAdH69flbtKXymz7nUCptS&#43;/QQNFnLwUY5OE&#43;BQ==" crossorigin="anonymous">
+
+    
+    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.d14f6044c8182f20be0f3f902da6f8a3e80d2e02f38b0b284d4ca8dc793ea23bdd410dcc0e8816b91cf4768e76a5ae918101c2ac856ea9eca9ed5a7129e30dee.css" integrity="sha512-0U9gRMgYLyC&#43;Dz&#43;QLab4o&#43;gNLgLziwsoTUyo3Hk&#43;ojvdQQ3MDogWuRz0do52pa6RgQHCrIVuqeyp7VpxKeMN7g==" crossorigin="anonymous">
+    
+  </head>
+  
+  
+    
+  
+  <body data-code="7" data-lines="false" id="documentTop">
+
+<header class="nav_header" >
+  <nav class="nav">
+    <a href='https://pseonghoon.github.io/' class="nav_brand nav_item">
+        PSH
+      <div class="nav_close">
+        <div>
+          <svg class="icon">
+            <use xlink:href="#open-menu"></use>
+          </svg>
+          <svg class="icon">
+            <use xlink:href="#closeme"></use>
+          </svg>
+        </div>
+      </div>
+    </a>
+    <div class='nav_body nav_body_left'>
+      
+      
+      
+        
+
+  <div class="nav_parent">
+    <a href="https://pseonghoon.github.io/" class="nav_item">Home </a>
+  </div>
+  <div class="nav_parent">
+    <a href="https://pseonghoon.github.io/about/" class="nav_item">About </a>
+  </div>
+      
+      <div class="nav_parent">
+        <a href="#" class="nav_item"></a>
+        <div class="nav_sub">
+          <span class="nav_child"></span>
+          
+          <a href="https://pseonghoon.github.io/" class="nav_child nav_item"></a>
+          
+          <a href="https://pseonghoon.github.io/ko/" class="nav_child nav_item"></a>
+          
+        </div>
+      </div>
+      
+<div class='follow'>
+  <a href="https://www.linkedin.com/in/seonghoon-park-1aa84358/">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+  
+  <a href="https://pseonghoon.github.io/index.xml">
+    <svg class="icon">
+  <use xlink:href="#rss"></use>
+</svg>
+  </a>
+<div class="color_mode">
+  <input type="checkbox" class="color_choice" id="mode">
+</div>
+
+</div>
+
+    </div>
+  </nav>
+</header>
+
+    <main>
+  
+<div class = 'grid-inverse wrap content'>
+  <article class='post_content'>
+    <h1 class='post_title'>다시 생각하는 오라클 데이터베이스 운영</h1><div class="post_meta">
+  <svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg>
+  <span class="post_date">
+    Oct 4, 2020</span>
+  <a href='https://pseonghoon.github.io/tags/oracle' class="post_tag button button_translucent">Oracle
+  </a>
+</div>
+
+    
+<div class="post_share">
+  Share on:
+  <a href="https://twitter.com/intent/tweet?text=%eb%8b%a4%ec%8b%9c%20%ec%83%9d%ea%b0%81%ed%95%98%eb%8a%94%20%ec%98%a4%eb%9d%bc%ed%81%b4%20%eb%8d%b0%ec%9d%b4%ed%84%b0%eb%b2%a0%ec%9d%b4%ec%8a%a4%20%ec%9a%b4%ec%98%81&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2foracle-myth%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+  </a>
+  <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2foracle-myth%2f&t=%eb%8b%a4%ec%8b%9c%20%ec%83%9d%ea%b0%81%ed%95%98%eb%8a%94%20%ec%98%a4%eb%9d%bc%ed%81%b4%20%eb%8d%b0%ec%9d%b4%ed%84%b0%eb%b2%a0%ec%9d%b4%ec%8a%a4%20%ec%9a%b4%ec%98%81" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+  </a>
+  <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+  <a href="https://pseonghoon.github.io/post/oracle-myth/" title="Copy Link" class="link link_yank">
+    <svg class="icon">
+  <use xlink:href="#yank"></use>
+</svg>
+  </a>
+</div>
+
+    
+    
+    <h3>Table of Contents</h3>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#index-organized-table-iot의-적극적인-사용">Index-Organized Table (IOT)의 적극적인 사용</a></li>
+    <li><a href="#스토리지-성능과-storage-area-network-san">스토리지 성능과 Storage Area Network (SAN)</a></li>
+    <li><a href="#rman으로-백업">RMAN으로 백업</a></li>
+    <li><a href="#날짜-데이터에-date-타입-사용">날짜 데이터에 DATE 타입 사용</a></li>
+    <li><a href="#단순한-테이블스페이스-구성">단순한 테이블스페이스 구성</a></li>
+  </ul>
+</nav>
+    <p><em>이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 원고를 다듬은 것이다</em></p>
+<p>DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다. 해외에서도 이런 문제에 대한 언급<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>을 찾을 수 있으니 국내에만 국한된 문제가 아닌 것 같다. 이 글에서 그런 이유 때문에 효과에 비해 잘 활용되지 않는 것들의 장점을 알리고, 관련된 오해들에 대해 짚어보려고 한다.</p>
+<h1 id="index-organized-table-iot의-적극적인-사용">Index-Organized Table (IOT)의 적극적인 사용</h1>
+<hr>
+<p><code>Point:</code></p>
+<ul>
+<li>IOT로 손쉽게 극적인 성능 개선 효과를 볼 수 있다</li>
+<li>IOT에 적합한 데이터는 생각보다 흔하다</li>
+<li>DML 비중이 많아도 IOT를 쓰는데 문제가 없다</li>
+</ul>
+<p>IOT 는 인덱스 구조와 유사한 테이블 형태이다.
+IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에서 잘 정리된 설명을 쉽게 찾을 수 있을 것이니 여기선 자세한 설명보다 그 유용성을 강조하려고 한다.</p>
+<p>아래 &lt;그림1&gt;은 지난 2005년에  IOT로 성능 개선 효과를 본 사례이다.</p>
+<p><strong>&lt;그림1&gt; 친구 목록 데이터에 대해 IOT 적용 전후 CPU 사용량 비교</strong></p>
+<figure>
+    <img src="../img/iot.png"/> 
+</figure>
+
+<p>하지만 IOT는 아직 소극적으로 사용되는 경우가 많은데, 효과에 대해서는 덜 알려지고 약점은 실제보다 부각되었기 때문이다</p>
+<p>널리 알려진 IOT의 단점은 DML에 취약하다는 것이지만 정말 그럴까?
+생각해보면 IOT에 DML을 실행할 때 발생하는 부하는 인덱스가 있는 일반 테이블 (heap organized table)과 별 차이가 없다. 결국 인덱스가 있는 테이블을 별 문제없이 사용할 수 있다면 IOT 역시 잘 사용할 수 있다. 나는 IOT의 활용 여부를 판단할 때 DML비중을 고려하지 않지만 성능 문제가 발생한 경우는 없다.</p>
+<p>IOT에 대한 걱정을 덜 수 있는 좋은 비교 대상이 있다. MySQL에서 InnoDB 엔진을 사용하는 테이블들이 IOT와 유사한 구조로 되어 있다. MySQL에선 온라인 백업과 트랜잭션을 지원하기 위해 모든 테이블을 InnoDB 로 만드는 경우도 흔하다.</p>
+<p>그럼 IOT는 어떤 곳에 사용해야 성능 개선 효과를 볼까?
+목록 형식의 데이터를 조회하는 경우에 적합하다. 사용자의 친구목록 조회, 게시판 별 게시글 조회, 댓글 조회 같은 것인데 모두 흔한 것들이다.</p>
+<p>쿼리 튜닝 다음으로 눈에 띄는 성능 개선 효과를 기대할 수 있는 것이 IOT의 적절한 사용이라고 생각한다.  IOT는 그것을 사용해서 효과를 볼 수 있는 대상이라면 적극적으로 사용하는 것이 좋다.</p>
+<p><code>Note:</code> IOT는 secondary index로 인한 비효율 등이 문제가 될 수 있다. IOT를 제대로 활용하려면 서비스 적용 전에 그 것의 특징에 대해서 정확히 알고 있어야 한다.</p>
+<h1 id="스토리지-성능과-storage-area-network-san">스토리지 성능과 Storage Area Network (SAN)</h1>
+<hr>
+<p><code>Point:</code></p>
+<ul>
+<li>스토리지의 I/O 성능은 장착된 개별 디스크의 성능과 수에 단순하게 비례한다</li>
+<li>SAN은 비용을 낮추기 위한 기술이다</li>
+</ul>
+<p>스토리지 시스템의 성능은 그것에 장착된 디스크의 성능과 개수에 좌우된다.
+고가의 스토리지 제품과 중저가 제품의 가장 중요한 차이는 장착 가능한 디스크의 개수이다. 하지만 디스크 개수가 같다면 스토리지의  I/O성능은 기본적으로 동일하다.</p>
+<p>데이터는 계속 늘어나게 마련이고 만약 그에 따라  고가 제품으로 교체해야 한다면 비용 부담이 클 것이다.</p>
+<p>저비용으로 스토리지 확장 문제를 해결해주는 기술이 SAN (Storage Area Network) 이다.
+SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트들의 네트워크를 구성해 각 호스트들이 필요한 만큼의 저장 공간을 여러 스토리지로부터 얻을 수 있다.
+‘SAN은 비싸다’ 는 오해와 달리 비용을 줄이고 높은 확장성을 얻기 위해 만들어진 것이다. 저가의 스토리지들을 필요할 때마다 붙여나가는 방식으로 시스템을 손쉽게 확장할 수 있다.</p>
+<p>이와 같이 스토리지의 확장 문제는 이미 오래 전에  SAN 기술로 해결이 되었지만 여전히 장점이 충분히 알려지지 않고 있는데, 그것은 스토리지 벤더의 입장과 관련이 있다. SAN을 기본 취지에 맞게 활용해 비용이 줄어들면 벤더의 수익도 줄어든다. 그러니 벤더 측에서 그 장점을 고객에게 적극적으로 알리지 않는 것도 한편으론 이해할 만한 일이다. 어떤 벤더에선 나에게 성능을 위해 SAN 스위치를 사용하지 말것을 권한 경우도 있다. SAN의 확장성의 핵심 구성 요소가 스위치인데도 그렇게 얘기가 된다.</p>
+<p>그리고, 특정 벤더에 종속되지 않는 시스템을 유지하기 원한다면 특정 벤더의 복제 솔루션은 사용하지 않는 것이 좋다. Oracle의 RMAN과 Data Guard 기능을 잘 활용하면 충분히 효율적인 백업,복제를 구현하는 것이 가능하다.</p>
+<h1 id="rman으로-백업">RMAN으로 백업</h1>
+<hr>
+<p><code>Point:</code></p>
+<ul>
+<li>Oracle 10g 이후의 RMAN은 훌륭한 백업 도구이다</li>
+</ul>
+<p>적어도 10g 이후에는 RMAN을 백업/복구 도구로 사용해도 전혀 문제가 없다.</p>
+<p>외부 솔루션을 이용해서 user managed backup 방식을 사용하면서 RMAN 사용을 주저하는 이유는 아래와 같다.</p>
+<ol>
+<li>RMAN에 대한 신뢰 부족</li>
+<li>DBMS가 실행되는 호스트 시스템에서 process로 실행되는 in-bound 방식이 DBMS 성능에 미칠 악영향에 대한 우려</li>
+</ol>
+<p>첫 번째는 과거에는 문제가 되었으나 이제는 해소된 것이고 두 번째는 시스템이 적절하게 셋업되어 있으면 문제가 없다. 여기서 적절한 시스템 셋업이란 아래를 갖춘 것이다.</p>
+<ol>
+<li>redo log 파일과 control 파일이 저장되는 디스크를 데이터,백업이 저장되는 디스크와 물리적으로 분리해서 서로 I/O 간섭이 없게 한다</li>
+<li>충분히 높은 buffer cache hit rate</li>
+<li>합리적인 스토리지 투자로 괜찮은 수준의  physical I/O 성능이 확보됨</li>
+</ol>
+<p>이런 조건에서는 설령 피크 시간에 백업을 실행하더라도 문제가 없다.
+원활한 서비스를 위해 필요한 것들이니 만약 백업 실행이 서비스에 영향을 미친다면  시스템이 제대로 셋업된 것인지 점검할 필요가 있다.</p>
+<p>그럼 잘 구성된 시스템에서 왜 백업이 DB성능에 영향을 미치지 않는 지 더 알아보자.
+백업 작업은 데이터가 저장된 디스크 장치의 physical I/O 성능을 일정하게 저해할 것이다.</p>
+<p>하지만</p>
+<ol>
+<li>redo log 파일은 백업 대상이 아니므로 데이터/백업과 물리적으로 독립되어 있기만 하면 DML과 트랜잭션 실행이 지연되지 않는다</li>
+<li>SELECT는 그것이 대부분 logical reads로 커버되는 환경이라면 physical read가 약간 느려져도 눈에 띄는 영향이 없어야 한다</li>
+<li>DBWR가 담당하는 physical write는 백업에 의해 영향을 받지만 백그라운드에서 일어나는 프로세스 이므로 사용자가 느끼는 성능과는 관련이 없다</li>
+</ol>
+<p>즉 RMAN을 사용해도 성능상 걱정할 것이 없으며 RMAN은 아래와 같은 장점이 있다.</p>
+<ul>
+<li>별도의 솔루션을 구매하지 않아도 된다.</li>
+<li>백업에 대한 DBA의 이해도가 높아진다. 외부 솔루션을 사용하면 업무 담당자 이외에는 전체 백업프로세스를 이해하기 어렵다</li>
+<li>RMAN repository에 백업과 관련된 세세한 메타데이터를 기록해서 사용자 작업을 쉽고 단순하게 한다.</li>
+</ul>
+<p>아직 RMAN을 사용하고 있지 않은 독자가 쉽게 실행해 볼 수 있도록 사용 중인 스크립트를 공유한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>rman target / <span class="s">&lt;&lt;_EOF  | tee logs/backup.log.`date +%m%d`
+</span><span class="ln">2</span><span class="s">RECOVER COPY OF DATABASE with TAG &#34;whole_db_copy&#34; UNTIL TIME &#39;trunc(SYSDATE)-7&#39;;
+</span><span class="ln">3</span><span class="s">DELETE NOPROMPT OBSOLETE;
+</span><span class="ln">4</span><span class="s">BACKUP INCREMENTAL LEVEL 1
+</span><span class="ln">5</span><span class="s">      FOR RECOVER OF COPY WITH TAG &#34;whole_db_copy&#34;
+</span><span class="ln">6</span><span class="s">      DATABASE;
+</span><span class="ln">7</span><span class="s">_EOF</span>
+</code></pre></div><p>이 스크립트는 10g 이상에서 DB_RECOVERY_FILE_DEST 파라미터를 설정해 놓고 실행하면 된다.
+짧은 내용이지만 incremental backup을 실행하고 최근 7일간 원하는 시점으로 point-in-time recovery가 가능하며, 필요 없는 archive log 만을 알아서 지우는 등 효율적인 백업을 구현할 수 있다. 각 명령어에 대한 자세한 설명은 공식 매뉴얼을 참고하면 된다.</p>
+<p><code>Note:</code> Oracle 10g 기준으로 Backup and Recovery Basics 매뉴얼의 4.4 RMAN Incremental Backups에 나와있다.</p>
+<h1 id="날짜-데이터에-date-타입-사용">날짜 데이터에 DATE 타입 사용</h1>
+<hr>
+<p><code>Point:</code></p>
+<ul>
+<li>날짜/시각 데이터는 DATE 타입에 저장해야 한다.</li>
+</ul>
+<p>날짜 데이터를 위한 DATE 타입이 있지만 VARCHAR2 형식으로 저장하는 경우가 많다.
+VARCHAR2를 다루는 것이 이미 익숙하고 이것으로도 날짜 데이터를 표현하는데 문제가 없다고 보기 때문인데 그렇다면 숫자는 왜 NUMBER에 저장할까? 날짜에 DATE를 써야 하는 이유는 숫자에 NUMBER를 써야 하는 이유와 같다.</p>
+<p>DATE 타입의 장점은 아래처럼 정리할 수 있다.</p>
+<ol>
+<li>저장공간 절약</li>
+<li>무결성 보장</li>
+<li>연산의 편리함과 SQL문의 간결함</li>
+<li>Optimizer에 더 풍부한 정보를 제공</li>
+</ol>
+<h4 id="1-저장공간-절약">1. 저장공간 절약</h4>
+<p>VARCHAR2로 저장하면 작게 잡아도 14 바이트가 필요하지만 DATE는 7 바이트면 된다.</p>
+<h4 id="2-무결성-보장-데이터와-포맷의-분리">2. 무결성 보장. 데이터와 포맷의 분리</h4>
+<p>날짜 형식이 아닌 엉뚱한 데이터가 입력되거나 여러 형식의 날짜 포맷이 뒤섞이는 것을 막을 수 있다.
+VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항상 그 형식으로 사용해야 하는데, 이 약속을 지키기가 쉽지 않다. 여러 경로로 실행되는 SQL문을 일일이 통제한다는 것이 사실상 불가능하기 때문이다. 일정 시간이 지나면 결국 여러 포맷의 데이터가 섞이게 된다. 그리고 컬럼마다 서로 다른 날짜 포맷을 사용한다면 테이블에 INSERT할 때마다 어떤 포맷인지 확인해야 해서 번거롭다.
+결국 VARCHAR2에 저장하려면 꼼꼼한 관리가 필요하다. 그러니 애초에 그런 수고가 필요 없는 방법을 사용하자.</p>
+<h4 id="3-연산의-편리함과-sql문의-간결함">3. 연산의 편리함과 SQL문의 간결함</h4>
+<p>전체적으로 SQL문이 간결해진다. 예를 들면, 날짜 데이터가 INSERT되거나 비교의 기준으로 sysdate 가 사용되는 경우가 많은데 이럴 때 DATE 라면 아래처럼 sysdate를 그대로 사용하면 된다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">T</span> <span class="p">(</span><span class="n">DATE_DATE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="n">sysdate</span><span class="p">)</span> 
+</code></pre></div><p>그렇지 않으면 아래처럼 <code>TO_CHAR()</code>로 일일이 변환을 해야 한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">T</span> <span class="p">(</span><span class="n">STR_DATE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">))</span>
+</code></pre></div><p>DATE 연산에서 간결함의 차이가 잘 보이는데, 예를 들어 어떤 날짜보다 하루 뒤의 값을 구하려면 DATE 는 아래처럼 단순하다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">DATE_DATE</span> <span class="o">+</span> <span class="mi">1</span>
+</code></pre></div><p>VARCHAR2는 깔끔하지 않은 문자열 연산을 하거나, DATE 타입으로 변환했다가 다시 VARCHAR2로 변환해야 한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="n">STR_DATE</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">,</span> <span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span>
+</code></pre></div><p>이런 연산은 자주 하는 것이라 누적되면 SQL문의 가독성이 나빠진다.</p>
+<h4 id="4-optimizer에-더-많은-정보를-제공">4. Optimizer에 더 많은 정보를 제공</h4>
+<p>Oracle optimizer 는 실행 계획을 만들 때 DATE 타입의 특성을 이해하고  활용한다.
+2012년 1월 1일 과 2012년 1월 3일 사이에 들어갈 수 있는 날짜는 1월 2일 하루 뿐이지만
+‘20120101’ 과 ‘20120103’ 사이에 분포하는 문자열 값은 훨씬 많다.
+즉 날짜/시각을 DATE로 저장하면 optimizer에 더 풍부한 정보를 제공할 수 있다.</p>
+<h4 id="date-타입을-더-편리하게-쓰는-팁">DATE 타입을 더 편리하게 쓰는 팁</h4>
+<p>DATE를 사용하면 형 변환을 위해 to_date() 와 to_char()를 매번 실행해야 해서 번거로울 것 같지만 알고 보면 그렇지 않다.
+우선, NLS_DATE_FORMAT 파라미터로 시스템 디폴트 날짜 포맷을 지정할 수 있다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">ALTER</span> <span class="k">SYSTEM</span> <span class="k">SET</span> <span class="n">NLS_DATE_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span>
+</code></pre></div><p>기본적으로 to_date() 와 to_char() 는 두 번째 인자로 날짜 포맷을 받는데 이것을 생략하면
+NLS_DATE_FORMAT의 값이 디폴트로 사용된다. 그리고 이 함수들은 형 변환이 필요할 때 암묵적으로 호출되므로 이 함수들을 명시적으로 쓸 필요가 없다.</p>
+<p>그리고 값을 입력할 때, 지정된 날짜 포맷과 정확히 일치하지 않더라도 비슷한 형태면 대부분 인식이 된다. 예를 들어 아래처럼 테이블을 만들고 입력할 때</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">DATE_TEST</span> <span class="p">(</span><span class="n">D</span> <span class="nb">DATE</span><span class="p">);</span>
+</code></pre></div><p>정석은 아래와 같지만</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="s1">&#39;2008-01-01 10:00:01&#39;</span><span class="p">,</span><span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span><span class="p">))</span>
+</code></pre></div><p>아래처럼 해도 성공한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;2008-01-01 10:00:01&#39;</span><span class="p">);</span>
+<span class="ln">2</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;20080101100001&#39;</span><span class="p">);</span>
+<span class="ln">3</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;2008:01:01 10&#39;</span><span class="p">);</span>
+</code></pre></div><p>데이터의 값은 포맷과는 독립되어 있기 때문에 표현이 달라도 실제로 저장되는 값에는 차이가 없다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">DATE_TEST</span><span class="p">;</span>
+<span class="ln">2</span><span class="n">D</span>
+<span class="ln">3</span><span class="c1">-------------------
+</span><span class="ln">4</span><span class="c1"></span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="ln">5</span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="ln">6</span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="ln">7</span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="ln">8</span>
+</code></pre></div><h1 id="단순한-테이블스페이스-구성">단순한 테이블스페이스 구성</h1>
+<hr>
+<p><code>Point:</code></p>
+<ul>
+<li>인덱스와 테이블을 별도의 테이블스페이스에 저장할 필요가 없다</li>
+<li>스키마 당 하나의 테이블스페이스를 만들면 편리하다.</li>
+</ul>
+<p>테이블스페이스를 지나치게 잘게 쪼개거나 테이블,인덱스용 테이블스페이스를 분리할 필요가 없다.  테이블과 인덱스를 함께 저장하고 크기도 크게 만들자.</p>
+<p>스키마 단위로 하나의 테이블스페이스를 할당하고 그 스키마의 디폴트 테이블스페이스로 지정하는 것을 권한다. 이렇게 하면 테이블이나 인덱스를 어떤 테이블스페이스에 넣어야 할지 남은 용량을 확인하면서 DDL에 일일이 지정하지 않아도 된다. 전체적인 테이블스페이스 수가 줄어서 관리가 간편해진다. 이런 단순한 규칙이면 개발환경 DB와 서비스DB의 테이블스페이스 구성을 동일하게 유지할 수 있게 되고 그에 따라 개발 환경 DB에서 사용한 DDL을 그대로 서비스 환경 DB에도 사용할 수 있다.</p>
+<p>테이블스페이스를 스키마 단위로는 분리하는 이유는, 테이블스페이스 단위의 복구(recovery) 나 스키마 단위로 다른 인스턴스로 이동할 때 Transportable Tablespace 기능 사용을 대비한 것이다.</p>
+<p>테이블스페이스의 크기는 평상시 성능과는 관계가 없지만 테이블스페이스 단위의 복구를 해야 할 경우엔 복구 시간이 그것에 비례한다. 나는 스키마 당 한 개의 테이블스페이스를 기본 원칙으로 하되, 최대 용량은 1TB 로 제한하는 방식을 쓰고 있다.</p>
+<p>100GB 크기의 테이블스페이스 하나를 만드는 것에 비해 10GB 짜리 10개를 만들었을 때 성능 상 유리한 점이 없고 테이블과 인덱스를 별도의 테이블스페이스에 분리 저장해서 얻을 수 있는 이점 역시 없다.</p>
+<p>테이블스페이스는 데이터를 논리적으로 분리해서 저장하는 단위이기 때문에 I/O 성능과는 직접적인 관계가 없다</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Thomas Kyte의 <a href="https://www.amazon.com/Effective-Oracle-Design-Osborne-ORACLE/dp/0072230657">Effective Oracle by Design</a> 은 이런 것들을 myths 라고 표현하며 여러 사례를 알려준다. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </article>
+<aside class="sidebar">
+  <section class="sidebar_inner">
+    <h2>Park Seong-hoon</h2>
+    <div>
+      Cloud Architect at Neowiz
+    </div>
+    <a href='https://pseonghoon.github.io/about/' class="button mt-1" role="button">Read More</a>
+    <h2 class="mt-4">Featured Posts</h2>
+    <ul>
+    
+      <li>
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link">코드로 인프라 관리하기</a>
+      </li>
+    
+    </ul>
+    <h2 class="mt-4">Recent Posts</h2>
+    <ul class="flex-column">
+      
+      <li>
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link">코드로 인프라 관리하기</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link">L4 DSR 에서 arp_ignore, arp_announce의 정확한 설정 방법</a>
+      </li>
+    </ul> 
+    
+    
+    
+    
+    
+    
+    <div>
+      <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
+      <nav class="tags_nav">
+        <a href='https://pseonghoon.github.io/tags/arp/' class="post_tag button button_translucent">
+          ARP
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/automation/' class="post_tag button button_translucent">
+          AUTOMATION
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/devops/' class="post_tag button button_translucent">
+          DEVOPS
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/dsr/' class="post_tag button button_translucent">
+          DSR
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent">
+          IAC
+          <span class="button_tally">1</span>
+        </a>
+        
+        
+        <br>
+        <div class="post_tags_toggle button">All Tags</div>
+        <div class="post_tags">
+          <div class="tags_list">
+            
+            <a href='https://pseonghoon.github.io/tags/arp/' class=" post_tag button button_translucent" data-position=1>ARP<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/automation/' class=" post_tag button button_translucent" data-position=1>AUTOMATION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=1>DEVOPS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/dsr/' class=" post_tag button button_translucent" data-position=1>DSR<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/iac/' class=" post_tag button button_translucent" data-position=1>IAC<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/index/' class=" post_tag button button_translucent" data-position=1>INDEX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/linux/' class=" post_tag button button_translucent" data-position=1>LINUX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/oracle/' class=" post_tag button button_translucent" data-position=1>ORACLE<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/tcp/ip/' class=" post_tag button button_translucent" data-position=1>TCP/IP<span class="button_tally">1</span>
+            </a>
+            
+            <div class="tags_sort"><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span>
+            </div>
+            <span class="tags_hide"><svg class="icon">
+            <use xlink:href="#closeme"></use>
+          </svg></span>
+          </div>
+        </div>
+        
+      </nav>
+    </div>
+    
+    
+  </section>
+</aside>
+
+</div>
+    </main><svg width="0" height="0" class="hidden">
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.001 18.001" id="twitter">
+    <path d="M15.891 4.013c.808-.496 1.343-1.173 1.605-2.034a8.68 8.68 0 0 1-2.351.861c-.703-.756-1.593-1.14-2.66-1.14-1.043 0-1.924.366-2.643 1.078a3.56 3.56 0 0 0-1.076 2.605c0 .309.039.585.117.819-3.076-.105-5.622-1.381-7.628-3.837-.34.601-.51 1.213-.51 1.846 0 1.301.549 2.332 1.645 3.089-.625-.053-1.176-.211-1.645-.47 0 .929.273 1.705.82 2.388a3.623 3.623 0 0 0 2.115 1.291c-.312.08-.641.118-.979.118-.312 0-.533-.026-.664-.083.23.757.664 1.371 1.291 1.841a3.652 3.652 0 0 0 2.152.743C4.148 14.173 2.625 14.69.902 14.69c-.422 0-.721-.006-.902-.038 1.697 1.102 3.586 1.649 5.676 1.649 2.139 0 4.029-.542 5.674-1.626 1.645-1.078 2.859-2.408 3.639-3.974a10.77 10.77 0 0 0 1.172-4.892v-.468a7.788 7.788 0 0 0 1.84-1.921 8.142 8.142 0 0 1-2.11.593z"
+      ></path>
+  </symbol>
+  <symbol aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="mail">
+    <path  d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="calendar">
+    <path d="M452 40h-24V0h-40v40H124V0H84v40H60C26.916 40 0 66.916 0 100v352c0 33.084 26.916 60 60 60h392c33.084 0 60-26.916 60-60V100c0-33.084-26.916-60-60-60zm20 412c0 11.028-8.972 20-20 20H60c-11.028 0-20-8.972-20-20V188h432v264zm0-304H40v-48c0-11.028 8.972-20 20-20h24v40h40V80h264v40h40V80h24c11.028 0 20 8.972 20 20v48z"></path>
+    <path d="M76 230h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 310h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 390h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80-80h40v40h-40z"></path>
+  </symbol>
+  <symbol viewBox="-21 0 512 512" xmlns="http://www.w3.org/2000/svg" id="yank">
+    <path d="M410.668 405.332H165.332c-32.363 0-58.664-26.3-58.664-58.664v-288c0-32.363 26.3-58.668 58.664-58.668h181.504c21.059 0 41.687 8.535 56.555 23.445l42.496 42.496c15.125 15.125 23.445 35.223 23.445 56.575v224.152c0 32.363-26.3 58.664-58.664 58.664zM165.332 32c-14.7 0-26.664 11.969-26.664 26.668v288c0 14.7 11.965 26.664 26.664 26.664h245.336c14.7 0 26.664-11.965 26.664-26.664V122.516c0-12.82-4.992-24.871-14.059-33.942l-42.496-42.496C371.84 37.121 359.488 32 346.836 32zm0 0"></path>
+    <path d="M314.668 512h-256C26.305 512 0 485.695 0 453.332V112c0-32.363 26.305-58.668 58.668-58.668h10.664c8.832 0 16 7.168 16 16s-7.168 16-16 16H58.668C43.968 85.332 32 97.301 32 112v341.332C32 468.032 43.969 480 58.668 480h256c14.7 0 26.664-11.969 26.664-26.668v-10.664c0-8.832 7.168-16 16-16s16 7.168 16 16v10.664c0 32.363-26.3 58.668-58.664 58.668zM368 181.332H208c-8.832 0-16-7.168-16-16s7.168-16 16-16h160c8.832 0 16 7.168 16 16s-7.168 16-16 16zm0 0"></path>
+    <path d="M368 245.332H208c-8.832 0-16-7.168-16-16s7.168-16 16-16h160c8.832 0 16 7.168 16 16s-7.168 16-16 16zm0 64H208c-8.832 0-16-7.168-16-16s7.168-16 16-16h160c8.832 0 16 7.168 16 16s-7.168 16-16 16zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="github">
+    <path d="M255.968 5.329C114.624 5.329 0 120.401 0 262.353c0 113.536 73.344 209.856 175.104 243.872 12.8 2.368 17.472-5.568 17.472-12.384 0-6.112-.224-22.272-.352-43.712-71.2 15.52-86.24-34.464-86.24-34.464-11.616-29.696-28.416-37.6-28.416-37.6-23.264-15.936 1.728-15.616 1.728-15.616 25.696 1.824 39.2 26.496 39.2 26.496 22.848 39.264 59.936 27.936 74.528 21.344 2.304-16.608 8.928-27.936 16.256-34.368-56.832-6.496-116.608-28.544-116.608-127.008 0-28.064 9.984-51.008 26.368-68.992-2.656-6.496-11.424-32.64 2.496-68 0 0 21.504-6.912 70.4 26.336 20.416-5.696 42.304-8.544 64.096-8.64 21.728.128 43.648 2.944 64.096 8.672 48.864-33.248 70.336-26.336 70.336-26.336 13.952 35.392 5.184 61.504 2.56 68 16.416 17.984 26.304 40.928 26.304 68.992 0 98.72-59.84 120.448-116.864 126.816 9.184 7.936 17.376 23.616 17.376 47.584 0 34.368-.32 62.08-.32 70.496 0 6.88 4.608 14.88 17.6 12.352C438.72 472.145 512 375.857 512 262.353 512 120.401 397.376 5.329 255.968 5.329z"></path>
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="rss">
+    <circle cx="3.429" cy="20.571" r="3.429"></circle>
+    <path d="M11.429 24h4.57C15.999 15.179 8.821 8.001 0 8v4.572c6.302.001 11.429 5.126 11.429 11.428z"></path>
+    <path d="M24 24C24 10.766 13.234 0 0 0v4.571c10.714 0 19.43 8.714 19.43 19.429z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="linkedin">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h362c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zM181 406h-60V196h60zm0-240h-60v-60h60zm210 240h-60V286c0-16.54-13.46-30-30-30s-30 13.46-30 30v120h-60V196h60v11.309C286.719 202.422 296.93 196 316 196c40.691.043 75 36.547 75 79.688zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612" id="arrow">
+    <path d="M604.501 440.509L325.398 134.956c-5.331-5.357-12.423-7.627-19.386-7.27-6.989-.357-14.056 1.913-19.387 7.27L7.499 440.509c-9.999 10.024-9.999 26.298 0 36.323s26.223 10.024 36.222 0l262.293-287.164L568.28 476.832c9.999 10.024 26.222 10.024 36.221 0 9.999-10.023 9.999-26.298 0-36.323z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="carly">
+    <path d="M504.971 239.029L448 182.059V84c0-46.317-37.682-84-84-84h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c19.851 0 36 16.149 36 36v108c0 6.365 2.529 12.47 7.029 16.971L454.059 256l-47.029 47.029A24.002 24.002 0 0 0 400 320v108c0 19.851-16.149 36-36 36h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c46.318 0 84-37.683 84-84v-98.059l56.971-56.971c9.372-9.372 9.372-24.568 0-33.941zM112 192V84c0-19.851 16.149-36 36-36h44c13.255 0 24-10.745 24-24S205.255 0 192 0h-44c-46.318 0-84 37.683-84 84v98.059l-56.971 56.97c-9.373 9.373-9.373 24.568 0 33.941L64 329.941V428c0 46.317 37.682 84 84 84h44c13.255 0 24-10.745 24-24s-10.745-24-24-24h-44c-19.851 0-36-16.149-36-36V320c0-6.365-2.529-12.47-7.029-16.971L57.941 256l47.029-47.029A24.002 24.002 0 0 0 112 192z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="copy">
+    <path d="M366.345 406.069H66.207c-9.751 0-17.655-7.904-17.655-17.655V17.655C48.552 7.904 56.456 0 66.207 0h300.138C376.096 0 384 7.904 384 17.655v370.759c0 9.751-7.904 17.655-17.655 17.655z" fill="#f1f4fb"></path>
+    <path d="M384 388.414v-76.992c-.907.322-1.869.494-2.751.882-6.307-6.593-14.733-11.025-24.111-11.964a40.49 40.49 0 0 0-8.448.039v-92.93c0-21.903-17.82-39.723-39.723-39.724a40.5 40.5 0 0 0-4.036.202c-20.012 2.004-35.689 19.916-35.689 40.781v101.773l-21.581 21.581c-15.241 15.241-21.393 36.866-16.456 57.847l3.802 16.16h131.338c9.75 0 17.655-7.905 17.655-17.655z"
+      fill="#d5dced"></path>
+    <circle cx="128" cy="105.931" r="26.483" fill="#b4e66e"></circle>
+    <circle cx="128" cy="203.034" r="26.483" fill="#dae169"></circle>
+    <circle cx="128" cy="300.138" r="26.483" fill="#ffdc64"></circle>
+    <path d="M331.034 229.517H189.793c-4.879 0-8.828-3.953-8.828-8.828s3.948-8.828 8.828-8.828h141.241c4.879 0 8.828 3.953 8.828 8.828s-3.948 8.828-8.828 8.828z" fill="#7f8499"></path>
+    <path d="M295.724 194.207H189.793a8.826 8.826 0 0 1-8.828-8.828 8.826 8.826 0 0 1 8.828-8.828h105.931a8.826 8.826 0 0 1 8.828 8.828 8.826 8.826 0 0 1-8.828 8.828z" fill="#5b5d6e"></path>
+    <path d="M331.034 326.621H189.793c-4.879 0-8.828-3.953-8.828-8.828s3.948-8.828 8.828-8.828h141.241c4.879 0 8.828 3.953 8.828 8.828s-3.948 8.828-8.828 8.828z" fill="#7f8499"></path>
+    <path d="M295.724 291.31H189.793c-4.879 0-8.828-3.953-8.828-8.828s3.948-8.828 8.828-8.828h105.931c4.879 0 8.828 3.953 8.828 8.828s-3.948 8.828-8.828 8.828z" fill="#5b5d6e"></path>
+    <path d="M331.034 132.414H189.793a8.826 8.826 0 0 1-8.828-8.828 8.826 8.826 0 0 1 8.828-8.828h141.241a8.826 8.826 0 0 1 8.828 8.828 8.826 8.826 0 0 1-8.828 8.828z" fill="#7f8499"></path>
+    <path d="M295.724 97.103H189.793a8.826 8.826 0 0 1-8.828-8.828 8.826 8.826 0 0 1 8.828-8.828h105.931a8.826 8.826 0 0 1 8.828 8.828 8.825 8.825 0 0 1-8.828 8.828z" fill="#5b5d6e"></path>
+    <path d="M443.656 335.563c-13.21-1.323-24.345 9.015-24.345 21.954v-7.569c0-11.544-8.306-22.063-19.794-23.213-13.209-1.323-24.344 9.015-24.344 21.954v-7.569c0-11.544-8.306-22.063-19.794-23.213-13.209-1.323-24.344 9.015-24.344 21.954V207.448c0-12.939-11.135-23.277-24.345-21.954-11.486 1.15-19.793 11.669-19.793 23.213v109.086l-26.752 26.752a44.14 44.14 0 0 0-11.754 41.32l18.47 78.495c6.567 27.913 31.475 47.64 60.15 47.64h74.645c34.127 0 61.793-27.666 61.793-61.793v-91.431c-.001-11.544-8.306-22.063-19.793-23.213z"
+      fill="#f0c087"></path>
+    <path d="M339.862 361.377a8.829 8.829 0 0 0 8.828-8.828v-34.194c-10.052 2.061-17.655 10.844-17.655 21.506v12.687a8.827 8.827 0 0 0 8.827 8.829zM384 370.205a8.829 8.829 0 0 0 8.828-8.828v-34.194c-10.052 2.061-17.655 10.844-17.655 21.506v12.687a8.827 8.827 0 0 0 8.827 8.829zm44.138 8.827a8.829 8.829 0 0 0 8.828-8.828V336.01c-10.052 2.061-17.655 10.844-17.655 21.506v12.687a8.827 8.827 0 0 0 8.827 8.829zM288.885 464.36l-20.467-86.985a28.482 28.482 0 0 1 7.585-26.663l10.893-10.894v22.113a8.829 8.829 0 0 0 17.656 0V185.933c-10.344 2.173-17.655 11.972-17.655 22.773v109.087l-26.752 26.752a44.14 44.14 0 0 0-11.754 41.32l18.47 78.495c6.567 27.913 31.475 47.64 60.15 47.64h22.026c-28.677 0-53.584-19.727-60.152-47.64z"
+      fill="#e6af78"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001" id="closeme">
+    <path d="M284.286 256.002L506.143 34.144c7.811-7.811 7.811-20.475 0-28.285-7.811-7.81-20.475-7.811-28.285 0L256 227.717 34.143 5.859c-7.811-7.811-20.475-7.811-28.285 0-7.81 7.811-7.811 20.475 0 28.285l221.857 221.857L5.858 477.859c-7.811 7.811-7.811 20.475 0 28.285a19.938 19.938 0 0 0 14.143 5.857 19.94 19.94 0 0 0 14.143-5.857L256 284.287l221.857 221.857c3.905 3.905 9.024 5.857 14.143 5.857s10.237-1.952 14.143-5.857c7.811-7.811 7.811-20.475 0-28.285L284.286 256.002z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="open-menu">
+    <path d="M492 236H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0-160H20C8.954 76 0 84.954 0 96s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0 320H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="instagram">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id=youtube>
+    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+  </symbol>
+</svg>
+<footer class="footer">
+  <div class="footer_inner wrap pale">
+    <img src='https://pseonghoon.github.io/icons/apple-touch-icon.png' class="icon icon_2 transparent">
+    <p>Copyright &copy;&nbsp;<span class="year">2020</span>&nbsp;PSH. All Rights Reserved</p><a class="to_top" href="#documentTop">
+  <svg class="icon">
+  <use xlink:href="#arrow"></use>
+</svg>
+</a>
+
+  </div>
+</footer>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.1b1d30171a32fe4a27d28c8f3e7432da6678b444979e87f792d822649b720b1a0d16893101d1faf5f95bb4a5f29b3ee7502a6d4befd040d1672f0518e4e13e05.js" integrity="sha512-Gx0wFxoy/kon0oyPPnQy2mZ4tESXnof3ktgiZJtyCxoNFokxAdH69flbtKXymz7nUCptS&#43;/QQNFnLwUY5OE&#43;BQ==" crossorigin="anonymous"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DevOps on PSH</title>
+    <link>https://pseonghoon.github.io/tags/devops/</link>
+    <description>Recent content in DevOps on PSH</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>2020</copyright>
+    <lastBuildDate>Mon, 05 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>코드로 인프라 관리하기</title>
+      <link>https://pseonghoon.github.io/post/infrastructure-as-code/</link>
+      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/post/infrastructure-as-code/</guid>
+      <description>&lt;p&gt;&lt;code&gt;Link&lt;/code&gt;: &lt;a href=&#34;https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing&#34;&gt;코드로 인프라 관리하기 (ppt)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Games on AWS 2019에서 발표한 자료이다.
+행사 후에 AWS의 account manager가 알려줬는데, 청중의 발표 평가에서 가장 좋은 결과를 얻었다고 한다. 그만큼 요즘 관심이 많은 주제이다.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
