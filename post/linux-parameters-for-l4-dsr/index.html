@@ -9,15 +9,15 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="on-premise 환경에서 L4 스위치를 DSR(Direct Server Return) 모드로 구성할 때, real server의 Linux kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.
-이 포스트에서 그 parameter들에 관 …">
+<meta name="description" content="on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.
+이 포스트에서 그 parameter …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" />
 <meta property="og:title" content="L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기" />
-<meta property="og:description" content="on-premise 환경에서 L4 스위치를 DSR(Direct Server Return) 모드로 구성할 때, real server의 Linux kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.
-이 포스트에서 그 parameter들에 관 …" />
+<meta property="og:description" content="on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.
+이 포스트에서 그 parameter …" />
 <meta property="og:image" content="https://pseonghoon.github.io/images/thumbnail.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
@@ -155,16 +155,16 @@
 </div>
 
     
-    <p>on-premise 환경에서 L4 스위치를 DSR(Direct Server Return) 모드로 구성할 때, real server의 Linux kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.</p>
-<p>이 포스트에서 그 parameter들에 관해 잘못 알려진 정보를 바로잡고, 그 정확한 의미를 정리했다. <br>
+    <p>on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore,arp_announce를 적절히 설정해야 한다.</p>
+<p>이 포스트에서 그 parameter들에 관해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. <br>
 ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.</p>
 <h1 id="dsr-모드의-개요">DSR 모드의 개요</h1>
 <hr>
 <p>Direct Server Return의 준말인데, 정식 용어가 아니라 편의상 이렇게 부르는 것이다.
-L4 스위치의 부담을 줄이기 위해 real server가 클라이언트에 패킷을 바로 전송하게 하는 구성이다.</p>
-<p>패킷의 흐름이 아래와 같다.<br>
-클라이언트 -&gt; L4 스위치 (virtual server) -&gt; real server -&gt; 클라이언트</p>
-<p>현재는 L4 스위치의 성능이 충분해서 성능 때문에 이렇게 구성할 필요는 별로 없지만, 클라이언트의 source IP를 보존할 수 있다는 장점 때문에 아직도 많이 쓰이는 방법이다.</p>
+L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트에 패킷을 바로 전송하게 하는 구성이다.</p>
+<p>트래픽의 흐름이 아래와 같다.<br>
+클라이언트 -&gt; L4 로드 밸런서 (virtual server) -&gt; real server -&gt; 클라이언트</p>
+<p>현재는 L4 로드 밸런서의 성능이 충분해서 성능 때문에 이렇게 구성할 필요는 별로 없지만, 클라이언트의 source IP를 보존할 수 있다는 장점 때문에 아직도 많이 쓰이는 방법이다.</p>
 <p>이 포스트에서 DSR 모드의 전반적인 구성이나 설정 방법을 자세히 다루지는 않는다. <br>
 만약 DSR 모드나 ARP에 대한 사전 지식이 충분치 않다면 관련 내용을 먼저 파악하고 이 포스트를 읽으면 더 쉽게 이해할 수 있을 것이다.</p>
 <h1 id="요점">요점</h1>
@@ -176,16 +176,16 @@ L4 스위치의 부담을 줄이기 위해 real server가 클라이언트에 패
 <span class="ln">4</span><span class="na">net.ipv4.conf.lo.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
 <span class="ln">5</span><span class="na">net.ipv4.conf.lo.arp_announce</span> <span class="o">=</span> <span class="s">2</span>
 </code></pre></div><p>위에서 <mark>loopback interface인 lo에 한 설정이 의미가 없다</mark>는 것이 이 포스트의 요점이다.
-<mark>이 parameter들은 패킷을 수신하는 실제 interface에 설정해야 효력이 있다</mark>. 따라서 loopback interface에 설정하는 것은 아무 효과가 없다.
+<mark>이 parameter들은 패킷을 수신하는 실제 interface에 설정해야 효력이 있다</mark>.
 불필요한 설정이 추가된 것이라서 동작에는 문제가 없지만 정확한 의미를 알아야 트러블슈팅을 잘할 수 있다.</p>
-<p>DSR 모드로 구성하려면, real server의 loopback interface에 L4 스위치의 VIP를 추가해야 한다.<br>
-L4 스위치는 클라이언트에서 받은 패킷의 source IP, destination IP(L4 VIP)의 값을 그대로 보존한 채로 MAC address만 real server의 것으로 바꿔서 real server에 전달한다.</p>
+<p>DSR 모드로 구성하려면, real server의 loopback interface에 L4 로드 밸런서의 VIP를 추가해야 한다.<br>
+L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destination IP(L4 VIP)의 값을 그대로 보존한 채로 MAC address만 real server의 것으로 바꿔서 real server에 전달한다.</p>
 <p>destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.
 이렇게 하면 real sever가 VIP를 자신의 IP처럼 인식한다.</p>
-<p>하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 스위치가 보낸 패킷을 받는 경우에만 국한되어야 한다.
-만약 다른 호스트가 L4 스위치에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.</p>
+<p>하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다.
+만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.</p>
 <p>이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4의 것으로 정확히 알고 있어야 한다.
-즉, L4 스위치의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
+즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
 <p>real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.</p>
 <p>이 parameter들은 VIP에 대한 real sever의 ARP 관련 동작을 설정하는 것이다.
 그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 잘못된 설정이 널리 쓰이게 된 것 같다.</p>
@@ -242,7 +242,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <hr>
 <p>잘못된 설정으로 loopback interface에 설정한 VIP에 대해 ARP reply를 전송하는 현상을 확인하는 방법이다.</p>
 <p>host A, host B 모두 eth0 으로 10.41.66.0/24 네트웍에서 통신하고 있을 때 아래처럼 확인할 수 있다.
-host A 가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 스위치의 로드밸런싱 구성에 포함되지 않는 서버이다.</p>
+host A 가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로드 밸런서의 로드밸런싱 구성에 포함되지 않는 서버이다.</p>
 <p><strong>host A:</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>sudo sysctl -w net.ipv4.conf.eth0.arp_ignore <span class="o">=</span> <span class="m">0</span>  
 <span class="ln">2</span>sudo ifconfig lo:0 10.41.66.100 netmask 255.255.255.255  <span class="c1"># lo에 VIP 추가</span>
@@ -254,6 +254,7 @@ host A 가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 스�
 <span class="ln">5</span>Unicast reply from 10.41.66.100 <span class="o">[</span>00:22:19:BA:D1:DF<span class="o">]</span>  0.609ms
 <span class="ln">6</span>Unicast reply from 10.41.66.100 <span class="o">[</span>00:22:19:BA:D1:DF<span class="o">]</span>  0.614ms
 </code></pre></div><p>위의 결과에서 보다시피 host A는 lookback interface에 설정된 10.41.66.100 에 대한 ARP request를 받았을 때도 자신의 MAC 주소로 응답한다.</p>
+<p>참고로, 이런 테스트 환경은 <a href="https://www.vagrantup.com/">Vagrant</a>로 VM들의 로컬 네트워크를 구성하면 쉽게 만들수 있다.</p>
 <hr>
 <h2 id="참고-문서">참고 문서</h2>
 <ul>
