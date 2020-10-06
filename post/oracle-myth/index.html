@@ -9,15 +9,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 원고를 다듬은 것이다
-DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유 …">
+<meta name="description" content="DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다. 해외에서도 이런 문제에 대한 언 …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="다시 생각하는 오라클 데이터베이스 운영" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/oracle-myth/" />
 <meta property="og:title" content="다시 생각하는 오라클 데이터베이스 운영" />
-<meta property="og:description" content="이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 원고를 다듬은 것이다
-DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유 …" />
+<meta property="og:description" content="DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다. 해외에서도 이런 문제에 대한 언 …" />
 <meta property="og:image" content="https://pseonghoon.github.io/images/thumbnail.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
@@ -160,8 +158,8 @@ DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과
     <li><a href="#단순한-테이블스페이스-구성">단순한 테이블스페이스 구성</a></li>
   </ul>
 </nav>
-    <p><em>이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 원고를 다듬은 것이다</em></p>
-<p>DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다. 해외에서도 이런 문제에 대한 언급<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>을 찾을 수 있으니 국내에만 국한된 문제가 아닌 것 같다. 이 글에서 그런 이유 때문에 효과에 비해 잘 활용되지 않는 것들의 장점을 알리고, 관련된 오해들에 대해 짚어보려고 한다.</p>
+    <p>DBA는 보수적이라는 인식이 있다. 새로운 방식을 시도하는 과정에서 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 방식이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다. 해외에서도 이런 문제에 대한 언급<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>을 찾을 수 있으니 국내에만 국한된 문제가 아닌 것 같다. 이 글에서 그런 이유 때문에 효과에 비해 잘 활용되지 않는 것들의 장점을 알리고, 관련된 오해들에 대해 짚어보려고 한다.</p>
+<p><em>이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 글을 다듬은 것이다</em></p>
 <hr>
 <h1 id="index-organized-table-iot의-적극적인-사용">Index-Organized Table (IOT)의 적극적인 사용</h1>
 <p><code>Point:</code></p>
