@@ -19,7 +19,7 @@
     </item>
     
     <item>
-      <title>L4 DSR 에서 arp_ignore, arp_announce의 정확한 설정 방법</title>
+      <title>L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기</title>
       <link>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</link>
       <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
       
