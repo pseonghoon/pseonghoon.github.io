@@ -188,7 +188,7 @@ L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destina
 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
 <p>real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.</p>
 <p>이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.<br>
-그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 잘못된 방법이 널리 쓰이게 된 것 같다.</p>
+그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.</p>
 <hr>
 <h1 id="올바른-설정-방법">올바른 설정 방법</h1>
 <p><code>/etc/sysctl.conf</code> 의 내용이 아래와 같아야 한다.</p>
