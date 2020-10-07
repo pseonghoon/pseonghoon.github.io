@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
-  <head>  <title>코드로 인프라 관리하기 | PSH</title>
+  <head>  <title>코드로 인프라 관리하기 (Games on AWS 2019 발표 자료) | PSH</title>
   <meta charset="utf-8">
   <meta name="generator" content="Hugo 0.75.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,18 +9,18 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Link: 코드로 인프라 관리하기 (ppt)
-Games on AWS 2019에서 발표한 자료이다.
+<meta name="description" content="링크: 코드로 인프라 관리하기 (ppt)
+Games on AWS 2019에서 발표한 자료다.
 행사 후에 AWS의 account manager가 알려줬는데, 청중의 발표 평가에서 가장 좋은 결과를 얻었다고 한다. 그만큼 요즘 관심이 많은 주제이다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="코드로 인프라 관리하기" />
+<meta name="twitter:title" content="코드로 인프라 관리하기 (Games on AWS 2019 발표 자료)" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/infrastructure-as-code/" />
-<meta property="og:title" content="코드로 인프라 관리하기" />
-<meta property="og:description" content="Link: 코드로 인프라 관리하기 (ppt)
-Games on AWS 2019에서 발표한 자료이다.
+<meta property="og:title" content="코드로 인프라 관리하기 (Games on AWS 2019 발표 자료)" />
+<meta property="og:description" content="링크: 코드로 인프라 관리하기 (ppt)
+Games on AWS 2019에서 발표한 자료다.
 행사 후에 AWS의 account manager가 알려줬는데, 청중의 발표 평가에서 가장 좋은 결과를 얻었다고 한다. 그만큼 요즘 관심이 많은 주제이다." />
-<meta property="og:image" content="https://pseonghoon.github.io/images/thumbnail.jpeg" />
+<meta property="og:image" content="https://pseonghoon.github.io/post/img/git-terraform.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
 <link rel="icon" type="image/png" sizes="16x16" href='https://pseonghoon.github.io/icons/favicon-16x16.png'>
@@ -115,7 +115,7 @@ Games on AWS 2019에서 발표한 자료이다.
   
 <div class = 'grid-inverse wrap content'>
   <article class='post_content'>
-    <h1 class='post_title'>코드로 인프라 관리하기</h1><div class="post_meta">
+    <h1 class='post_title'>코드로 인프라 관리하기 (Games on AWS 2019 발표 자료)</h1><div class="post_meta">
   <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
@@ -132,12 +132,12 @@ Games on AWS 2019에서 발표한 자료이다.
     
 <div class="post_share">
   Share on:
-  <a href="https://twitter.com/intent/tweet?text=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+  <a href="https://twitter.com/intent/tweet?text=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0%20%28Games%20on%20AWS%202019%20%eb%b0%9c%ed%91%9c%20%ec%9e%90%eb%a3%8c%29&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
     <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
   </a>
-  <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&t=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+  <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&t=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0%20%28Games%20on%20AWS%202019%20%eb%b0%9c%ed%91%9c%20%ec%9e%90%eb%a3%8c%29" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
     <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -155,8 +155,8 @@ Games on AWS 2019에서 발표한 자료이다.
 </div>
 
     
-    <p><code>Link</code>: <a href="https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing">코드로 인프라 관리하기 (ppt)</a></p>
-<p>Games on AWS 2019에서 발표한 자료이다.<br>
+    <p><code>링크</code>: <a href="https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing">코드로 인프라 관리하기 (ppt)</a></p>
+<p>Games on AWS 2019에서 발표한 자료다.<br>
 행사 후에 AWS의 account manager가 알려줬는데, 청중의 발표 평가에서 가장 좋은 결과를 얻었다고 한다. 그만큼 요즘 관심이 많은 주제이다.</p>
 <p>사내에서 경영진 대상으로 발표했던 자료를 행사의 성격에 맞게 수정해서 사용했다.<br>
 Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.<br>
