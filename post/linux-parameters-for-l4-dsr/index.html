@@ -187,24 +187,24 @@ L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destina
 <p>이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다.<br>
 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
 <p>real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.</p>
-<p>이 parameter들은 VIP에 대한 real sever의 ARP 관련 동작을 설정하는 것이다.<br>
-그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 잘못된 설정이 널리 쓰이게 된 것 같다.</p>
+<p>이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.<br>
+그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 잘못된 방법이 널리 쓰이게 된 것 같다.</p>
 <hr>
 <h1 id="올바른-설정-방법">올바른 설정 방법</h1>
-<p><code>/etc/sysctl.conf</code> 를 아래처럼 설정해야 한다.</p>
+<p><code>/etc/sysctl.conf</code> 의 내용이 아래와 같아야 한다.</p>
 <div class="highlight"><pre class="chroma"><code class="language-ini" data-lang="ini"><span class="ln">1</span><span class="c1">#/etc/sysctl.conf </span>
 <span class="ln">2</span><span class="na">net.ipv4.conf.default.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
 <span class="ln">3</span><span class="na">net.ipv4.conf.default.arp_announce</span> <span class="o">=</span> <span class="s">2</span>
-<span class="ln">4</span><span class="c1">#loopback interface에는 설정할 필요가 없지만 맥락을 분명하게 하기 위해 아래처럼 설정했다.</span>
+<span class="ln">4</span><span class="c1">#loopback interface에는 설정할 필요가 없지만 맥락을 분명하게 하기 위해 아래처럼 했다.</span>
 <span class="ln">5</span><span class="na">net.ipv4.conf.lo.arp_ignore</span> <span class="o">=</span> <span class="s">0 </span>
 <span class="ln">6</span><span class="na">net.ipv4.conf.lo.arp_announce</span> <span class="o">=</span> <span class="s">0 </span>
 </code></pre></div><p>이 parameter들은 아래의 형식으로 설정한다.</p>
 <div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span> * net.ipv4.conf.(&lt;target-interface&gt;|all|default).arp_ignore
 <span class="ln">2</span> * net.ipv4.conf.(&lt;target-interface&gt;|all|default).arp_announce
-</code></pre></div><p>&lsquo;default&rsquo; 대신 &lsquo;all&rsquo;을 써도 원하는 결과를 얻을 수 있으나  all로 설정하면 개별 interface마다 다른 설정을 할 수 없으니 default가 더 유연하다.</p>
+</code></pre></div><p>&lsquo;default&rsquo; 대신 &lsquo;all&rsquo;을 써도 원하는 결과를 얻을 수 있으나  all을 선택하면 개별 interface마다 다른 설정을 할 수 없으니 default가 더 유연하다.</p>
 <p>default는 interace가 처음 생성될 때 복사되는 값이고 all은 모든 interace에 영향을 주는 값이다.<br>
 all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 값이 효력을 가질지는 kernel parameter 별로 다르니 자세한 내용은 <a href="https://unix.stackexchange.com/questions/90443/what-is-the-difference-between-all-default-and-eth-in-proc-sys-net-ipv">여기</a>를 참고한다.</p>
-<p>참고로, /etc/rc.local 스크립트에서 sysctl 명령을 실행하면 안되고 /etc/sysctl.conf에 설정해야 한다. /etc/rc.local은 시스템 초기 설정 (<a href="http://glennastory.net/boot/init.html">System V init</a>)의 후반부에 실행되기 때문에 interface가 올라오면서 자신의 MAC address를 L2 network에 알리기 위해 <a href="https://wiki.wireshark.org/Gratuitous_ARP">Gratuitous ARP</a>를 전송하는 시점에는 스크립트가 실행되지 않는다.</p>
+<p>참고로, /etc/rc.local 스크립트에서 sysctl 명령을 실행하면 안되고 /etc/sysctl.conf에 설정해야 한다. /etc/rc.local은 시스템 초기 셋업 (<a href="http://glennastory.net/boot/init.html">System V init</a>)의 후반부에 실행되기 때문에 interface가 올라오면서 자신의 MAC address를 L2 network에 알리기 위해 <a href="https://wiki.wireshark.org/Gratuitous_ARP">Gratuitous ARP</a>를 전송하는 시점에는 스크립트가 실행되지 않는다.</p>
 <hr>
 <h1 id="arg_ignore">arg_ignore</h1>
 <p>ARP request를 받았을 때 응답을 할지 여부를 결정한다.</p>
@@ -215,13 +215,13 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 </ul>
 <p><strong>설정값의 의미</strong></p>
 <ul>
-<li>0 (default) : ARP request가 도착했을 때, 조회 대상 IP가 이 시스템의 어떤 interface이건 (loopback 포함) 설정되어 있기만 하면 응답</li>
+<li>0 (default) : ARP request가 도착했을 때, 조회 대상 IP가 이 시스템의 어떤 interface이건 (loopback 포함) 있기만 하면 응답</li>
 <li>1 : arp_ignore가 1로 설정된 interface를 통해 ARP request가 도착하면 조회 대상 IP가 이 interface에 직접 설정되어 있을 때만 응답</li>
 </ul>
-<p>ARP request는 loopback이 아니라 실제 통신이 일어나는 interface에 도착하므로 그 interface에 arp_ignore를 1로 설정해야 한다. lookback interface에는 ARP request 등 외부 패킷이 도달하지 않으므로 lo에 설정하는 것은 의미가 없다.</p>
+<p>ARP request는 loopback이 아니라 실제 통신이 일어나는 interface에 도착하므로 그 interface의 arp_ignore 가 1이어야 한다. lookback interface에는 ARP request 등 외부 패킷이 도달하지 않으므로 lo에 설정하는 것은 의미가 없다.</p>
 <hr>
 <h1 id="arp_announce">arp_announce</h1>
-<p>ARP request를 보낼 때 &lsquo;sender IP 주소&rsquo;를 어떻게 설정할지를 정하는 parameter이다.</p>
+<p>ARP request를 보낼 때 &lsquo;sender IP 주소&rsquo;에 어떤 값을 쓸지 정하는 parameter이다.</p>
 <p>여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.</p>
 <p><strong>ARP 패킷의 구조:</strong><br>
 <figure>
@@ -230,8 +230,8 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 </p>
 <p>이 parameter를 사용하는 목적은 아래와 같다.</p>
 <p>호스트의 ARP cache는 ARP reply를 받았을 때 업데이트되는 것이 기본이다.<br>
-그런데 호스트가 ARP request를 받았을 때도 패킷의 내용(payload)에 포함된 sender IP 주소와 sender MAC 주소를 사용해서 ARP cache를 업데이트한다.<br>
-따라서 real server에서 ARP request를 보낼 때 sender IP 값이 VIP이면 이 패킷을 받는 서버들이 자신의 ARP cache에서 VIP의 MAC 주소를 real server의 것으로 업데이트한다. 이렇게 되면 트래픽이 엉뚱한 곳으로 가게되므로 그것을 방지하기 위한 설정이다.</p>
+그런데 호스트가 ARP request를 수신했을 때도 패킷의 내용(payload)에 포함된 sender IP 주소와 sender MAC 주소를 사용해서 ARP cache를 업데이트한다.<br>
+따라서 real server에서 ARP request를 보낼 때 sender IP 값이 VIP이면 이 패킷을 받는 서버들이 자신의 ARP cache에서 VIP의 MAC 주소를 real server의 것으로 업데이트한다. 이렇게 되면 트래픽이 엉뚱한 곳으로 가게되는데 이 parameter를 이용해 방지할 수 있다.</p>
 <p><strong>설정값의 의미</strong></p>
 <ul>
 <li>0 (default) : sender IP 주소로 시스템에 설정된 어떤 IP든 사용할 수 있음</li>
