@@ -38,12 +38,12 @@
 
     
     
-    <link rel="preload" href="https://pseonghoon.github.io/css/styles.feb6202294ec1176c1a0377d98586ba604aa22ca9c2dab913221e1d25f99058693ee822a52a86f26fd1072b0b086d9f46251eec0bcfe1f03b2bc43d2161a5c01.css" integrity = "sha512-/rYgIpTsEXbBoDd9mFhrpgSqIsqcLauRMiHh0l&#43;ZBYaT7oIqUqhvJv0QcrCwhtn0YlHuwLz&#43;HwOyvEPSFhpcAQ==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/css/styles.f93a38707487023043a23e114a831e1059b926abb76733378dc77bdd5dc12cb15bef69c12ea7794020a2c84e412a22d51f8b074397f8ffca31cc6f4af64874fb.css" integrity = "sha512-&#43;To4cHSHAjBDoj4RSoMeEFm5Jqu3ZzM3jcd73V3BLLFb72nBLqd5QCCiyE5BKiLVH4sHQ5f4/8oxzG9K9kh0&#43;w==" as="style" crossorigin="anonymous">
     <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.abfa17ad56871a2a049a714aeaaa7dc44535ab5f1b0e08a3189a81905c14d2775c266027dbd343996fd277ad9c65315ace87313a0c3a24fe5ac5c0b7a26467b3.js" as="script" integrity=
     "sha512-q/oXrVaHGioEmnFK6qp9xEU1q18bDgijGJqBkFwU0ndcJmAn29NDmW/Sd62cZTFazocxOgw6JP5axcC3omRnsw==" crossorigin="anonymous">
 
     
-    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.feb6202294ec1176c1a0377d98586ba604aa22ca9c2dab913221e1d25f99058693ee822a52a86f26fd1072b0b086d9f46251eec0bcfe1f03b2bc43d2161a5c01.css" integrity="sha512-/rYgIpTsEXbBoDd9mFhrpgSqIsqcLauRMiHh0l&#43;ZBYaT7oIqUqhvJv0QcrCwhtn0YlHuwLz&#43;HwOyvEPSFhpcAQ==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.f93a38707487023043a23e114a831e1059b926abb76733378dc77bdd5dc12cb15bef69c12ea7794020a2c84e412a22d51f8b074397f8ffca31cc6f4af64874fb.css" integrity="sha512-&#43;To4cHSHAjBDoj4RSoMeEFm5Jqu3ZzM3jcd73V3BLLFb72nBLqd5QCCiyE5BKiLVH4sHQ5f4/8oxzG9K9kh0&#43;w==" crossorigin="anonymous">
     
   </head>
   
@@ -175,7 +175,7 @@
 <li>IOT에 적합한 데이터는 생각보다 흔하다</li>
 <li>DML 비중이 많아도 IOT를 쓰는데 문제가 없다</li>
 </ul>
-<p>IOT 는 인덱스 구조와 유사한 테이블 형태이다.<br>
+<p>IOT 는 인덱스 구조와 유사한 테이블 형태이다.
 IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에서 잘 정리된 설명을 쉽게 찾을 수 있을 것이니 여기선 자세한 설명보다 그 유용성을 강조하려고 한다.</p>
 <p>아래 &lt;그림1&gt;은 지난 2005년에  IOT로 성능 개선 효과를 본 사례이다.</p>
 <p><strong>&lt;그림1&gt; 친구 목록 데이터에 대해 IOT 적용 전후 CPU 사용량 비교</strong></p>
@@ -184,10 +184,10 @@ IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에�
 </figure>
 
 <p>하지만 IOT는 아직 소극적으로 사용되는 경우가 많은데, 효과에 대해서는 덜 알려지고 약점은 실제보다 부각되었기 때문이다</p>
-<p>널리 알려진 IOT의 단점은 DML에 취약하다는 것이지만 정말 그럴까?<br>
+<p>널리 알려진 IOT의 단점은 DML에 취약하다는 것이지만 정말 그럴까?
 생각해보면 IOT에 DML을 실행할 때 발생하는 부하는 인덱스가 있는 일반 테이블 (heap organized table)과 별 차이가 없다. 결국 인덱스가 있는 테이블을 별 문제없이 사용할 수 있다면 IOT 역시 잘 사용할 수 있다. 나는 IOT의 활용 여부를 판단할 때 DML비중을 고려하지 않지만 성능 문제가 발생한 경우는 없다.</p>
 <p>IOT에 대한 걱정을 덜 수 있는 좋은 비교 대상이 있다. MySQL에서 InnoDB 엔진을 사용하는 테이블들이 IOT와 유사한 구조로 되어 있다. MySQL에선 온라인 백업과 트랜잭션을 지원하기 위해 모든 테이블을 InnoDB 로 만드는 경우도 흔하다.</p>
-<p>그럼 IOT는 어떤 곳에 사용해야 성능 개선 효과를 볼까?<br>
+<p>그럼 IOT는 어떤 곳에 사용해야 성능 개선 효과를 볼까?
 목록 형식의 데이터를 조회하는 경우에 적합하다. 사용자의 친구목록 조회, 게시판 별 게시글 조회, 댓글 조회 같은 것인데 모두 흔한 것들이다.</p>
 <p>쿼리 튜닝 다음으로 눈에 띄는 성능 개선 효과를 기대할 수 있는 것이 IOT의 적절한 사용이라고 생각한다.  IOT는 그것을 사용해서 효과를 볼 수 있는 대상이라면 적극적으로 사용하는 것이 좋다.</p>
 <p><code>Note:</code> IOT는 secondary index로 인한 비효율 등이 문제가 될 수 있다. IOT를 제대로 활용하려면 서비스 적용 전에 그 것의 특징에 대해서 정확히 알고 있어야 한다.</p>
@@ -198,11 +198,11 @@ IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에�
 <li>스토리지의 I/O 성능은 장착된 개별 디스크의 성능과 수에 단순하게 비례한다</li>
 <li>SAN은 비용을 낮추기 위한 기술이다</li>
 </ul>
-<p>스토리지 시스템의 성능은 그것에 장착된 디스크의 성능과 개수에 좌우된다.<br>
+<p>스토리지 시스템의 성능은 그것에 장착된 디스크의 성능과 개수에 좌우된다.
 고가의 스토리지 제품과 중저가 제품의 가장 중요한 차이는 장착 가능한 디스크의 개수이다. 하지만 디스크 개수가 같다면 스토리지의  I/O성능은 기본적으로 동일하다.</p>
 <p>데이터는 계속 늘어나게 마련이고 만약 그에 따라  고가 제품으로 교체해야 한다면 비용 부담이 클 것이다.</p>
-<p>저비용으로 스토리지 확장 문제를 해결해주는 기술이 SAN (Storage Area Network) 이다.<br>
-SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트들의 네트워크를 구성해 각 호스트들이 필요한 만큼의 저장 공간을 여러 스토리지로부터 얻을 수 있다.<br>
+<p>저비용으로 스토리지 확장 문제를 해결해주는 기술이 SAN (Storage Area Network) 이다.
+SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트들의 네트워크를 구성해 각 호스트들이 필요한 만큼의 저장 공간을 여러 스토리지로부터 얻을 수 있다.
 ‘SAN은 비싸다’ 는 오해와 달리 비용을 줄이고 높은 확장성을 얻기 위해 만들어진 것이다. 저가의 스토리지들을 필요할 때마다 붙여나가는 방식으로 시스템을 손쉽게 확장할 수 있다.</p>
 <p>이와 같이 스토리지의 확장 문제는 이미 오래 전에  SAN 기술로 해결이 되었지만 여전히 장점이 충분히 알려지지 않고 있는데, 그것은 스토리지 벤더의 입장과 관련이 있다. SAN을 기본 취지에 맞게 활용해 비용이 줄어들면 벤더의 수익도 줄어든다. 그러니 벤더 측에서 그 장점을 고객에게 적극적으로 알리지 않는 것도 한편으론 이해할 만한 일이다. 어떤 벤더에선 나에게 성능을 위해 SAN 스위치를 사용하지 말것을 권한 경우도 있다. SAN의 확장성의 핵심 구성 요소가 스위치인데도 그렇게 얘기가 된다.</p>
 <p>그리고, 특정 벤더에 종속되지 않는 시스템을 유지하기 원한다면 특정 벤더의 복제 솔루션은 사용하지 않는 것이 좋다. Oracle의 RMAN과 Data Guard 기능을 잘 활용하면 충분히 효율적인 백업,복제를 구현하는 것이 가능하다.</p>
@@ -224,9 +224,9 @@ SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트�
 <li>충분히 높은 buffer cache hit rate</li>
 <li>합리적인 스토리지 투자로 괜찮은 수준의  physical I/O 성능이 확보됨</li>
 </ol>
-<p>이런 조건에서는 설령 피크 시간에 백업을 실행하더라도 문제가 없다.<br>
+<p>이런 조건에서는 설령 피크 시간에 백업을 실행하더라도 문제가 없다.
 원활한 서비스를 위해 필요한 것들이니 만약 백업 실행이 서비스에 영향을 미친다면  시스템이 제대로 셋업된 것인지 점검할 필요가 있다.</p>
-<p>그럼 잘 구성된 시스템에서 왜 백업이 DB성능에 영향을 미치지 않는 지 더 알아보자.<br>
+<p>그럼 잘 구성된 시스템에서 왜 백업이 DB성능에 영향을 미치지 않는 지 더 알아보자.
 백업 작업은 데이터가 저장된 디스크 장치의 physical I/O 성능을 일정하게 저해할 것이다.</p>
 <p>하지만</p>
 <ol>
@@ -248,7 +248,7 @@ SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트�
 </span><span class="ln">5</span><span class="s">      FOR RECOVER OF COPY WITH TAG &#34;whole_db_copy&#34;
 </span><span class="ln">6</span><span class="s">      DATABASE;
 </span><span class="ln">7</span><span class="s">_EOF</span>
-</code></pre></div><p>이 스크립트는 10g 이상에서 DB_RECOVERY_FILE_DEST 파라미터를 설정해 놓고 실행하면 된다.<br>
+</code></pre></div><p>이 스크립트는 10g 이상에서 DB_RECOVERY_FILE_DEST 파라미터를 설정해 놓고 실행하면 된다.
 짧은 내용이지만 incremental backup을 실행하고 최근 7일간 원하는 시점으로 point-in-time recovery가 가능하며, 필요 없는 archive log 만을 알아서 지우는 등 효율적인 백업을 구현할 수 있다. 각 명령어에 대한 자세한 설명은 공식 매뉴얼을 참고하면 된다.</p>
 <p><code>Note:</code> Oracle 10g 기준으로 Backup and Recovery Basics 매뉴얼의 4.4 RMAN Incremental Backups에 나와있다.</p>
 <hr>
@@ -257,7 +257,7 @@ SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트�
 <ul>
 <li>날짜/시각 데이터는 DATE 타입에 저장해야 한다.</li>
 </ul>
-<p>날짜 데이터를 위한 DATE 타입이 있지만 VARCHAR2 형식으로 저장하는 경우가 많다.<br>
+<p>날짜 데이터를 위한 DATE 타입이 있지만 VARCHAR2 형식으로 저장하는 경우가 많다.
 VARCHAR2를 다루는 것이 이미 익숙하고 이것으로도 날짜 데이터를 표현하는데 문제가 없다고 보기 때문인데 그렇다면 숫자는 왜 NUMBER에 저장할까? 날짜에 DATE를 써야 하는 이유는 숫자에 NUMBER를 써야 하는 이유와 같다.</p>
 <p>DATE 타입의 장점은 아래처럼 정리할 수 있다.</p>
 <ol>
@@ -269,8 +269,8 @@ VARCHAR2를 다루는 것이 이미 익숙하고 이것으로도 날짜 데이�
 <h4 id="1-저장공간-절약">1. 저장공간 절약</h4>
 <p>VARCHAR2로 저장하면 작게 잡아도 14 바이트가 필요하지만 DATE는 7 바이트면 된다.</p>
 <h4 id="2-무결성-보장-데이터와-포맷의-분리">2. 무결성 보장. 데이터와 포맷의 분리</h4>
-<p>날짜 형식이 아닌 엉뚱한 데이터가 입력되거나 여러 형식의 날짜 포맷이 뒤섞이는 것을 막을 수 있다.<br>
-VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항상 그 형식으로 사용해야 하는데, 이 약속을 지키기가 쉽지 않다. 여러 경로로 실행되는 SQL문을 일일이 통제한다는 것이 사실상 불가능하기 때문이다. 일정 시간이 지나면 결국 여러 포맷의 데이터가 섞이게 된다. 그리고 컬럼마다 서로 다른 날짜 포맷을 사용한다면 테이블에 INSERT할 때마다 어떤 포맷인지 확인해야 해서 번거롭다.<br>
+<p>날짜 형식이 아닌 엉뚱한 데이터가 입력되거나 여러 형식의 날짜 포맷이 뒤섞이는 것을 막을 수 있다.
+VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항상 그 형식으로 사용해야 하는데, 이 약속을 지키기가 쉽지 않다. 여러 경로로 실행되는 SQL문을 일일이 통제한다는 것이 사실상 불가능하기 때문이다. 일정 시간이 지나면 결국 여러 포맷의 데이터가 섞이게 된다. 그리고 컬럼마다 서로 다른 날짜 포맷을 사용한다면 테이블에 INSERT할 때마다 어떤 포맷인지 확인해야 해서 번거롭다.
 결국 VARCHAR2에 저장하려면 꼼꼼한 관리가 필요하다. 그러니 애초에 그런 수고가 필요 없는 방법을 사용하자.</p>
 <h4 id="3-연산의-편리함과-sql문의-간결함">3. 연산의 편리함과 SQL문의 간결함</h4>
 <p>전체적으로 SQL문이 간결해진다. 예를 들면, 날짜 데이터가 INSERT되거나 비교의 기준으로 sysdate 가 사용되는 경우가 많은데 이럴 때 DATE 라면 아래처럼 sysdate를 그대로 사용하면 된다.</p>
@@ -283,15 +283,15 @@ VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항�
 <div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="n">STR_DATE</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">,</span> <span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span>
 </code></pre></div><p>이런 연산은 자주 하는 것이라 누적되면 SQL문의 가독성이 나빠진다.</p>
 <h4 id="4-optimizer에-더-많은-정보를-제공">4. Optimizer에 더 많은 정보를 제공</h4>
-<p>Oracle optimizer 는 실행 계획을 만들 때 DATE 타입의 특성을 이해하고  활용한다.<br>
-2012년 1월 1일 과 2012년 1월 3일 사이에 들어갈 수 있는 날짜는 1월 2일 하루 뿐이지만<br>
-‘20120101’ 과 ‘20120103’ 사이에 분포하는 문자열 값은 훨씬 많다.<br>
+<p>Oracle optimizer 는 실행 계획을 만들 때 DATE 타입의 특성을 이해하고  활용한다.
+2012년 1월 1일 과 2012년 1월 3일 사이에 들어갈 수 있는 날짜는 1월 2일 하루 뿐이지만
+‘20120101’ 과 ‘20120103’ 사이에 분포하는 문자열 값은 훨씬 많다.
 즉 날짜/시각을 DATE로 저장하면 optimizer에 더 풍부한 정보를 제공할 수 있다.</p>
 <h4 id="date-타입을-더-편리하게-쓰는-팁">DATE 타입을 더 편리하게 쓰는 팁</h4>
-<p>DATE를 사용하면 형 변환을 위해 to_date() 와 to_char()를 매번 실행해야 해서 번거로울 것 같지만 알고 보면 그렇지 않다.<br>
+<p>DATE를 사용하면 형 변환을 위해 to_date() 와 to_char()를 매번 실행해야 해서 번거로울 것 같지만 알고 보면 그렇지 않다.
 우선, NLS_DATE_FORMAT 파라미터로 시스템 디폴트 날짜 포맷을 지정할 수 있다.</p>
 <div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">ALTER</span> <span class="k">SYSTEM</span> <span class="k">SET</span> <span class="n">NLS_DATE_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span>
-</code></pre></div><p>기본적으로 to_date() 와 to_char() 는 두 번째 인자로 날짜 포맷을 받는데 이것을 생략하면<br>
+</code></pre></div><p>기본적으로 to_date() 와 to_char() 는 두 번째 인자로 날짜 포맷을 받는데 이것을 생략하면
 NLS_DATE_FORMAT의 값이 디폴트로 사용된다. 그리고 이 함수들은 형 변환이 필요할 때 암묵적으로 호출되므로 이 함수들을 명시적으로 쓸 필요가 없다.</p>
 <p>그리고 값을 입력할 때, 지정된 날짜 포맷과 정확히 일치하지 않더라도 비슷한 형태면 대부분 인식이 된다. 예를 들어 아래처럼 테이블을 만들고 입력할 때</p>
 <div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">DATE_TEST</span> <span class="p">(</span><span class="n">D</span> <span class="nb">DATE</span><span class="p">);</span>

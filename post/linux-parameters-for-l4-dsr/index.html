@@ -40,12 +40,12 @@
 
     
     
-    <link rel="preload" href="https://pseonghoon.github.io/css/styles.feb6202294ec1176c1a0377d98586ba604aa22ca9c2dab913221e1d25f99058693ee822a52a86f26fd1072b0b086d9f46251eec0bcfe1f03b2bc43d2161a5c01.css" integrity = "sha512-/rYgIpTsEXbBoDd9mFhrpgSqIsqcLauRMiHh0l&#43;ZBYaT7oIqUqhvJv0QcrCwhtn0YlHuwLz&#43;HwOyvEPSFhpcAQ==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/css/styles.f93a38707487023043a23e114a831e1059b926abb76733378dc77bdd5dc12cb15bef69c12ea7794020a2c84e412a22d51f8b074397f8ffca31cc6f4af64874fb.css" integrity = "sha512-&#43;To4cHSHAjBDoj4RSoMeEFm5Jqu3ZzM3jcd73V3BLLFb72nBLqd5QCCiyE5BKiLVH4sHQ5f4/8oxzG9K9kh0&#43;w==" as="style" crossorigin="anonymous">
     <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.abfa17ad56871a2a049a714aeaaa7dc44535ab5f1b0e08a3189a81905c14d2775c266027dbd343996fd277ad9c65315ace87313a0c3a24fe5ac5c0b7a26467b3.js" as="script" integrity=
     "sha512-q/oXrVaHGioEmnFK6qp9xEU1q18bDgijGJqBkFwU0ndcJmAn29NDmW/Sd62cZTFazocxOgw6JP5axcC3omRnsw==" crossorigin="anonymous">
 
     
-    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.feb6202294ec1176c1a0377d98586ba604aa22ca9c2dab913221e1d25f99058693ee822a52a86f26fd1072b0b086d9f46251eec0bcfe1f03b2bc43d2161a5c01.css" integrity="sha512-/rYgIpTsEXbBoDd9mFhrpgSqIsqcLauRMiHh0l&#43;ZBYaT7oIqUqhvJv0QcrCwhtn0YlHuwLz&#43;HwOyvEPSFhpcAQ==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.f93a38707487023043a23e114a831e1059b926abb76733378dc77bdd5dc12cb15bef69c12ea7794020a2c84e412a22d51f8b074397f8ffca31cc6f4af64874fb.css" integrity="sha512-&#43;To4cHSHAjBDoj4RSoMeEFm5Jqu3ZzM3jcd73V3BLLFb72nBLqd5QCCiyE5BKiLVH4sHQ5f4/8oxzG9K9kh0&#43;w==" crossorigin="anonymous">
     
   </head>
   
@@ -166,13 +166,12 @@
 <p>이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.</p>
 <hr>
 <h1 id="dsr-모드의-개요">DSR 모드의 개요</h1>
-<p>Direct Server Return의 준말인데, 정식 용어가 아니라 편의상 이렇게 부르는 것이다.<br>
+<p>Direct Server Return의 준말인데, 정식 용어가 아니라 편의상 이렇게 부르는 것이다.
 L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트에 패킷을 바로 전송하게 하는 구성이다.</p>
 <p>트래픽의 흐름이 아래와 같다.<br>
 클라이언트 -&gt; L4 로드 밸런서 (virtual server) -&gt; real server -&gt; 클라이언트</p>
 <p>현재는 L4 로드 밸런서의 성능이 충분해서 성능 때문에 이렇게 구성할 필요는 별로 없지만, 클라이언트의 source IP를 보존할 수 있다는 장점 때문에 아직도 많이 쓰이는 방법이다.</p>
-<p>이 포스트에서 DSR 모드의 전반적인 구성이나 설정 방법을 자세히 다루지는 않는다. <br>
-만약 DSR 모드나 ARP에 대한 사전 지식이 충분치 않다면 관련 내용을 먼저 파악하고 이 포스트를 읽으면 더 쉽게 이해할 수 있을 것이다.</p>
+<p>이 포스트에서 DSR 모드의 전반적인 구성이나 설정 방법을 자세히 다루지는 않는다. 만약 DSR 모드나 ARP에 대한 사전 지식이 충분치 않다면 관련 내용을 먼저 파악하고 이 포스트를 읽으면 더 쉽게 이해할 수 있을 것이다.</p>
 <hr>
 <h1 id="요점">요점</h1>
 <p>인터넷에서 찾을 수 있는 문서들은 대부분 <code>/etc/sysctl.conf</code>를 아래처럼 설정하도록 안내한다. 대부분 이렇게 설정하고 있을 것이다.</p>
@@ -181,19 +180,17 @@ L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트
 <span class="ln">3</span>
 <span class="ln">4</span><span class="na">net.ipv4.conf.lo.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
 <span class="ln">5</span><span class="na">net.ipv4.conf.lo.arp_announce</span> <span class="o">=</span> <span class="s">2</span>
-</code></pre></div><p>위에서 <mark>loopback interface인 lo에 한 설정이 의미가 없다</mark>는 것이 이 포스트의 요점이다.<br>
-<mark>이 parameter들은 패킷을 수신하는 실제 interface에 설정해야 효력이 있다</mark>.<br>
+</code></pre></div><p>위에서 <mark>loopback interface인 lo에 한 설정이 의미가 없다</mark>는 것이 이 포스트의 요점이다.
+<mark>이 parameter들은 패킷을 수신하는 실제 interface에 설정해야 효력이 있다</mark>.
 불필요한 설정이 추가된 것이라서 동작에는 문제가 없지만 정확한 의미를 알아야 트러블슈팅을 잘할 수 있다.</p>
-<p>DSR 모드로 구성하려면, real server의 loopback interface에 L4 로드 밸런서의 VIP를 추가해야 한다.<br>
+<p>DSR 모드로 구성하려면, real server의 loopback interface에 L4 로드 밸런서의 VIP를 추가해야 한다.
 L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destination IP(L4 VIP)의 값을 그대로 보존한 채로 MAC address만 real server의 것으로 바꿔서 real server에 전달한다.</p>
-<p>destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.<br>
+<p>destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.
 이렇게 하면 real sever가 VIP를 자신의 IP처럼 인식한다.</p>
-<p>하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다.<br>
-만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.</p>
-<p>이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다.<br>
-즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
+<p>하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다. 만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.</p>
+<p>이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
 <p>real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.</p>
-<p>이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.<br>
+<p>이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.
 그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.</p>
 <hr>
 <h1 id="올바른-설정-방법">올바른 설정 방법</h1>
@@ -217,7 +214,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <ul>
 <li>L4 로드 밸런서의 VIP를 real server의 loopback interface에 추가했을 때, real server의 default 동작은 이 VIP에 대한 ARP request에 응답을 하는 것이다</li>
 <li>real server가 VIP에 대한 ARP request에 응답하면 안되니 arp_ignore 설정을 default 값인 0이 아닌 1로 해야 한다</li>
-<li>arp_ignore는 interface 별로 설정할 수 있는데, loopback interface에다 설정하는 것이 아니라 실제로 통신이 일어나는 interface에 설정해야 한다</li>
+<li>arp_ignore는 interface 별로 설정할 수 있는데, loopback interface에 하는 것이 아니라 실제로 통신이 일어나는 interface에 해야 한다</li>
 </ul>
 <p><strong>설정값의 의미</strong></p>
 <ul>
@@ -229,14 +226,14 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <h1 id="arp_announce">arp_announce</h1>
 <p>ARP request를 보낼 때 &lsquo;sender IP 주소&rsquo;에 어떤 값을 쓸지 정하는 parameter이다.</p>
 <p>여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.</p>
-<p><strong>ARP 패킷의 구조:</strong><br>
+<p><strong>ARP 패킷의 구조:</strong>
 <figure>
     <img src="/images/arp.gif"/> 
 </figure>
 </p>
 <p>이 parameter를 사용하는 목적은 아래와 같다.</p>
-<p>호스트의 ARP cache는 ARP reply를 받았을 때 업데이트되는 것이 기본이다.<br>
-그런데 호스트가 ARP request를 수신했을 때도 패킷의 내용(payload)에 포함된 sender IP 주소와 sender MAC 주소를 사용해서 ARP cache를 업데이트한다.<br>
+<p>호스트의 ARP cache는 ARP reply를 받았을 때 업데이트되는 것이 기본이다.
+그런데 호스트가 ARP request를 수신했을 때도 패킷의 내용(payload)에 포함된 sender IP 주소와 sender MAC 주소를 사용해서 ARP cache를 업데이트한다.
 따라서 real server에서 ARP request를 보낼 때 sender IP 값이 VIP이면 이 패킷을 받는 서버들이 자신의 ARP cache에서 VIP의 MAC 주소를 real server의 것으로 업데이트한다. 이렇게 되면 트래픽이 엉뚱한 곳으로 가게되는데 이 parameter를 이용해 방지할 수 있다.</p>
 <p><strong>설정값의 의미</strong></p>
 <ul>
@@ -245,9 +242,9 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 </ul>
 <hr>
 <h1 id="테스트-방법">테스트 방법</h1>
-<p>잘못된 설정으로 loopback interface에 설정한 VIP에 대해 ARP reply를 전송하는 현상을 확인하는 방법이다.</p>
-<p>host A, host B 모두 eth0 으로 10.41.66.0/24 네트웍에서 통신하고 있을 때 아래처럼 확인할 수 있다.<br>
-host A 가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로드 밸런서의 로드밸런싱 구성에 포함되지 않는 서버이다.</p>
+<p>설정을 잘못해서 real server가 VIP에 대한 ARP request에 응답하는 현상을 확인하는 방법이다.</p>
+<p>host A, host B 모두 eth0 으로 10.41.66.0/24 네트웍에서 통신하고 있을 때 아래처럼 확인할 수 있다.
+host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로드 밸런서의 로드밸런싱 구성에 포함되지 않는 서버이다.</p>
 <p><strong>host A:</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>sudo sysctl -w net.ipv4.conf.eth0.arp_ignore <span class="o">=</span> <span class="m">0</span>  
 <span class="ln">2</span>sudo ifconfig lo:0 10.41.66.100 netmask 255.255.255.255  <span class="c1"># lo에 VIP 추가</span>
