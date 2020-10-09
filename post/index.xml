@@ -25,8 +25,7 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
       
       <guid>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</guid>
       <description>&lt;p&gt;on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.&lt;/p&gt;
-&lt;p&gt;이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다.&lt;br&gt;
-ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;</description>
+&lt;p&gt;이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;</description>
     </item>
     
     <item>
