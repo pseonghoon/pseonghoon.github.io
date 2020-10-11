@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
-<html lang="en" data-figures="" data-mode="lit">
-  <head>  <title>Tags | PSH&#39;s Blog</title>
+<html lang="en" data-figures="" class="page" data-mode="lit">
+  <head>  <title>Kubernetes에서 NFS(EFS) 사용하기 | PSH&#39;s Blog</title>
   <meta charset="utf-8">
   <meta name="generator" content="Hugo 0.75.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -15,17 +15,15 @@
 </script>
 <meta property="og:locale" content="en" />
 
-<meta property="og:locale:alternate" content="ko" />
-
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="Pod에서 NFS를 volume으로 사용하기 위해 공식 문서의 예제1를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간 …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Tags" />
-<meta property="og:url" content="https://pseonghoon.github.io/tags/" />
-<meta property="og:title" content="Tags" />
-<meta property="og:description" content="" />
-<meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
+<meta name="twitter:title" content="Kubernetes에서 NFS(EFS) 사용하기" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/k8s-and-nfs/" />
+<meta property="og:title" content="Kubernetes에서 NFS(EFS) 사용하기" />
+<meta property="og:description" content="Pod에서 NFS를 volume으로 사용하기 위해 공식 문서의 예제1를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간 …" />
+<meta property="og:image" content="https://pseonghoon.github.io/post/img/nfs.jpeg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
 <link rel="icon" type="image/png" sizes="16x16" href='https://pseonghoon.github.io/icons/favicon-16x16.png'>
@@ -34,7 +32,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-  <link rel="canonical" href="https://pseonghoon.github.io/tags/">
+  <link rel="canonical" href="https://pseonghoon.github.io/post/k8s-and-nfs/">
 
     
 
@@ -117,112 +115,146 @@
 </header>
 
     <main>
-
-<div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/tags/oracle/'>Oracle</a>
-      </h3>
-      <div class="post_meta">
+  
+<div class = 'grid-inverse wrap content'>
+  <article class='post_content'>
+    <h1 class='post_title'>Kubernetes에서 NFS(EFS) 사용하기</h1><div class="post_meta">
   <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
   <span class="post_date">
-    Oct 4, 2020</span>
+    Oct 11, 2020</span>
+  <a href='https://pseonghoon.github.io/tags/kubernetes' class="post_tag button button_translucent">Kubernetes
+  </a>
+  <a href='https://pseonghoon.github.io/tags/nfs' class="post_tag button button_translucent">NFS
+  </a>
+  <a href='https://pseonghoon.github.io/tags/efs' class="post_tag button button_translucent">EFS
+  </a>
+  <a href='https://pseonghoon.github.io/tags/efs-provisioner' class="post_tag button button_translucent">efs-provisioner
+  </a>
 </div>
 
-    </div>
-      <div class = 'excerpt_footer'>
-        <div>
-          
-          
-          <a href='https://pseonghoon.github.io/tags/oracle/' class='excerpt_more button'>Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-  
-
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/tags/index/'>index</a>
-      </h3>
-      <div class="post_meta">
-  <svg class="icon">
-  <use xlink:href="#calendar"></use>
+    
+<div class="post_share">
+  Share on:
+  <a href="https://twitter.com/intent/tweet?text=Kubernetes%ec%97%90%ec%84%9c%20NFS%28EFS%29%20%ec%82%ac%ec%9a%a9%ed%95%98%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fk8s-and-nfs%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#twitter"></use>
 </svg>
-  <span class="post_date">
-    Jan 1, 0001</span>
-</div>
-
-    </div>
-      <div class = 'excerpt_footer'>
-        <div>
-          
-          
-          <a href='https://pseonghoon.github.io/tags/index/' class='excerpt_more button'>Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-  
-
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/tags/tcp/ip/'>tcp/ip</a>
-      </h3>
-      <div class="post_meta">
-  <svg class="icon">
-  <use xlink:href="#calendar"></use>
+  </a>
+  <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fk8s-and-nfs%2f&t=Kubernetes%ec%97%90%ec%84%9c%20NFS%28EFS%29%20%ec%82%ac%ec%9a%a9%ed%95%98%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#facebook"></use>
 </svg>
-  <span class="post_date">
-    Jan 1, 0001</span>
+  </a>
+  <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+  <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" title="Copy Link" class="link link_yank">
+    <svg class="icon">
+  <use xlink:href="#yank"></use>
+</svg>
+  </a>
 </div>
 
-    </div>
-      <div class = 'excerpt_footer'>
-        <div>
-          
-          
-          <a href='https://pseonghoon.github.io/tags/tcp/ip/' class='excerpt_more button'>Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-  
-
-    <li>
-<ul class="pagination">
-  <li class="page-item">
-    <a href="/tags/" class="page-link" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
-  </li>
-  <li class="page-item">
-    <a href="/tags/" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
-  </li>
-  <li class="page-item">
-    <a class="page-link" href="/tags/">1</a>
-  </li>
-  <li class="page-item active">
-    <a class="page-link" href="/tags/page/2/">2</a>
-  </li>
-  <li class="page-item disabled">
-    <a  class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-  </li>
-  <li class="page-item">
-    <a href="/tags/page/2/" class="page-link" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
-  </li>
+    
+    <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 <strong>efs-provisioner</strong> 도 간략하게 소개하려고 한다.</p>
+<p>공식 문서에서 소개하는 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>(PersistentVolume)와 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml">PVC</a>(PersistentVolumeClaim)를 정의해서 Pod이 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30">PVC를 volume으로 지정</a>하는 방식을 쓰고 있다.</p>
+<p>더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다.  AWS라면 <a href="https://aws.amazon.com/efs/">EFS 서비스</a>를 사용하면 된다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
+</span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
+</span><span class="ln"> 5</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 6</span><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w"> 
+</span><span class="ln"> 7</span><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
+</span><span class="ln">10</span><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span><span class="ln">11</span><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln">12</span><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span><span class="ln">13</span><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
+</span><span class="ln">14</span><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="ln">15</span><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span><span class="ln">16</span><span class="w">      </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">nginx</span><span class="w">
+</span><span class="ln">17</span><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nginx</span><span class="w">
+</span><span class="ln">18</span><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span><span class="ln">19</span><span class="w">           </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/nfs</span><span class="w">
+</span><span class="ln">20</span><span class="w">             </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">efs-vol</span><span class="w">
+</span><span class="hl"><span class="ln">21</span><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span><span class="hl"><span class="ln">22</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">efs-vol</span><span class="w">
+</span></span><span class="hl"><span class="ln">23</span><span class="w">        </span><span class="nt">nfs</span><span class="p">:</span><span class="w">
+</span></span><span class="hl"><span class="ln">24</span><span class="w">          </span><span class="c"># 예제로 EFS를 사용했지만 일반적인 NFS 서버면 된다.</span><span class="w">
+</span></span><span class="hl"><span class="ln">25</span><span class="w">          </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l">fs-f9352198.efs.ap-northeast-2.amazonaws.com </span><span class="w">
+</span></span><span class="hl"><span class="ln">26</span><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/</span><span class="w">
+</span></span><span class="hl"><span class="ln">27</span><span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></code></pre></div>
+<p><em>nfs 타입의 volume에서 설정할 수 있는 field는 <a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#nfsvolumesource-v1-core">API reference</a>를 참고했다.</em></p>
+<h2 id="official-nfs-example">공식 문서의 예제에 대한 보완 설명</h2>
+<hr>
+<p>먼저 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>의 내용을 따라하면서 충분히 이해한 후 이 포스트를 읽으면 더 도움이 될 것이다.
+예제는 도움이 많이 되는 좋은 내용이라고 생각한다. 하지만 실무에서 활용하려면 유의할 점이 있다.</p>
+<p>우선 NFS 서버를 클러스터 내부에서 운영하고 있다. 예제로는 좋은 접근이지만 그대로 활용하기에는 아래와 같은 한계가 있다.</p>
+<ul>
+<li>NFS 서버의 위치를 DNS name 대신 IP로 하드코딩한다.</li>
+<li>Google Cloud의 Persistent Disk를 사용했다. Persistent Disk는 zone에 종속된다. (AWS라면 EBS와 AZ에 해당)</li>
 </ul>
-
-
-    </li>
-  </ul>
+<p>그리고 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>와 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml">PVC</a>를 정의한 후 Pod이 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30">PVC를 volume으로 지정</a>하는데, 맥락 상 어색한 방법이다.</p>
+<h3 id="hardcodedip">IP 하드코딩</h3>
+<p>예제에선 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-server-service.yaml">nfs-server</a> 라는 Service를 정의한다. 그래서 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV 정의</a>에서 DNS name인 <strong>nfs-server.default.svc.cluster.local</strong> 로 NFS 서버의 위치를 지정하고 있지만 이렇게는 접속이 안된다. 해결하기 위한 임시방편으로 Service의 clusterIP를 사람이 확인해서 코드를 고치는 방식을 안내하고 있다.</p>
+<p>여기서 DNS name을 사용할 수 없는 이유가 있다. NFS mount는 Pod이 직접 하는 것이 아니라 node에서 해줘야 한다. 그런데 node는 클러스터 내의 DNS(coreDNS 등)에 쿼리를 하지 않기 때문이다. 그렇게 하도록 설정하는 것이 가능하겠지만 node의 DNS lookup이 Kubernetes 클러스터 내부 DNS를 의존하는 것은 좋은 구성이 아닐 수 있다.</p>
+<h3 id="pvc">PVC와 PV의 어색한 활용</h3>
+<p>Pod의 생애와 관계 없이 계속 유지되는 데이터가 필요하면 PV(PersistentVolume)를 반드시 써야 한다고 생각하는 경우가 많다. 하지만 꼭 그런 것은 아니다.</p>
+<p>PV는 PVC(PersistentVolumeClaim)없이 단독으로 volume으로 사용할 수 없다.
+그럼 PVC는 왜 필요한가? PVC는 PV를 (미리 정의하지 않고) 필요할 때 dynamic provisioning 하기 위해 사용하는 것이 대부분이다. 클라우드 환경이라면 더욱 그렇다.</p>
+<p>예제에서는 이미 존재하는 NFS 서버와 path(/)를 mount한 것이기 때문에 PVC와 PV를 굳이 정의할 필요가 없다.
+이 포스트에서 한 것처럼 Pod의 volume에서 바로 nfs를 사용하는 것이 더 간단하고 직관적이다.</p>
+<p>그리고, PVC와 PV를 binding하는 방식도 적절하지 않은 것 같다.
+이 주제에서 별로 중요한 포인트는 아니라서 각주<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>에서 설명했으니 관심 있는 분들은 참고하셨으면 한다.</p>
+<h2 id="efs-provisioner-소개">efs-provisioner 소개</h2>
+<hr>
+<p>AWS에서 EFS를 사용한다면, <a href="https://github.com/kubernetes-retired/external-storage/tree/master/aws/efs">efs-provisioner</a>를 쓰면 편리하다.</p>
+<p>오해하기 쉬운데, EFS를 Kubernets에서 사용하기 위해서 반드시 efs-provisioner를 써야하는 것은 아니다.
+efs-provisioner는 EFS에 기반한 volume을 dynamic provisioning할 때 사용하는 것이다. 이 포스트에서 주로 다룬 경우처럼 이미 NFS 서버와 mount할 path가 존재한다면 적합하지 않은 도구이다. dynamic provisiong을 위해 PVC를 정의해야 하는데 PVC가 namespaced resource이기 때문에 그에 따른 제약이 있다.</p>
+<p>PVC를 여럿 만드는 경우에도 EFS file system을 하나만 생성하고 efs-provisioner <a href="https://github.com/helm/charts/tree/master/stable/efs-provisioner">Helm chart</a>도 하나만 설치하면 된다.</p>
+<p>Helm chart를 설치할 때 EFS filesystem ID를 알려주면, 이것과 연계된 StorageClass를 생성한다.
+여러 Pod들이 공유해야 하는 데이터가 있으면 이 StorageClass를 사용하는 PVC를 생성한 후 여러 Pod들이 동일하게 이 PVC를 volume으로 지정하면 된다.
+그러면 efs-provisioner가 EFS filesystem 내에 각 PVC별로 전용 디렉토리를 만들어 제공하는 방식이다.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>참조하는 코드는 2020년 10월 10일 기준 master branch가 가리키는 commit으로 고정했다. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8">PVC의 storageClassName 설정</a>을 “”로 했는데 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 실무에서 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector">label selector</a>를 설정해야 할 것이다. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
     <h2>Park Seong-hoon</h2>
@@ -233,9 +265,6 @@
     <h2 class="mt-4">Featured Posts</h2>
     <ul>
     
-      <li>
-        <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" class="nav-link">Kubernetes에서 NFS(EFS) 사용하기</a>
-      </li>
     
       <li>
         <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link">코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
@@ -245,9 +274,6 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       
-      <li>
-        <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" class="nav-link">Kubernetes에서 NFS(EFS) 사용하기</a>
-      </li>
       <li>
         <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link">코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
       </li>
@@ -375,8 +401,6 @@
 </aside>
 
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
