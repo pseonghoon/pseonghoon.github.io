@@ -205,7 +205,7 @@
 <p>예제에선 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-server-service.yaml">nfs-server</a> 라는 Service를 정의한다. 그래서 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV 정의</a>에서 DNS name인 <strong>nfs-server.default.svc.cluster.local</strong> 로 NFS 서버의 위치를 지정하고 있지만 이렇게는 접속이 안된다. 해결하기 위한 임시방편으로 Service의 clusterIP를 사람이 확인해서 코드를 고치는 방식을 안내하고 있다.</p>
 <p>여기서 DNS name을 사용할 수 없는 이유가 있다. NFS mount는 Pod이 직접 하는 것이 아니라 node에서 해줘야 한다. 그런데 node는 클러스터 내의 DNS(coreDNS 등)에 쿼리를 하지 않기 때문이다. 그렇게 하도록 설정하는 것이 가능하겠지만 node의 DNS lookup이 Kubernetes 클러스터 내부 DNS를 의존하는 것은 좋은 구성이 아닐 수 있다.</p>
 <h3 id="pvc">PVC와 PV의 어색한 활용</h3>
-<p>Pod의 생애와 관계 없이 계속 유지되는 데이터가 필요하면 PV(PersistentVolume)를 반드시 써야 한다고 생각하는 경우가 많다. 하지만 꼭 그런 것은 아니다.</p>
+<p>Pod의 생애와 관계 없이 계속 유지되는 데이터가 필요하면 PV(PersistentVolume)를 반드시 써야 한다고 생각하기 쉽다. 하지만 꼭 그런 것은 아니다.</p>
 <p>PV는 PVC(PersistentVolumeClaim)없이 단독으로 volume으로 사용할 수 없다.
 그럼 PVC는 왜 필요한가? PVC는 대부분의 경우 dynamic provisioning 하기 위해 사용한다. 클라우드 환경이라면 더욱 그렇다.</p>
 <p>예제에서는 이미 존재하는 NFS 서버와 path(/)를 mount한 것이기 때문에 PVC와 PV를 굳이 정의할 필요가 없다.
