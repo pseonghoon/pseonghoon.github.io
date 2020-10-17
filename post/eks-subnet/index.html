@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
-<html lang="ko" data-figures="" data-mode="lit">
-  <head>  <title>404 Page not found | PSH&#39;s Blog</title>
+<html lang="en" data-figures="" class="page" data-mode="lit">
+  <head>  <title>오해하기 쉬운 EKS 클러스터의 subnet 설정 | PSH&#39;s Blog</title>
   <meta charset="utf-8">
   <meta name="generator" content="Hugo 0.75.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -13,17 +13,19 @@
   gtag('js', new Date());
   gtag('config', 'UA-180147609-1');
 </script>
-<meta property="og:locale" content="ko" />
+<meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="404 Page not found" />
-<meta property="og:url" content="https://pseonghoon.github.io/ko/404.html" />
-<meta property="og:title" content="404 Page not found" />
-<meta property="og:description" content="" />
-<meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
+<meta name="twitter:title" content="오해하기 쉬운 EKS 클러스터의 subnet 설정" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/eks-subnet/" />
+<meta property="og:title" content="오해하기 쉬운 EKS 클러스터의 subnet 설정" />
+<meta property="og:description" content="EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다." />
+<meta property="og:image" content="https://pseonghoon.github.io/post/img/eks.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
 <link rel="icon" type="image/png" sizes="16x16" href='https://pseonghoon.github.io/icons/favicon-16x16.png'>
@@ -32,7 +34,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-  <link rel="canonical" href="https://pseonghoon.github.io/ko/404.html">
+  <link rel="canonical" href="https://pseonghoon.github.io/post/eks-subnet/">
 
     
 
@@ -54,7 +56,7 @@
 
 <header class="nav_header" >
   <nav class="nav">
-    <a href='https://pseonghoon.github.io/ko/' class="nav_brand nav_item">
+    <a href='https://pseonghoon.github.io/' class="nav_brand nav_item">
         PSH&#39;s Blog
       <div class="nav_close">
         <div>
@@ -74,10 +76,10 @@
         
 
   <div class="nav_parent">
-    <a href="https://pseonghoon.github.io/ko/" class="nav_item">Home </a>
+    <a href="https://pseonghoon.github.io/" class="nav_item">Home </a>
   </div>
   <div class="nav_parent">
-    <a href="https://pseonghoon.github.io/ko/about/" class="nav_item">About </a>
+    <a href="https://pseonghoon.github.io/about/" class="nav_item">About </a>
   </div>
       
       <div class="nav_parent">
@@ -99,7 +101,7 @@
 </svg>
   </a>
   
-  <a href="https://pseonghoon.github.io/ko/index.xml">
+  <a href="https://pseonghoon.github.io/index.xml">
     <svg class="icon">
   <use xlink:href="#rss"></use>
 </svg>
@@ -115,12 +117,267 @@
 </header>
 
     <main>
-<div class="never wrap">
-  <h1>Lost</h1>
-  <p class="pale">We couldn&#39;t find the page you&#39;re looking for</p><br>
-  <div class="button btn_back">Go Back</div>
+  
+<div class = 'grid-inverse wrap content'>
+  <article class='post_content'>
+    <h1 class='post_title'>오해하기 쉬운 EKS 클러스터의 subnet 설정</h1><div class="post_meta">
+  <svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg>
+  <span class="post_date">
+    Oct 17, 2020</span>
+  <a href='https://pseonghoon.github.io/tags/kubernetes' class="post_tag button button_translucent">Kubernetes
+  </a>
+  <a href='https://pseonghoon.github.io/tags/eks' class="post_tag button button_translucent">EKS
+  </a>
+  <a href='https://pseonghoon.github.io/tags/aws' class="post_tag button button_translucent">AWS
+  </a>
 </div>
 
+    
+<div class="post_share">
+  Share on:
+  <a href="https://twitter.com/intent/tweet?text=%ec%98%a4%ed%95%b4%ed%95%98%ea%b8%b0%20%ec%89%ac%ec%9a%b4%20EKS%20%ed%81%b4%eb%9f%ac%ec%8a%a4%ed%84%b0%ec%9d%98%20subnet%20%ec%84%a4%ec%a0%95&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2feks-subnet%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+  </a>
+  <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2feks-subnet%2f&t=%ec%98%a4%ed%95%b4%ed%95%98%ea%b8%b0%20%ec%89%ac%ec%9a%b4%20EKS%20%ed%81%b4%eb%9f%ac%ec%8a%a4%ed%84%b0%ec%9d%98%20subnet%20%ec%84%a4%ec%a0%95" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+  </a>
+  <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+  <a href="https://pseonghoon.github.io/post/eks-subnet/" title="Copy Link" class="link link_yank">
+    <svg class="icon">
+  <use xlink:href="#yank"></use>
+</svg>
+  </a>
+</div>
+
+    
+    <p>EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.</p>
+<p>특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.
+AWS 콘솔을 사용한다면 콘솔 UI가 전체 subnet을 우선 후보로 제시하기 때문에 별로 헷갈리지 않을 것 같다.</p>
+<p><a href="https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options">AWSCLI 문서</a> 중 클러스터 subnetIds에 대한 설명이 아래와 같다.</p>
+<p><strong>subnetIds -&gt; (list)</strong></p>
+<blockquote>
+<p>Specify subnets for your Amazon EKS worker nodes.
+Amazon EKS creates cross-account elastic network interfaces in these
+subnets to allow communication between your worker nodes and the Kubernetes control plane.</p>
+<p>(string)</p>
+</blockquote>
+<p>첫 문장을 보고 worker node들이 사용하는 모든 subnet으로 설정해야 한다고 생각할 수 있는데 그렇지 않다(첫 문장 자체에 오해의 소지가 있다).</p>
+<p>이어지는 내용을 차분히 읽으면 알 수 있듯이, control plance (master)이 해당 subnet에 network interface를 생성해서 worker node들과 통신할 수 있으면 된다.
+VPC 내의 subnet들은 서로 routing이 되니 <mark> VPC 내의 private subnet 중 아무 것이나 사용해도 된다</mark>. 단, 서로 다른 AZ에 있는 2개 이상의 subnet으로 설정해야 한다.</p>
+<h2 id="잘못-이해했을-때의-문제">잘못 이해했을 때의 문제</h2>
+<p>이것을 잘못 이해하면 곤란한 상황에 처할 수 있다.
+EKS에선 Pod들도 실제 VPC의 IP를 사용하니 많은 IP가 필요하다.</p>
+<p>처음에 클러스터의 규모를 작게 예상해서 worker node가 사용하는 subnet에 작은 크기의 IP 대역을 할당할 수 있다.
+이후에 IP가 부족하면 subnet을 늘려야 하는데, 설정의 의미를 오해하면 EKS cluster(master)의 subnet도 그에 맞게 변경해야 한다고 생각하게 된다.</p>
+<p>문제는 <a href="(https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html)">AWS EKS API</a>가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html">API 문서</a>에서도 아래처럼 알려주고 있다. (2020년 10월 16일 기준)</p>
+<blockquote>
+<p><strong>Important</strong>
+At this time, you can not update the subnets or security group IDs for an existing cluster.</p>
+</blockquote>
+<p>Terraform에서 <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster#subnet_ids">subnet_ids</a> 값을 변경하고 terraform apply를 실행하면 클러스터를 삭제하고 새로 생성한다.</p>
+<p>결국 IP 대역을 늘리기 위해 불필요하게 cluster를 삭제하고 새로 만드는 수고를 하게 될 수 있다.
+아니면 IP 대역을 늘리는 것이 쉬운 일이 아니라고 생각해서 처음부터 지나치게 큰 IP 대역을 할당하게 될 수도 있다.</p>
+<h2 id="올바른-설정의-예">올바른 설정의 예</h2>
+<p>범용으로 사용하는 private subnet (private_subnet이라 하자)과 eks worker 전용 subnet (eks_worker_subnet)을 따로 만들었다고 가정하자.</p>
+<p>EKS 클러스터에는 private_subnet을 설정하면 된다.</p>
+<p><strong>Terraform 코드 예제</strong>
+<div class="highlight"><pre class="chroma"><code class="language-hcl" data-lang="hcl"><span class="ln"> 1</span><span class="k">resource</span> <span class="s2">&#34;aws_eks_cluster&#34; &#34;main&#34;</span> {
+<span class="ln"> 2</span><span class="n">  name</span>     <span class="o">=</span> <span class="s2">&#34;main&#34;</span>
+<span class="ln"> 3</span><span class="n">  role_arn</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_iam</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">common_role_arn</span><span class="p">.</span><span class="k">eks_master</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span>  <span class="k">vpc_config</span> {
+<span class="ln"> 6</span><span class="n">    security_group_ids</span> <span class="o">=</span> <span class="p">[</span><span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_sg</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">eks_sg_ids</span><span class="p">.</span><span class="k">eks_master</span><span class="p">]</span><span class="c1">
+</span><span class="ln"> 7</span><span class="c1">    # 2개 이상의 AZ를 포함하기만 하면 되므로 2개만 잘라서 쓴다. 
+</span><span class="ln"> 8</span><span class="c1">    # 2개로 고정했기 때문에 나중에 만약 private_subnet_ids에 새로운 subnet이 추가되어도 여기를 수정하지 않아도 된다.
+</span><span class="hl"><span class="ln"> 9</span><span class="c1"></span><span class="n">    subnet_ids</span> <span class="o">=</span> <span class="k">slice</span><span class="p">(</span><span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_vpc</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">private_subnet_ids</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
+</span><span class="ln">10</span>  }
+<span class="ln">11</span>}</code></pre></div></p>
+<p>eks_woker_subnet은 worker node를 생성하는 Auto Scaling Group에 설정하면 된다.
+Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#vpc_zone_identifier">vpc_zone_identifier</a>에 설정하면 된다.</p>
+<p>이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.</p>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </article>
+<aside class="sidebar">
+  <section class="sidebar_inner">
+    <h2>Park Seong-hoon</h2>
+    <div>
+      Cloud Architect at Neowiz
+    </div>
+    <a href='https://pseonghoon.github.io/about/' class="button mt-1" role="button">Read More</a>
+    <h2 class="mt-4">Featured Posts</h2>
+    <ul>
+    
+      <li>
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link">코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
+      </li>
+    
+    </ul>
+    <h2 class="mt-4">Recent Posts</h2>
+    <ul class="flex-column">
+      
+      <li>
+        <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" class="nav-link">Kubernetes에서 NFS(EFS) 사용하기</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link">코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link">L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/oracle-myth/" class="nav-link">다시 생각하는 오라클 데이터베이스 운영</a>
+      </li>
+    </ul> 
+    
+    
+    
+    
+    
+    
+    <div>
+      <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
+      <nav class="tags_nav">
+        <a href='https://pseonghoon.github.io/tags/aws/' class="post_tag button button_translucent">
+          AWS
+          <span class="button_tally">3</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/kubernetes/' class="post_tag button button_translucent">
+          KUBERNETES
+          <span class="button_tally">2</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/arp/' class="post_tag button button_translucent">
+          ARP
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/devops/' class="post_tag button button_translucent">
+          DEVOPS
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/dsr/' class="post_tag button button_translucent">
+          DSR
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/efs/' class="post_tag button button_translucent">
+          EFS
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/efs-provisioner/' class="post_tag button button_translucent">
+          EFS-PROVISIONER
+          <span class="button_tally">1</span>
+        </a>
+        
+        
+        <br>
+        <div class="post_tags_toggle button">All Tags</div>
+        <div class="post_tags">
+          <div class="tags_list">
+            
+            <a href='https://pseonghoon.github.io/tags/arp/' class=" post_tag button button_translucent" data-position=1>ARP<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=3>AWS<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=1>DEVOPS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/dsr/' class=" post_tag button button_translucent" data-position=1>DSR<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/efs/' class=" post_tag button button_translucent" data-position=1>EFS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/efs-provisioner/' class=" post_tag button button_translucent" data-position=1>EFS-PROVISIONER<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/eks/' class=" post_tag button button_translucent" data-position=1>EKS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/iac/' class=" post_tag button button_translucent" data-position=1>IAC<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/index/' class=" post_tag button button_translucent" data-position=1>INDEX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=2>KUBERNETES<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/linux/' class=" post_tag button button_translucent" data-position=1>LINUX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/oracle/' class=" post_tag button button_translucent" data-position=1>ORACLE<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://pseonghoon.github.io/tags/tcp/ip/' class=" post_tag button button_translucent" data-position=1>TCP/IP<span class="button_tally">1</span>
+            </a>
+            
+            <div class="tags_sort"><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span>
+            </div>
+            <span class="tags_hide"><svg class="icon">
+            <use xlink:href="#closeme"></use>
+          </svg></span>
+          </div>
+        </div>
+        
+      </nav>
+    </div>
+    
+    
+  </section>
+</aside>
+
+</div>
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>

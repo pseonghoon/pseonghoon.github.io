@@ -6,7 +6,17 @@
     <description>Recent content in Posts on PSH&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
-    <lastBuildDate>Sun, 11 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>오해하기 쉬운 EKS 클러스터의 subnet 설정</title>
+      <link>https://pseonghoon.github.io/post/eks-subnet/</link>
+      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/post/eks-subnet/</guid>
+      <description>&lt;p&gt;EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Kubernetes에서 NFS(EFS) 사용하기</title>
       <link>https://pseonghoon.github.io/post/k8s-and-nfs/</link>

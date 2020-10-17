@@ -6,7 +6,34 @@
     <description>Recent content in Tags on PSH&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
-    <lastBuildDate>Sun, 11 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWS</title>
+      <link>https://pseonghoon.github.io/tags/aws/</link>
+      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>EKS</title>
+      <link>https://pseonghoon.github.io/tags/eks/</link>
+      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/eks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://pseonghoon.github.io/tags/kubernetes/</link>
+      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>EFS</title>
       <link>https://pseonghoon.github.io/tags/efs/</link>
@@ -22,33 +49,6 @@
       <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/tags/efs-provisioner/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
-      <link>https://pseonghoon.github.io/tags/kubernetes/</link>
-      <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>NFS</title>
-      <link>https://pseonghoon.github.io/tags/nfs/</link>
-      <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/nfs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Automation</title>
-      <link>https://pseonghoon.github.io/tags/automation/</link>
-      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/automation/</guid>
       <description></description>
     </item>
     
