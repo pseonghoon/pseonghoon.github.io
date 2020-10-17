@@ -17,14 +17,14 @@
 
 <meta property="og:type" content="article">
 <meta name="description" content="EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
-만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.">
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP 대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="오해하기 쉬운 EKS 클러스터의 subnet 설정" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/eks-subnet/" />
 <meta property="og:title" content="오해하기 쉬운 EKS 클러스터의 subnet 설정" />
 <meta property="og:description" content="EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
-만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다." />
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP 대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다." />
 <meta property="og:image" content="https://pseonghoon.github.io/post/img/eks.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://pseonghoon.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://pseonghoon.github.io/icons/favicon-32x32.png'>
@@ -161,7 +161,7 @@
 
     
     <p>EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
-만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.</p>
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면 나중에 IP 대역을 늘리기 위해 불필요하게 EKS 클러스터(master)를 재생성하게 될 수 있다.</p>
 <p>특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.
 AWS 콘솔을 사용한다면 콘솔 UI가 전체 subnet을 우선 후보로 제시하기 때문에 별로 헷갈리지 않을 것 같다.</p>
 <p><a href="https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options">AWSCLI 문서</a> 중 클러스터 subnetIds에 대한 설명이 아래와 같다.</p>
@@ -275,6 +275,11 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
           <span class="button_tally">3</span>
         </a>
         
+        <a href='https://pseonghoon.github.io/tags/eks/' class="post_tag button button_translucent">
+          EKS
+          <span class="button_tally">2</span>
+        </a>
+        
         <a href='https://pseonghoon.github.io/tags/kubernetes/' class="post_tag button button_translucent">
           KUBERNETES
           <span class="button_tally">2</span>
@@ -285,16 +290,6 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/efs/' class="post_tag button button_translucent">
-          EFS
-          <span class="button_tally">1</span>
-        </a>
-        
-        <a href='https://pseonghoon.github.io/tags/eks/' class="post_tag button button_translucent">
-          EKS
-          <span class="button_tally">1</span>
-        </a>
-        
         <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent">
           IAC
           <span class="button_tally">1</span>
@@ -302,6 +297,11 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
         
         <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent">
           INDEX
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/linux/' class="post_tag button button_translucent">
+          LINUX
           <span class="button_tally">1</span>
         </a>
         
@@ -319,11 +319,7 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
             </a>
             
             
-            <a href='https://pseonghoon.github.io/tags/efs/' class=" post_tag button button_translucent" data-position=1>EFS<span class="button_tally">1</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/eks/' class=" post_tag button button_translucent" data-position=1>EKS<span class="button_tally">1</span>
+            <a href='https://pseonghoon.github.io/tags/eks/' class=" post_tag button button_translucent" data-position=2>EKS<span class="button_tally">2</span>
             </a>
             
             
