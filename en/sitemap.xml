@@ -63,11 +63,6 @@
   </url>
   
   <url>
-    <loc>https://pseonghoon.github.io/tags/efs-provisioner/</loc>
-    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://pseonghoon.github.io/post/k8s-and-nfs/</loc>
     <lastmod>2020-10-11T00:00:00+00:00</lastmod>
   </url>
