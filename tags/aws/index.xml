@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>AWS on PSH&#39;s Blog</title>
+    <title>AWS on 박성훈의 블로그</title>
     <link>https://pseonghoon.github.io/tags/aws/</link>
-    <description>Recent content in AWS on PSH&#39;s Blog</description>
+    <description>Recent content in AWS on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
     <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
@@ -13,8 +13,57 @@
       <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/eks-subnet/</guid>
-      <description>&lt;p&gt;EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
-만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면, IP 대역을 늘리기 위해 EKS 클러스터(master)를 재생성하게 될 수 있다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면, IP 대역을 늘리기 위해 EKS 클러스터(master)를 재생성하게 될 수 있다.&lt;/p&gt;
+&lt;p&gt;특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.
+AWS 콘솔을 사용한다면 콘솔 UI가 전체 subnet을 우선 후보로 제시하기 때문에 별로 헷갈리지 않을 것 같다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options&#34;&gt;AWSCLI 문서&lt;/a&gt; 중 클러스터 subnetIds에 대한 설명이 아래와 같다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;subnetIds -&amp;gt; (list)&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Specify subnets for your Amazon EKS worker nodes.
+Amazon EKS creates cross-account elastic network interfaces in these
+subnets to allow communication between your worker nodes and the Kubernetes control plane.&lt;/p&gt;
+&lt;p&gt;(string)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;첫 문장을 보고 worker node들이 사용하는 모든 subnet으로 설정해야 한다고 생각할 수 있는데 그렇지 않다(첫 문장 자체에 오해의 소지가 있다).&lt;/p&gt;
+&lt;p&gt;이어지는 내용을 차분히 읽으면 알 수 있듯이, control plance (master)이 해당 subnet에 network interface를 생성해서 worker node들과 통신할 수 있으면 된다.
+VPC 내의 subnet들은 서로 routing이 되니 &lt;mark&gt; VPC 내의 private subnet 중 아무 것이나 사용해도 된다&lt;/mark&gt;. 단, 서로 다른 AZ에 있는 2개 이상의 subnet으로 설정해야 한다.&lt;/p&gt;
+&lt;h2 id=&#34;잘못-이해했을-때의-문제&#34;&gt;잘못 이해했을 때의 문제&lt;/h2&gt;
+&lt;p&gt;이것을 잘못 이해하면 곤란한 상황에 처할 수 있다.
+EKS에선 Pod들도 실제 VPC의 IP를 사용하니 많은 IP가 필요하다.&lt;/p&gt;
+&lt;p&gt;처음에 클러스터의 규모를 작게 예상해서 worker node가 사용하는 subnet에 작은 크기의 IP 대역을 할당할 수 있다.
+이후에 IP가 부족하면 subnet을 늘려야 하는데, 설정의 의미를 오해하면 EKS cluster(master)의 subnet도 그에 맞게 변경해야 한다고 생각하게 된다.&lt;/p&gt;
+&lt;p&gt;문제는 &lt;a href=&#34;(https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html)&#34;&gt;AWS EKS API&lt;/a&gt;가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html&#34;&gt;API 문서&lt;/a&gt;에서도 아래처럼 알려주고 있다. (2020년 10월 16일 기준)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Important&lt;/strong&gt;
+At this time, you can not update the subnets or security group IDs for an existing cluster.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Terraform에서 &lt;a href=&#34;https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster#subnet_ids&#34;&gt;subnet_ids&lt;/a&gt; 값을 변경하고 terraform apply를 실행하면 클러스터를 삭제하고 새로 생성한다.&lt;/p&gt;
+&lt;p&gt;결국 IP 대역을 늘리기 위해 불필요하게 cluster를 삭제하고 새로 만드는 수고를 하게 될 수 있다.
+아니면 IP 대역을 늘리는 것이 쉬운 일이 아니라고 생각해서 처음부터 지나치게 큰 IP 대역을 할당하게 될 수도 있다.&lt;/p&gt;
+&lt;h2 id=&#34;올바른-설정의-예&#34;&gt;올바른 설정의 예&lt;/h2&gt;
+&lt;p&gt;범용으로 사용하는 private subnet (private_subnet이라 하자)과 eks worker 전용 subnet (eks_worker_subnet)을 따로 만들었다고 가정하자.&lt;/p&gt;
+&lt;p&gt;EKS 클러스터에는 private_subnet을 설정하면 된다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Terraform 코드 예제&lt;/strong&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;aws_eks_cluster&amp;#34; &amp;#34;main&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  name&lt;/span&gt;     &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;main&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  role_arn&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;terraform_remote_state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;tf_iam&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;outputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;common_role_arn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;eks_master&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;vpc_config&lt;/span&gt; {
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;    security_group_ids&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;terraform_remote_state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;tf_sg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;outputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;eks_sg_ids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;eks_master&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;    # 2개 이상의 AZ를 포함하기만 하면 되므로 2개만 잘라서 쓴다. 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;    # 2개로 고정했기 때문에 나중에 만약 private_subnet_ids에 새로운 subnet이 추가되어도 여기를 수정하지 않아도 된다.
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;    subnet_ids&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;slice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;terraform_remote_state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;tf_vpc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;outputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;private_subnet_ids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;  }
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;eks_woker_subnet은 worker node를 생성하는 Auto Scaling Group에 설정하면 된다.
+Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#vpc_zone_identifier&#34;&gt;vpc_zone_identifier&lt;/a&gt;에 설정하면 된다.&lt;/p&gt;
+&lt;p&gt;이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.&lt;/p&gt;
+        
+      </description>
     </item>
     
     <item>
@@ -23,7 +72,83 @@
       <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/k8s-and-nfs/</guid>
-      <description>&lt;p&gt;Pod에서 NFS를 volume으로 사용하기 위해 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#nfs&#34;&gt;공식 문서&lt;/a&gt;의 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 &lt;strong&gt;efs-provisioner&lt;/strong&gt; 도 간략하게 소개하려고 한다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;Pod에서 NFS를 volume으로 사용하기 위해 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#nfs&#34;&gt;공식 문서&lt;/a&gt;의 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 &lt;strong&gt;efs-provisioner&lt;/strong&gt; 도 간략하게 소개하려고 한다.&lt;/p&gt;
+&lt;p&gt;공식 문서에서 소개하는 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;(PersistentVolume)와 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml&#34;&gt;PVC&lt;/a&gt;(PersistentVolumeClaim)를 정의해서 Pod이 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30&#34;&gt;PVC를 volume으로 지정&lt;/a&gt;하는 방식을 쓰고 있다.&lt;/p&gt;
+&lt;p&gt;더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다.  AWS라면 &lt;a href=&#34;https://aws.amazon.com/efs/&#34;&gt;EFS 서비스&lt;/a&gt;를 사용하면 된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nfs-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nfs-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nfs-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;           &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/nfs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;efs-vol&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;efs-vol&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nfs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# 예제로 EFS를 사용했지만 일반적인 NFS 서버면 된다.&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;fs-f9352198.efs.ap-northeast-2.amazonaws.com &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;readOnly&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;nfs 타입의 volume에서 설정할 수 있는 field는 &lt;a href=&#34;https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#nfsvolumesource-v1-core&#34;&gt;API reference&lt;/a&gt;를 참고했다.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;official-nfs-example&#34;&gt;공식 문서의 예제에 대한 보완 설명&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;먼저 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;의 내용을 따라하면서 충분히 이해한 후 이 포스트를 읽으면 더 도움이 될 것이다.
+예제는 도움이 많이 되는 좋은 내용이라고 생각한다. 하지만 실무에서 활용하려면 유의할 점이 있다.&lt;/p&gt;
+&lt;p&gt;우선 NFS 서버를 클러스터 내부에서 운영하고 있다. 예제로는 좋은 접근이지만 그대로 활용하기에는 아래와 같은 한계가 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NFS 서버의 위치를 DNS name 대신 IP로 하드코딩한다.&lt;/li&gt;
+&lt;li&gt;Google Cloud의 Persistent Disk를 사용했다. Persistent Disk는 zone에 종속된다. (AWS라면 EBS와 AZ에 해당)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;그리고 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;와 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml&#34;&gt;PVC&lt;/a&gt;를 정의한 후 Pod이 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30&#34;&gt;PVC를 volume으로 지정&lt;/a&gt;하는데, 맥락 상 어색한 방법이다.&lt;/p&gt;
+&lt;h3 id=&#34;hardcodedip&#34;&gt;IP 하드코딩&lt;/h3&gt;
+&lt;p&gt;예제에선 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-server-service.yaml&#34;&gt;nfs-server&lt;/a&gt; 라는 Service를 정의한다. 그래서 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV 정의&lt;/a&gt;에서 DNS name인 &lt;strong&gt;nfs-server.default.svc.cluster.local&lt;/strong&gt; 로 NFS 서버의 위치를 지정하고 있지만 이렇게는 접속이 안된다. 해결하기 위한 임시방편으로 Service의 clusterIP를 사람이 확인해서 코드를 고치는 방식을 안내하고 있다.&lt;/p&gt;
+&lt;p&gt;여기서 DNS name을 사용할 수 없는 이유가 있다. NFS mount는 Pod이 직접 하는 것이 아니라 node에서 해줘야 한다. 그런데 node는 클러스터 내의 DNS(coreDNS 등)에 쿼리를 하지 않기 때문이다. 그렇게 하도록 설정하는 것이 가능하겠지만 node의 DNS lookup이 Kubernetes 클러스터 내부 DNS를 의존하는 것은 좋은 구성이 아닐 수 있다.&lt;/p&gt;
+&lt;h3 id=&#34;pvc&#34;&gt;PVC와 PV의 어색한 활용&lt;/h3&gt;
+&lt;p&gt;Pod의 생애와 관계 없이 계속 유지되는 데이터가 필요하면 PV(PersistentVolume)를 반드시 써야 한다고 생각하기 쉽다. 하지만 꼭 그런 것은 아니다.&lt;/p&gt;
+&lt;p&gt;PV는 PVC(PersistentVolumeClaim)없이 단독으로 volume으로 사용할 수 없다.
+그럼 PVC는 왜 필요한가? PVC는 대부분의 경우 dynamic provisioning 하기 위해 사용한다. 클라우드 환경이라면 더욱 그렇다.&lt;/p&gt;
+&lt;p&gt;예제에서는 이미 존재하는 NFS 서버와 path(/)를 mount한 것이기 때문에 PVC와 PV를 굳이 정의할 필요가 없다.
+이 포스트에서 한 것처럼 Pod의 volume에서 바로 nfs를 사용하는 것이 더 간단하고 직관적이다.&lt;/p&gt;
+&lt;p&gt;그리고, 예제에서 PVC와 PV를 binding한 방식도 적절하지 않다.
+이 주제에서 별로 중요한 포인트는 아니라서 각주&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;에서 설명했으니 관심 있는 분들은 참고하셨으면 한다.&lt;/p&gt;
+&lt;h2 id=&#34;efs-provisioner-소개&#34;&gt;efs-provisioner 소개&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;AWS에서 EFS를 사용한다면, &lt;a href=&#34;https://github.com/kubernetes-retired/external-storage/tree/master/aws/efs&#34;&gt;efs-provisioner&lt;/a&gt;를 쓰면 편리하다.&lt;/p&gt;
+&lt;p&gt;오해하기 쉬운데, EFS를 Kubernets에서 사용하기 위해서 반드시 efs-provisioner를 써야하는 것은 아니다. efs-provisioner는 EFS에 기반한 volume을 dynamic provisioning할 때 사용하는 것이다. 이 포스트에서 주로 다룬 경우처럼 이미 NFS 서버와 mount할 path가 존재한다면 적합하지 않은 도구이다.&lt;/p&gt;
+&lt;p&gt;이것을 사용하려면 PVC를 정의해야 하는데 PVC는 namespaced resource라서 동일한 namespace 안의 Pod만 접근할 수 있는 한계가 있다.&lt;/p&gt;
+&lt;h3 id=&#34;사용-방법&#34;&gt;사용 방법&lt;/h3&gt;
+&lt;p&gt;PVC를 여럿 만드는 경우에도, EFS file system을 하나만 생성하고 efs-provisioner &lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/efs-provisioner&#34;&gt;Helm chart&lt;/a&gt;도 하나만 설치하면 된다.&lt;/p&gt;
+&lt;p&gt;Helm chart를 설치할 때 EFS filesystem ID를 알려주면, 이것과 연계된 StorageClass를 생성한다.
+여러 Pod들이 공유해야 하는 데이터가 있으면 이 StorageClass를 사용하는 PVC를 생성한 후 여러 Pod들이 동일하게 이 PVC를 volume으로 지정하면 된다.
+그러면 efs-provisioner가 EFS filesystem 내에 각 PVC별로 전용 디렉토리를 만들어 제공하는 방식이다.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;참조하는 코드는 2020년 10월 10일 기준 master branch가 가리키는 commit으로 고정했다.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8&#34;&gt;PVC의 storageClassName 설정&lt;/a&gt;을 “”로 했는데 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector&#34;&gt;label selector&lt;/a&gt;를 설정해야 할 것이다.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+        
+      </description>
     </item>
     
     <item>
@@ -32,9 +157,15 @@
       <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/infrastructure-as-code/</guid>
-      <description>&lt;p&gt;&lt;code&gt;링크&lt;/code&gt;: &lt;a href=&#34;https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing&#34;&gt;코드로 인프라 관리하기 (ppt)&lt;/a&gt;&lt;/p&gt;
+      <description>
+        
+          &lt;p&gt;&lt;code&gt;링크&lt;/code&gt;: &lt;a href=&#34;https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing&#34;&gt;코드로 인프라 관리하기 (ppt)&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Games on AWS 2019에서 발표한 자료다. 당시 청중 설문에서 가장 좋은 평가를 받았다.
-Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.&lt;/p&gt;</description>
+Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.&lt;/p&gt;
+&lt;p&gt;사내에서 경영진 대상으로 발표했던 자료를 행사의 성격에 맞게 수정해서 사용했다.
+2017년부터 2년 간의 구현 경험으로 쓴 것이다.&lt;/p&gt;
+        
+      </description>
     </item>
     
   </channel>

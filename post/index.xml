@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on PSH&#39;s Blog</title>
+    <title>Posts on 박성훈의 블로그</title>
     <link>https://pseonghoon.github.io/post/</link>
-    <description>Recent content in Posts on PSH&#39;s Blog</description>
+    <description>Recent content in Posts on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
     <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
@@ -13,8 +13,57 @@
       <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/eks-subnet/</guid>
-      <description>&lt;p&gt;EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
-만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면, IP 대역을 늘리기 위해 EKS 클러스터(master)를 재생성하게 될 수 있다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면, IP 대역을 늘리기 위해 EKS 클러스터(master)를 재생성하게 될 수 있다.&lt;/p&gt;
+&lt;p&gt;특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.
+AWS 콘솔을 사용한다면 콘솔 UI가 전체 subnet을 우선 후보로 제시하기 때문에 별로 헷갈리지 않을 것 같다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options&#34;&gt;AWSCLI 문서&lt;/a&gt; 중 클러스터 subnetIds에 대한 설명이 아래와 같다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;subnetIds -&amp;gt; (list)&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Specify subnets for your Amazon EKS worker nodes.
+Amazon EKS creates cross-account elastic network interfaces in these
+subnets to allow communication between your worker nodes and the Kubernetes control plane.&lt;/p&gt;
+&lt;p&gt;(string)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;첫 문장을 보고 worker node들이 사용하는 모든 subnet으로 설정해야 한다고 생각할 수 있는데 그렇지 않다(첫 문장 자체에 오해의 소지가 있다).&lt;/p&gt;
+&lt;p&gt;이어지는 내용을 차분히 읽으면 알 수 있듯이, control plance (master)이 해당 subnet에 network interface를 생성해서 worker node들과 통신할 수 있으면 된다.
+VPC 내의 subnet들은 서로 routing이 되니 &lt;mark&gt; VPC 내의 private subnet 중 아무 것이나 사용해도 된다&lt;/mark&gt;. 단, 서로 다른 AZ에 있는 2개 이상의 subnet으로 설정해야 한다.&lt;/p&gt;
+&lt;h2 id=&#34;잘못-이해했을-때의-문제&#34;&gt;잘못 이해했을 때의 문제&lt;/h2&gt;
+&lt;p&gt;이것을 잘못 이해하면 곤란한 상황에 처할 수 있다.
+EKS에선 Pod들도 실제 VPC의 IP를 사용하니 많은 IP가 필요하다.&lt;/p&gt;
+&lt;p&gt;처음에 클러스터의 규모를 작게 예상해서 worker node가 사용하는 subnet에 작은 크기의 IP 대역을 할당할 수 있다.
+이후에 IP가 부족하면 subnet을 늘려야 하는데, 설정의 의미를 오해하면 EKS cluster(master)의 subnet도 그에 맞게 변경해야 한다고 생각하게 된다.&lt;/p&gt;
+&lt;p&gt;문제는 &lt;a href=&#34;(https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html)&#34;&gt;AWS EKS API&lt;/a&gt;가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html&#34;&gt;API 문서&lt;/a&gt;에서도 아래처럼 알려주고 있다. (2020년 10월 16일 기준)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Important&lt;/strong&gt;
+At this time, you can not update the subnets or security group IDs for an existing cluster.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Terraform에서 &lt;a href=&#34;https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster#subnet_ids&#34;&gt;subnet_ids&lt;/a&gt; 값을 변경하고 terraform apply를 실행하면 클러스터를 삭제하고 새로 생성한다.&lt;/p&gt;
+&lt;p&gt;결국 IP 대역을 늘리기 위해 불필요하게 cluster를 삭제하고 새로 만드는 수고를 하게 될 수 있다.
+아니면 IP 대역을 늘리는 것이 쉬운 일이 아니라고 생각해서 처음부터 지나치게 큰 IP 대역을 할당하게 될 수도 있다.&lt;/p&gt;
+&lt;h2 id=&#34;올바른-설정의-예&#34;&gt;올바른 설정의 예&lt;/h2&gt;
+&lt;p&gt;범용으로 사용하는 private subnet (private_subnet이라 하자)과 eks worker 전용 subnet (eks_worker_subnet)을 따로 만들었다고 가정하자.&lt;/p&gt;
+&lt;p&gt;EKS 클러스터에는 private_subnet을 설정하면 된다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Terraform 코드 예제&lt;/strong&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;aws_eks_cluster&amp;#34; &amp;#34;main&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  name&lt;/span&gt;     &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;main&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  role_arn&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;terraform_remote_state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;tf_iam&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;outputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;common_role_arn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;eks_master&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;vpc_config&lt;/span&gt; {
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;    security_group_ids&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;terraform_remote_state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;tf_sg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;outputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;eks_sg_ids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;eks_master&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;    # 2개 이상의 AZ를 포함하기만 하면 되므로 2개만 잘라서 쓴다. 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;    # 2개로 고정했기 때문에 나중에 만약 private_subnet_ids에 새로운 subnet이 추가되어도 여기를 수정하지 않아도 된다.
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;    subnet_ids&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;slice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;terraform_remote_state&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;tf_vpc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;outputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;private_subnet_ids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;  }
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;eks_woker_subnet은 worker node를 생성하는 Auto Scaling Group에 설정하면 된다.
+Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#vpc_zone_identifier&#34;&gt;vpc_zone_identifier&lt;/a&gt;에 설정하면 된다.&lt;/p&gt;
+&lt;p&gt;이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.&lt;/p&gt;
+        
+      </description>
     </item>
     
     <item>
@@ -23,7 +72,83 @@
       <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/k8s-and-nfs/</guid>
-      <description>&lt;p&gt;Pod에서 NFS를 volume으로 사용하기 위해 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#nfs&#34;&gt;공식 문서&lt;/a&gt;의 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 &lt;strong&gt;efs-provisioner&lt;/strong&gt; 도 간략하게 소개하려고 한다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;Pod에서 NFS를 volume으로 사용하기 위해 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#nfs&#34;&gt;공식 문서&lt;/a&gt;의 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 &lt;strong&gt;efs-provisioner&lt;/strong&gt; 도 간략하게 소개하려고 한다.&lt;/p&gt;
+&lt;p&gt;공식 문서에서 소개하는 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;(PersistentVolume)와 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml&#34;&gt;PVC&lt;/a&gt;(PersistentVolumeClaim)를 정의해서 Pod이 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30&#34;&gt;PVC를 volume으로 지정&lt;/a&gt;하는 방식을 쓰고 있다.&lt;/p&gt;
+&lt;p&gt;더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다.  AWS라면 &lt;a href=&#34;https://aws.amazon.com/efs/&#34;&gt;EFS 서비스&lt;/a&gt;를 사용하면 된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nfs-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nfs-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nfs-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;           &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/nfs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;efs-vol&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;efs-vol&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nfs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# 예제로 EFS를 사용했지만 일반적인 NFS 서버면 된다.&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;fs-f9352198.efs.ap-northeast-2.amazonaws.com &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;readOnly&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;nfs 타입의 volume에서 설정할 수 있는 field는 &lt;a href=&#34;https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#nfsvolumesource-v1-core&#34;&gt;API reference&lt;/a&gt;를 참고했다.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;official-nfs-example&#34;&gt;공식 문서의 예제에 대한 보완 설명&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;먼저 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;의 내용을 따라하면서 충분히 이해한 후 이 포스트를 읽으면 더 도움이 될 것이다.
+예제는 도움이 많이 되는 좋은 내용이라고 생각한다. 하지만 실무에서 활용하려면 유의할 점이 있다.&lt;/p&gt;
+&lt;p&gt;우선 NFS 서버를 클러스터 내부에서 운영하고 있다. 예제로는 좋은 접근이지만 그대로 활용하기에는 아래와 같은 한계가 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NFS 서버의 위치를 DNS name 대신 IP로 하드코딩한다.&lt;/li&gt;
+&lt;li&gt;Google Cloud의 Persistent Disk를 사용했다. Persistent Disk는 zone에 종속된다. (AWS라면 EBS와 AZ에 해당)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;그리고 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;와 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml&#34;&gt;PVC&lt;/a&gt;를 정의한 후 Pod이 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30&#34;&gt;PVC를 volume으로 지정&lt;/a&gt;하는데, 맥락 상 어색한 방법이다.&lt;/p&gt;
+&lt;h3 id=&#34;hardcodedip&#34;&gt;IP 하드코딩&lt;/h3&gt;
+&lt;p&gt;예제에선 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-server-service.yaml&#34;&gt;nfs-server&lt;/a&gt; 라는 Service를 정의한다. 그래서 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV 정의&lt;/a&gt;에서 DNS name인 &lt;strong&gt;nfs-server.default.svc.cluster.local&lt;/strong&gt; 로 NFS 서버의 위치를 지정하고 있지만 이렇게는 접속이 안된다. 해결하기 위한 임시방편으로 Service의 clusterIP를 사람이 확인해서 코드를 고치는 방식을 안내하고 있다.&lt;/p&gt;
+&lt;p&gt;여기서 DNS name을 사용할 수 없는 이유가 있다. NFS mount는 Pod이 직접 하는 것이 아니라 node에서 해줘야 한다. 그런데 node는 클러스터 내의 DNS(coreDNS 등)에 쿼리를 하지 않기 때문이다. 그렇게 하도록 설정하는 것이 가능하겠지만 node의 DNS lookup이 Kubernetes 클러스터 내부 DNS를 의존하는 것은 좋은 구성이 아닐 수 있다.&lt;/p&gt;
+&lt;h3 id=&#34;pvc&#34;&gt;PVC와 PV의 어색한 활용&lt;/h3&gt;
+&lt;p&gt;Pod의 생애와 관계 없이 계속 유지되는 데이터가 필요하면 PV(PersistentVolume)를 반드시 써야 한다고 생각하기 쉽다. 하지만 꼭 그런 것은 아니다.&lt;/p&gt;
+&lt;p&gt;PV는 PVC(PersistentVolumeClaim)없이 단독으로 volume으로 사용할 수 없다.
+그럼 PVC는 왜 필요한가? PVC는 대부분의 경우 dynamic provisioning 하기 위해 사용한다. 클라우드 환경이라면 더욱 그렇다.&lt;/p&gt;
+&lt;p&gt;예제에서는 이미 존재하는 NFS 서버와 path(/)를 mount한 것이기 때문에 PVC와 PV를 굳이 정의할 필요가 없다.
+이 포스트에서 한 것처럼 Pod의 volume에서 바로 nfs를 사용하는 것이 더 간단하고 직관적이다.&lt;/p&gt;
+&lt;p&gt;그리고, 예제에서 PVC와 PV를 binding한 방식도 적절하지 않다.
+이 주제에서 별로 중요한 포인트는 아니라서 각주&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;에서 설명했으니 관심 있는 분들은 참고하셨으면 한다.&lt;/p&gt;
+&lt;h2 id=&#34;efs-provisioner-소개&#34;&gt;efs-provisioner 소개&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;AWS에서 EFS를 사용한다면, &lt;a href=&#34;https://github.com/kubernetes-retired/external-storage/tree/master/aws/efs&#34;&gt;efs-provisioner&lt;/a&gt;를 쓰면 편리하다.&lt;/p&gt;
+&lt;p&gt;오해하기 쉬운데, EFS를 Kubernets에서 사용하기 위해서 반드시 efs-provisioner를 써야하는 것은 아니다. efs-provisioner는 EFS에 기반한 volume을 dynamic provisioning할 때 사용하는 것이다. 이 포스트에서 주로 다룬 경우처럼 이미 NFS 서버와 mount할 path가 존재한다면 적합하지 않은 도구이다.&lt;/p&gt;
+&lt;p&gt;이것을 사용하려면 PVC를 정의해야 하는데 PVC는 namespaced resource라서 동일한 namespace 안의 Pod만 접근할 수 있는 한계가 있다.&lt;/p&gt;
+&lt;h3 id=&#34;사용-방법&#34;&gt;사용 방법&lt;/h3&gt;
+&lt;p&gt;PVC를 여럿 만드는 경우에도, EFS file system을 하나만 생성하고 efs-provisioner &lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/efs-provisioner&#34;&gt;Helm chart&lt;/a&gt;도 하나만 설치하면 된다.&lt;/p&gt;
+&lt;p&gt;Helm chart를 설치할 때 EFS filesystem ID를 알려주면, 이것과 연계된 StorageClass를 생성한다.
+여러 Pod들이 공유해야 하는 데이터가 있으면 이 StorageClass를 사용하는 PVC를 생성한 후 여러 Pod들이 동일하게 이 PVC를 volume으로 지정하면 된다.
+그러면 efs-provisioner가 EFS filesystem 내에 각 PVC별로 전용 디렉토리를 만들어 제공하는 방식이다.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;참조하는 코드는 2020년 10월 10일 기준 master branch가 가리키는 commit으로 고정했다.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8&#34;&gt;PVC의 storageClassName 설정&lt;/a&gt;을 “”로 했는데 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector&#34;&gt;label selector&lt;/a&gt;를 설정해야 할 것이다.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+        
+      </description>
     </item>
     
     <item>
@@ -32,9 +157,15 @@
       <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/infrastructure-as-code/</guid>
-      <description>&lt;p&gt;&lt;code&gt;링크&lt;/code&gt;: &lt;a href=&#34;https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing&#34;&gt;코드로 인프라 관리하기 (ppt)&lt;/a&gt;&lt;/p&gt;
+      <description>
+        
+          &lt;p&gt;&lt;code&gt;링크&lt;/code&gt;: &lt;a href=&#34;https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing&#34;&gt;코드로 인프라 관리하기 (ppt)&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Games on AWS 2019에서 발표한 자료다. 당시 청중 설문에서 가장 좋은 평가를 받았다.
-Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.&lt;/p&gt;</description>
+Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.&lt;/p&gt;
+&lt;p&gt;사내에서 경영진 대상으로 발표했던 자료를 행사의 성격에 맞게 수정해서 사용했다.
+2017년부터 2년 간의 구현 경험으로 쓴 것이다.&lt;/p&gt;
+        
+      </description>
     </item>
     
     <item>
@@ -43,8 +174,110 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
       <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</guid>
-      <description>&lt;p&gt;on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
-이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
+이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;
+&lt;h2 id=&#34;dsr-모드의-개요&#34;&gt;DSR 모드의 개요&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;Direct Server Return의 준말인데, 정식 용어가 아니라 편의상 이렇게 부르는 것이다.
+L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트에 패킷을 바로 전송하게 하는 구성이다.&lt;/p&gt;
+&lt;p&gt;트래픽의 흐름이 아래와 같다.&lt;br&gt;
+클라이언트 -&amp;gt; L4 로드 밸런서 (virtual server) -&amp;gt; real server -&amp;gt; 클라이언트&lt;/p&gt;
+&lt;p&gt;현재는 L4 로드 밸런서의 성능이 충분해서 성능 때문에 이렇게 구성할 필요는 별로 없지만, 클라이언트의 source IP를 보존할 수 있다는 장점 때문에 아직도 많이 쓰이는 방법이다.&lt;/p&gt;
+&lt;p&gt;이 포스트에서 DSR 모드의 전반적인 구성이나 설정 방법을 자세히 다루지는 않는다. 만약 DSR 모드나 ARP에 대한 사전 지식이 충분치 않다면 관련 내용을 먼저 파악하고 이 포스트를 읽으면 더 쉽게 이해할 수 있을 것이다.&lt;/p&gt;
+&lt;h2 id=&#34;요점&#34;&gt;요점&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;인터넷에서 찾을 수 있는 문서들은 대부분 &lt;code&gt;/etc/sysctl.conf&lt;/code&gt;를 아래처럼 설정하도록 안내한다. 대부분 이렇게 설정하고 있을 것이다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.all.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.all.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;위에서 &lt;mark&gt;loopback interface인 lo에 한 설정이 의미가 없다&lt;/mark&gt;는 것이 이 포스트의 요점이다.
+&lt;mark&gt;이 parameter들은 패킷을 수신하는 실제 interface에 설정해야 효력이 있다&lt;/mark&gt;.
+불필요한 설정이 추가된 것이라서 동작에는 문제가 없지만 정확한 의미를 알아야 트러블슈팅을 잘할 수 있다.&lt;/p&gt;
+&lt;p&gt;DSR 모드로 구성하려면, real server의 loopback interface에 L4 로드 밸런서의 VIP를 추가해야 한다.
+L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destination IP(L4 VIP)의 값을 그대로 보존한 채로 MAC address만 real server의 것으로 바꿔서 real server에 전달한다.&lt;/p&gt;
+&lt;p&gt;destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.
+이렇게 하면 real sever가 VIP를 자신의 IP처럼 인식한다.&lt;/p&gt;
+&lt;p&gt;하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다. 만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.&lt;/p&gt;
+&lt;p&gt;이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.&lt;/p&gt;
+&lt;p&gt;real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.&lt;/p&gt;
+&lt;p&gt;이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.
+그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.&lt;/p&gt;
+&lt;h2 id=&#34;올바른-설정-방법&#34;&gt;올바른 설정 방법&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;/etc/sysctl.conf&lt;/code&gt; 의 내용이 아래와 같아야 한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#/etc/sysctl.conf &lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.default.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.default.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#loopback interface에는 설정할 필요가 없지만 맥락을 분명하게 하기 위해 아래처럼 했다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;0 &lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;0 &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 parameter들은 아래와 같은 형식으로 사용한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt; * net.ipv4.conf.(&amp;lt;target-interface&amp;gt;|all|default).arp_ignore
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt; * net.ipv4.conf.(&amp;lt;target-interface&amp;gt;|all|default).arp_announce
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lsquo;default&amp;rsquo; 대신 &amp;lsquo;all&amp;rsquo;을 써도 원하는 결과를 얻을 수 있으나  all을 선택하면 개별 interface마다 다른 설정을 할 수 없으니 default가 더 유연하다.&lt;/p&gt;
+&lt;p&gt;default는 interace가 처음 생성될 때 복사되는 값이고 all은 모든 interace에 영향을 주는 값이다.&lt;br&gt;
+all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 값이 효력을 가질지는 kernel parameter 별로 다르니 자세한 내용은 &lt;a href=&#34;https://unix.stackexchange.com/questions/90443/what-is-the-difference-between-all-default-and-eth-in-proc-sys-net-ipv&#34;&gt;여기&lt;/a&gt;를 참고한다.&lt;/p&gt;
+&lt;p&gt;참고로, /etc/rc.local 스크립트에서 sysctl 명령을 실행하면 안되고 /etc/sysctl.conf에 설정해야 한다. /etc/rc.local은 시스템 초기 셋업 (&lt;a href=&#34;http://glennastory.net/boot/init.html&#34;&gt;System V init&lt;/a&gt;)의 후반부에 실행되기 때문에 interface가 올라오면서 자신의 MAC address를 L2 network에 알리기 위해 &lt;a href=&#34;https://wiki.wireshark.org/Gratuitous_ARP&#34;&gt;Gratuitous ARP&lt;/a&gt;를 전송하는 시점에는 스크립트가 실행되지 않는다.&lt;/p&gt;
+&lt;h2 id=&#34;arg_ignore&#34;&gt;arg_ignore&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;ARP request를 받았을 때 응답을 할지 여부를 결정한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;L4 로드 밸런서의 VIP를 real server의 loopback interface에 추가했을 때, real server의 default 동작은 이 VIP에 대한 ARP request에 응답을 하는 것이다&lt;/li&gt;
+&lt;li&gt;real server가 VIP에 대한 ARP request에 응답하면 안되니 arp_ignore 설정을 default 값인 0이 아닌 1로 해야 한다&lt;/li&gt;
+&lt;li&gt;arp_ignore는 interface 별로 설정할 수 있는데, loopback interface에 하는 것이 아니라 실제로 통신이 일어나는 interface에 해야 한다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;설정값의 의미&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;0 (default) : ARP request가 도착했을 때, 조회 대상 IP가 이 시스템의 어떤 interface이건 (loopback 포함) 있기만 하면 응답&lt;/li&gt;
+&lt;li&gt;1 : arp_ignore가 1로 설정된 interface를 통해 ARP request가 도착하면 조회 대상 IP가 이 interface에 직접 설정되어 있을 때만 응답&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ARP request는 loopback이 아니라 실제 통신이 일어나는 interface에 도착하므로 그 interface의 arp_ignore 가 1이어야 한다. lookback interface에는 ARP request 등 외부 패킷이 도달하지 않으므로 lo에 설정하는 것은 의미가 없다.&lt;/p&gt;
+&lt;h2 id=&#34;arp_announce&#34;&gt;arp_announce&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;ARP request를 보낼 때 &amp;lsquo;sender IP 주소&amp;rsquo;에 어떤 값을 쓸지 정하는 parameter이다.&lt;/p&gt;
+&lt;p&gt;여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ARP 패킷의 구조:&lt;/strong&gt;
+&lt;figure&gt;&lt;img src=&#34;https://pseonghoon.github.io/images/arp.gif&#34;/&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;이 parameter를 사용하는 목적은 아래와 같다.&lt;/p&gt;
+&lt;p&gt;호스트의 ARP cache는 ARP reply를 받았을 때 업데이트되는 것이 기본이다.
+그런데 호스트가 ARP request를 수신했을 때도 패킷의 내용(payload)에 포함된 sender IP 주소와 sender MAC 주소를 사용해서 ARP cache를 업데이트한다.
+따라서 real server에서 ARP request를 보낼 때 sender IP 값이 VIP이면 이 패킷을 받는 서버들이 자신의 ARP cache에서 VIP의 MAC 주소를 real server의 것으로 업데이트한다. 이렇게 되면 트래픽이 엉뚱한 곳으로 가게되는데 이 parameter를 이용해 방지할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;설정값의 의미&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;0 (default) : sender IP 주소로 시스템에 설정된 어떤 IP든 사용할 수 있음&lt;/li&gt;
+&lt;li&gt;2 : sender IP 주소로 가능하면 ARP request를 실제 전송하는 interface에 설정된 IP를 사용. 실제 기준은 좀 더 복잡하니 정확한 것은 &lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;여기&lt;/a&gt;를 참고할 것&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;테스트-방법&#34;&gt;테스트 방법&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;설정을 잘못해서 real server가 VIP에 대한 ARP request에 응답하는 현상을 확인하는 방법이다.&lt;/p&gt;
+&lt;p&gt;host A, host B 모두 eth0 으로 10.41.66.0/24 네트웍에서 통신하고 있을 때 아래처럼 확인할 수 있다.
+host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로드 밸런서의 로드밸런싱 구성에 포함되지 않는 서버이다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;host A:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo sysctl -w net.ipv4.conf.eth0.arp_ignore &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;  
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;sudo ifconfig lo:0 10.41.66.100 netmask 255.255.255.255  &lt;span class=&#34;c1&#34;&gt;# lo에 VIP 추가&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;host B:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ sudo arping -I eth0 -b 10.41.66.100  &lt;span class=&#34;c1&#34;&gt;# VIP에 대한 ARP request를 L2 network에 broadcast&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;ARPING 10.41.66.100 from 10.41.66.45 eth0
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;Unicast reply from 10.41.66.100 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;00:22:19:BA:D1:DF&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  0.641ms   &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; 00:22:19:BA:D1:DF 은  host A의 MAC 주소
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;Unicast reply from 10.41.66.100 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;00:22:19:BA:D1:DF&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  0.609ms
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;Unicast reply from 10.41.66.100 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;00:22:19:BA:D1:DF&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  0.614ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;위의 결과에서 보다시피 host A는 lookback interface에 설정된 10.41.66.100 에 대한 ARP request를 받았을 때도 자신의 MAC 주소로 응답한다.&lt;/p&gt;
+&lt;p&gt;참고로, 이런 테스트 환경은 &lt;a href=&#34;https://www.vagrantup.com/&#34;&gt;Vagrant&lt;/a&gt;로 VM들의 로컬 네트워크를 구성하면 쉽게 만들수 있다.&lt;/p&gt;
+&lt;h2 id=&#34;참고-문서&#34;&gt;참고 문서&lt;/h2&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;https://www.kernel.org/ documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469&#34;&gt;TCP/IP Illustrated, Volume 1&lt;/a&gt;: Chapter 4 ARP&lt;/li&gt;
+&lt;/ul&gt;
+        
+      </description>
     </item>
     
     <item>
@@ -53,7 +286,177 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
       <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/oracle-myth/</guid>
-      <description>&lt;p&gt;DBA는 보수적이라는 인식이 흔히 있다. 새로운 시도를 하다가 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 것이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;DBA는 보수적이라는 인식이 흔히 있다. 새로운 시도를 하다가 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 것이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다.&lt;/p&gt;
+&lt;p&gt;해외에서도 이런 문제에 대한 언급&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;을 찾을 수 있으니 국내에만 국한된 문제가 아닌 것 같다. 이 글에서 그런 것들 중 몇가지 사례를 들고 대안을 제시해 보려고 한다.&lt;/p&gt;
+&lt;!--more--&gt; 
+&lt;p&gt;&lt;em&gt;이 포스트는 2012년에 월간 마이크로소프트웨어에 기고한 글을 다듬은 것이다&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;index-organized-table-iot의-적극적인-사용&#34;&gt;Index-Organized Table (IOT)의 적극적인 사용&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;Point:&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;IOT로 손쉽게 극적인 성능 개선 효과를 볼 수 있다&lt;/li&gt;
+&lt;li&gt;IOT에 적합한 데이터는 생각보다 흔하다&lt;/li&gt;
+&lt;li&gt;DML 비중이 많아도 IOT를 쓰는데 문제가 없다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;IOT 는 인덱스 구조와 유사한 테이블 형태이다.
+IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에서 잘 정리된 설명을 쉽게 찾을 수 있을 것이니 여기선 자세한 설명보다 그 유용성을 강조하려고 한다.&lt;/p&gt;
+&lt;p&gt;아래 &amp;lt;그림1&amp;gt;은 지난 2005년에  IOT로 성능 개선 효과를 본 사례이다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&amp;lt;그림1&amp;gt; 친구 목록 데이터에 대해 IOT 적용 전후 CPU 사용량 비교&lt;/strong&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img src=&#34;../img/iot.png&#34;/&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;하지만 IOT는 아직 소극적으로 사용되는 경우가 많은데, 효과에 대해서는 덜 알려지고 약점은 실제보다 부각되었기 때문이다&lt;/p&gt;
+&lt;p&gt;널리 알려진 IOT의 단점은 DML에 취약하다는 것이지만 정말 그럴까?
+생각해보면 IOT에 DML을 실행할 때 발생하는 부하는 인덱스가 있는 일반 테이블 (heap organized table)과 별 차이가 없다. 결국 인덱스가 있는 테이블을 별 문제없이 사용할 수 있다면 IOT 역시 잘 사용할 수 있다. 나는 IOT의 활용 여부를 판단할 때 DML비중을 고려하지 않지만 성능 문제가 발생한 경우는 없다.&lt;/p&gt;
+&lt;p&gt;IOT에 대한 걱정을 덜 수 있는 좋은 비교 대상이 있다. MySQL에서 InnoDB 엔진을 사용하는 테이블들이 IOT와 유사한 구조로 되어 있다. MySQL에선 온라인 백업과 트랜잭션을 지원하기 위해 모든 테이블을 InnoDB 로 만드는 경우도 흔하다.&lt;/p&gt;
+&lt;p&gt;그럼 IOT는 어떤 곳에 사용해야 성능 개선 효과를 볼까?
+목록 형식의 데이터를 조회하는 경우에 적합하다. 사용자의 친구목록 조회, 게시판 별 게시글 조회, 댓글 조회 같은 것인데 모두 흔한 것들이다.&lt;/p&gt;
+&lt;p&gt;쿼리 튜닝 다음으로 눈에 띄는 성능 개선 효과를 기대할 수 있는 것이 IOT의 적절한 사용이라고 생각한다.  IOT는 그것을 사용해서 효과를 볼 수 있는 대상이라면 적극적으로 사용하는 것이 좋다.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Note:&lt;/code&gt; IOT는 secondary index로 인한 비효율 등이 문제가 될 수 있다. IOT를 제대로 활용하려면 서비스 적용 전에 그 것의 특징에 대해서 정확히 알고 있어야 한다.&lt;/p&gt;
+&lt;h2 id=&#34;스토리지-성능과-storage-area-network-san&#34;&gt;스토리지 성능과 Storage Area Network (SAN)&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;Point:&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;스토리지의 I/O 성능은 장착된 개별 디스크의 성능과 수에 단순하게 비례한다&lt;/li&gt;
+&lt;li&gt;SAN은 비용을 낮추기 위한 기술이다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;스토리지 시스템의 성능은 그것에 장착된 디스크의 성능과 개수에 좌우된다.
+고가의 스토리지 제품과 중저가 제품의 가장 중요한 차이는 장착 가능한 디스크의 개수이다. 하지만 디스크 개수가 같다면 스토리지의  I/O성능은 기본적으로 동일하다.&lt;/p&gt;
+&lt;p&gt;데이터는 계속 늘어나게 마련이고 만약 그에 따라  고가 제품으로 교체해야 한다면 비용 부담이 클 것이다.&lt;/p&gt;
+&lt;p&gt;저비용으로 스토리지 확장 문제를 해결해주는 기술이 SAN (Storage Area Network) 이다.
+SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트들의 네트워크를 구성해 각 호스트들이 필요한 만큼의 저장 공간을 여러 스토리지로부터 얻을 수 있다.
+‘SAN은 비싸다’ 는 오해와 달리 비용을 줄이고 높은 확장성을 얻기 위해 만들어진 것이다. 저가의 스토리지들을 필요할 때마다 붙여나가는 방식으로 시스템을 손쉽게 확장할 수 있다.&lt;/p&gt;
+&lt;p&gt;이와 같이 스토리지의 확장 문제는 이미 오래 전에  SAN 기술로 해결이 되었지만 여전히 장점이 충분히 알려지지 않고 있는데, 그것은 스토리지 벤더의 입장과 관련이 있다. SAN을 기본 취지에 맞게 활용해 비용이 줄어들면 벤더의 수익도 줄어든다. 그러니 벤더 측에서 그 장점을 고객에게 적극적으로 알리지 않는 것도 한편으론 이해할 만한 일이다. 어떤 벤더에선 나에게 성능을 위해 SAN 스위치를 사용하지 말것을 권한 경우도 있다. SAN의 확장성의 핵심 구성 요소가 스위치인데도 그렇게 얘기가 된다.&lt;/p&gt;
+&lt;p&gt;그리고, 특정 벤더에 종속되지 않는 시스템을 유지하기 원한다면 특정 벤더의 복제 솔루션은 사용하지 않는 것이 좋다. Oracle의 RMAN과 Data Guard 기능을 잘 활용하면 충분히 효율적인 백업,복제를 구현하는 것이 가능하다.&lt;/p&gt;
+&lt;h2 id=&#34;rman으로-백업&#34;&gt;RMAN으로 백업&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;Point:&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Oracle 10g 이후의 RMAN은 훌륭한 백업 도구이다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;적어도 10g 이후에는 RMAN을 백업/복구 도구로 사용해도 전혀 문제가 없다.&lt;/p&gt;
+&lt;p&gt;외부 솔루션을 이용해서 user managed backup 방식을 사용하면서 RMAN 사용을 주저하는 이유는 아래와 같다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;RMAN에 대한 신뢰 부족&lt;/li&gt;
+&lt;li&gt;DBMS가 실행되는 호스트 시스템에서 process로 실행되는 in-bound 방식이 DBMS 성능에 미칠 악영향에 대한 우려&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;첫 번째는 과거에는 문제가 되었으나 이제는 해소된 것이고 두 번째는 시스템이 적절하게 셋업되어 있으면 문제가 없다. 여기서 적절한 시스템 셋업이란 아래를 갖춘 것이다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;redo log 파일과 control 파일이 저장되는 디스크를 데이터,백업이 저장되는 디스크와 물리적으로 분리해서 서로 I/O 간섭이 없게 한다&lt;/li&gt;
+&lt;li&gt;충분히 높은 buffer cache hit rate&lt;/li&gt;
+&lt;li&gt;합리적인 스토리지 투자로 괜찮은 수준의  physical I/O 성능이 확보됨&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;이런 조건에서는 설령 피크 시간에 백업을 실행하더라도 문제가 없다.
+원활한 서비스를 위해 필요한 것들이니 만약 백업 실행이 서비스에 영향을 미친다면  시스템이 제대로 셋업된 것인지 점검할 필요가 있다.&lt;/p&gt;
+&lt;p&gt;그럼 잘 구성된 시스템에서 왜 백업이 DB성능에 영향을 미치지 않는 지 더 알아보자.
+백업 작업은 데이터가 저장된 디스크 장치의 physical I/O 성능을 일정하게 저해할 것이다.&lt;/p&gt;
+&lt;p&gt;하지만&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;redo log 파일은 백업 대상이 아니므로 데이터/백업과 물리적으로 독립되어 있기만 하면 DML과 트랜잭션 실행이 지연되지 않는다&lt;/li&gt;
+&lt;li&gt;SELECT는 그것이 대부분 logical reads로 커버되는 환경이라면 physical read가 약간 느려져도 눈에 띄는 영향이 없어야 한다&lt;/li&gt;
+&lt;li&gt;DBWR가 담당하는 physical write는 백업에 의해 영향을 받지만 백그라운드에서 일어나는 프로세스 이므로 사용자가 느끼는 성능과는 관련이 없다&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;즉 RMAN을 사용해도 성능상 걱정할 것이 없으며 RMAN은 아래와 같은 장점이 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;별도의 솔루션을 구매하지 않아도 된다.&lt;/li&gt;
+&lt;li&gt;백업에 대한 DBA의 이해도가 높아진다. 외부 솔루션을 사용하면 업무 담당자 이외에는 전체 백업프로세스를 이해하기 어렵다&lt;/li&gt;
+&lt;li&gt;RMAN repository에 백업과 관련된 세세한 메타데이터를 기록해서 사용자 작업을 쉽고 단순하게 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;아직 RMAN을 사용하고 있지 않은 독자가 쉽게 실행해 볼 수 있도록 사용 중인 스크립트를 공유한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;rman target / &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt;_EOF  | tee logs/backup.log.`date +%m%d`
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;RECOVER COPY OF DATABASE with TAG &amp;#34;whole_db_copy&amp;#34; UNTIL TIME &amp;#39;trunc(SYSDATE)-7&amp;#39;;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;DELETE NOPROMPT OBSOLETE;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;BACKUP INCREMENTAL LEVEL 1
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      FOR RECOVER OF COPY WITH TAG &amp;#34;whole_db_copy&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      DATABASE;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;_EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 스크립트는 10g 이상에서 DB_RECOVERY_FILE_DEST 파라미터를 설정해 놓고 실행하면 된다.
+짧은 내용이지만 incremental backup을 실행하고 최근 7일간 원하는 시점으로 point-in-time recovery가 가능하며, 필요 없는 archive log 만을 알아서 지우는 등 효율적인 백업을 구현할 수 있다. 각 명령어에 대한 자세한 설명은 공식 매뉴얼을 참고하면 된다.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Note:&lt;/code&gt; Oracle 10g 기준으로 Backup and Recovery Basics 매뉴얼의 4.4 RMAN Incremental Backups에 나와있다.&lt;/p&gt;
+&lt;h2 id=&#34;날짜-데이터에-date-타입-사용&#34;&gt;날짜 데이터에 DATE 타입 사용&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;Point:&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;날짜/시각 데이터는 DATE 타입에 저장해야 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;날짜 데이터를 위한 DATE 타입이 있지만 VARCHAR2 형식으로 저장하는 경우가 많다.
+VARCHAR2를 다루는 것이 이미 익숙하고 이것으로도 날짜 데이터를 표현하는데 문제가 없다고 보기 때문인데 그렇다면 숫자는 왜 NUMBER에 저장할까? 날짜에 DATE를 써야 하는 이유는 숫자에 NUMBER를 써야 하는 이유와 같다.&lt;/p&gt;
+&lt;p&gt;DATE 타입의 장점은 아래처럼 정리할 수 있다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;저장공간 절약&lt;/li&gt;
+&lt;li&gt;무결성 보장&lt;/li&gt;
+&lt;li&gt;연산의 편리함과 SQL문의 간결함&lt;/li&gt;
+&lt;li&gt;Optimizer에 더 풍부한 정보를 제공&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;1-저장공간-절약&#34;&gt;1. 저장공간 절약&lt;/h4&gt;
+&lt;p&gt;VARCHAR2로 저장하면 작게 잡아도 14 바이트가 필요하지만 DATE는 7 바이트면 된다.&lt;/p&gt;
+&lt;h4 id=&#34;2-무결성-보장-데이터와-포맷의-분리&#34;&gt;2. 무결성 보장. 데이터와 포맷의 분리&lt;/h4&gt;
+&lt;p&gt;날짜 형식이 아닌 엉뚱한 데이터가 입력되거나 여러 형식의 날짜 포맷이 뒤섞이는 것을 막을 수 있다.
+VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항상 그 형식으로 사용해야 하는데, 이 약속을 지키기가 쉽지 않다. 여러 경로로 실행되는 SQL문을 일일이 통제한다는 것이 사실상 불가능하기 때문이다. 일정 시간이 지나면 결국 여러 포맷의 데이터가 섞이게 된다. 그리고 컬럼마다 서로 다른 날짜 포맷을 사용한다면 테이블에 INSERT할 때마다 어떤 포맷인지 확인해야 해서 번거롭다.
+결국 VARCHAR2에 저장하려면 꼼꼼한 관리가 필요하다. 그러니 애초에 그런 수고가 필요 없는 방법을 사용하자.&lt;/p&gt;
+&lt;h4 id=&#34;3-연산의-편리함과-sql문의-간결함&#34;&gt;3. 연산의 편리함과 SQL문의 간결함&lt;/h4&gt;
+&lt;p&gt;전체적으로 SQL문이 간결해진다. 예를 들면, 날짜 데이터가 INSERT되거나 비교의 기준으로 sysdate 가 사용되는 경우가 많은데 이럴 때 DATE 라면 아래처럼 sysdate를 그대로 사용하면 된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_DATE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sysdate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;그렇지 않으면 아래처럼 &lt;code&gt;TO_CHAR()&lt;/code&gt;로 일일이 변환을 해야 한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;STR_DATE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TO_CHAR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sysdate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;YYYYMMDDHH24MISS&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;DATE 연산에서 간결함의 차이가 잘 보이는데, 예를 들어 어떤 날짜보다 하루 뒤의 값을 구하려면 DATE 는 아래처럼 단순하다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_DATE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;VARCHAR2는 깔끔하지 않은 문자열 연산을 하거나, DATE 타입으로 변환했다가 다시 VARCHAR2로 변환해야 한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TO_CHAR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TO_DATE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;STR_DATE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;YYYYMMDDHH24MISS&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;YYYYMMDDHH24MISS&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이런 연산은 자주 하는 것이라 누적되면 SQL문의 가독성이 나빠진다.&lt;/p&gt;
+&lt;h4 id=&#34;4-optimizer에-더-많은-정보를-제공&#34;&gt;4. Optimizer에 더 많은 정보를 제공&lt;/h4&gt;
+&lt;p&gt;Oracle optimizer 는 실행 계획을 만들 때 DATE 타입의 특성을 이해하고  활용한다.
+2012년 1월 1일 과 2012년 1월 3일 사이에 들어갈 수 있는 날짜는 1월 2일 하루 뿐이지만
+‘20120101’ 과 ‘20120103’ 사이에 분포하는 문자열 값은 훨씬 많다.
+즉 날짜/시각을 DATE로 저장하면 optimizer에 더 풍부한 정보를 제공할 수 있다.&lt;/p&gt;
+&lt;h4 id=&#34;date-타입을-더-편리하게-쓰는-팁&#34;&gt;DATE 타입을 더 편리하게 쓰는 팁&lt;/h4&gt;
+&lt;p&gt;DATE를 사용하면 형 변환을 위해 to_date() 와 to_char()를 매번 실행해야 해서 번거로울 것 같지만 알고 보면 그렇지 않다.
+우선, NLS_DATE_FORMAT 파라미터로 시스템 디폴트 날짜 포맷을 지정할 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ALTER&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SYSTEM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SET&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NLS_DATE_FORMAT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;YYYY-MM-DD HH24:MI:SS&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;기본적으로 to_date() 와 to_char() 는 두 번째 인자로 날짜 포맷을 받는데 이것을 생략하면
+NLS_DATE_FORMAT의 값이 디폴트로 사용된다. 그리고 이 함수들은 형 변환이 필요할 때 암묵적으로 호출되므로 이 함수들을 명시적으로 쓸 필요가 없다.&lt;/p&gt;
+&lt;p&gt;그리고 값을 입력할 때, 지정된 날짜 포맷과 정확히 일치하지 않더라도 비슷한 형태면 대부분 인식이 된다. 예를 들어 아래처럼 테이블을 만들고 입력할 때&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CREATE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;TABLE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_TEST&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;DATE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;정석은 아래와 같지만&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_TEST&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TO_DATE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2008-01-01 10:00:01&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;YYYY-MM-DD HH24:MI:SS&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;아래처럼 해도 성공한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_TEST&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2008-01-01 10:00:01&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_TEST&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;20080101100001&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_TEST&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2008:01:01 10&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;데이터의 값은 포맷과는 독립되어 있기 때문에 표현이 달라도 실제로 저장되는 값에는 차이가 없다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DATE_TEST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;-------------------
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2008&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2008&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2008&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2008&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;01&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;단순한-테이블스페이스-구성&#34;&gt;단순한 테이블스페이스 구성&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;Point:&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;인덱스와 테이블을 별도의 테이블스페이스에 저장할 필요가 없다&lt;/li&gt;
+&lt;li&gt;스키마 당 하나의 테이블스페이스를 만들면 편리하다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;테이블스페이스를 지나치게 잘게 쪼개거나 테이블,인덱스용 테이블스페이스를 분리할 필요가 없다.  테이블과 인덱스를 함께 저장하고 크기도 크게 만들자.&lt;/p&gt;
+&lt;p&gt;스키마 단위로 하나의 테이블스페이스를 할당하고 그 스키마의 디폴트 테이블스페이스로 지정하는 것을 권한다. 이렇게 하면 테이블이나 인덱스를 어떤 테이블스페이스에 넣어야 할지 남은 용량을 확인하면서 DDL에 일일이 지정하지 않아도 된다. 전체적인 테이블스페이스 수가 줄어서 관리가 간편해진다. 이런 단순한 규칙이면 개발환경 DB와 서비스DB의 테이블스페이스 구성을 동일하게 유지할 수 있게 되고 그에 따라 개발 환경 DB에서 사용한 DDL을 그대로 서비스 환경 DB에도 사용할 수 있다.&lt;/p&gt;
+&lt;p&gt;테이블스페이스를 스키마 단위로는 분리하는 이유는, 테이블스페이스 단위의 복구(recovery) 나 스키마 단위로 다른 인스턴스로 이동할 때 Transportable Tablespace 기능 사용을 대비한 것이다.&lt;/p&gt;
+&lt;p&gt;테이블스페이스의 크기는 평상시 성능과는 관계가 없지만 테이블스페이스 단위의 복구를 해야 할 경우엔 복구 시간이 그것에 비례한다. 나는 스키마 당 한 개의 테이블스페이스를 기본 원칙으로 하되, 최대 용량은 1TB 로 제한하는 방식을 쓰고 있다.&lt;/p&gt;
+&lt;p&gt;100GB 크기의 테이블스페이스 하나를 만드는 것에 비해 10GB 짜리 10개를 만들었을 때 성능 상 유리한 점이 없고 테이블과 인덱스를 별도의 테이블스페이스에 분리 저장해서 얻을 수 있는 이점 역시 없다.&lt;/p&gt;
+&lt;p&gt;테이블스페이스는 데이터를 논리적으로 분리해서 저장하는 단위이기 때문에 I/O 성능과는 직접적인 관계가 없다&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Thomas Kyte의 &lt;a href=&#34;https://www.amazon.com/Effective-Oracle-Design-Osborne-ORACLE/dp/0072230657&#34;&gt;Effective Oracle by Design&lt;/a&gt; 은 이런 것들을 myths 라고 표현하며 여러 사례를 알려준다.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+        
+      </description>
     </item>
     
   </channel>

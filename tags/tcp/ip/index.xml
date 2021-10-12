@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>tcp/ip on PSH&#39;s Blog</title>
+    <title>tcp/ip on 박성훈의 블로그</title>
     <link>https://pseonghoon.github.io/tags/tcp/ip/</link>
-    <description>Recent content in tcp/ip on PSH&#39;s Blog</description>
+    <description>Recent content in tcp/ip on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright><atom:link href="https://pseonghoon.github.io/tags/tcp/ip/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -12,8 +12,110 @@
       <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</guid>
-      <description>&lt;p&gt;on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
-이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;</description>
+      <description>
+        
+          &lt;p&gt;on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
+이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;
+&lt;h2 id=&#34;dsr-모드의-개요&#34;&gt;DSR 모드의 개요&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;Direct Server Return의 준말인데, 정식 용어가 아니라 편의상 이렇게 부르는 것이다.
+L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트에 패킷을 바로 전송하게 하는 구성이다.&lt;/p&gt;
+&lt;p&gt;트래픽의 흐름이 아래와 같다.&lt;br&gt;
+클라이언트 -&amp;gt; L4 로드 밸런서 (virtual server) -&amp;gt; real server -&amp;gt; 클라이언트&lt;/p&gt;
+&lt;p&gt;현재는 L4 로드 밸런서의 성능이 충분해서 성능 때문에 이렇게 구성할 필요는 별로 없지만, 클라이언트의 source IP를 보존할 수 있다는 장점 때문에 아직도 많이 쓰이는 방법이다.&lt;/p&gt;
+&lt;p&gt;이 포스트에서 DSR 모드의 전반적인 구성이나 설정 방법을 자세히 다루지는 않는다. 만약 DSR 모드나 ARP에 대한 사전 지식이 충분치 않다면 관련 내용을 먼저 파악하고 이 포스트를 읽으면 더 쉽게 이해할 수 있을 것이다.&lt;/p&gt;
+&lt;h2 id=&#34;요점&#34;&gt;요점&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;인터넷에서 찾을 수 있는 문서들은 대부분 &lt;code&gt;/etc/sysctl.conf&lt;/code&gt;를 아래처럼 설정하도록 안내한다. 대부분 이렇게 설정하고 있을 것이다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.all.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.all.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;위에서 &lt;mark&gt;loopback interface인 lo에 한 설정이 의미가 없다&lt;/mark&gt;는 것이 이 포스트의 요점이다.
+&lt;mark&gt;이 parameter들은 패킷을 수신하는 실제 interface에 설정해야 효력이 있다&lt;/mark&gt;.
+불필요한 설정이 추가된 것이라서 동작에는 문제가 없지만 정확한 의미를 알아야 트러블슈팅을 잘할 수 있다.&lt;/p&gt;
+&lt;p&gt;DSR 모드로 구성하려면, real server의 loopback interface에 L4 로드 밸런서의 VIP를 추가해야 한다.
+L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destination IP(L4 VIP)의 값을 그대로 보존한 채로 MAC address만 real server의 것으로 바꿔서 real server에 전달한다.&lt;/p&gt;
+&lt;p&gt;destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.
+이렇게 하면 real sever가 VIP를 자신의 IP처럼 인식한다.&lt;/p&gt;
+&lt;p&gt;하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다. 만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.&lt;/p&gt;
+&lt;p&gt;이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.&lt;/p&gt;
+&lt;p&gt;real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.&lt;/p&gt;
+&lt;p&gt;이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.
+그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.&lt;/p&gt;
+&lt;h2 id=&#34;올바른-설정-방법&#34;&gt;올바른 설정 방법&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;/etc/sysctl.conf&lt;/code&gt; 의 내용이 아래와 같아야 한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#/etc/sysctl.conf &lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.default.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.default.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#loopback interface에는 설정할 필요가 없지만 맥락을 분명하게 하기 위해 아래처럼 했다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_ignore&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;0 &lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;net.ipv4.conf.lo.arp_announce&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;0 &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 parameter들은 아래와 같은 형식으로 사용한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt; * net.ipv4.conf.(&amp;lt;target-interface&amp;gt;|all|default).arp_ignore
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt; * net.ipv4.conf.(&amp;lt;target-interface&amp;gt;|all|default).arp_announce
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lsquo;default&amp;rsquo; 대신 &amp;lsquo;all&amp;rsquo;을 써도 원하는 결과를 얻을 수 있으나  all을 선택하면 개별 interface마다 다른 설정을 할 수 없으니 default가 더 유연하다.&lt;/p&gt;
+&lt;p&gt;default는 interace가 처음 생성될 때 복사되는 값이고 all은 모든 interace에 영향을 주는 값이다.&lt;br&gt;
+all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 값이 효력을 가질지는 kernel parameter 별로 다르니 자세한 내용은 &lt;a href=&#34;https://unix.stackexchange.com/questions/90443/what-is-the-difference-between-all-default-and-eth-in-proc-sys-net-ipv&#34;&gt;여기&lt;/a&gt;를 참고한다.&lt;/p&gt;
+&lt;p&gt;참고로, /etc/rc.local 스크립트에서 sysctl 명령을 실행하면 안되고 /etc/sysctl.conf에 설정해야 한다. /etc/rc.local은 시스템 초기 셋업 (&lt;a href=&#34;http://glennastory.net/boot/init.html&#34;&gt;System V init&lt;/a&gt;)의 후반부에 실행되기 때문에 interface가 올라오면서 자신의 MAC address를 L2 network에 알리기 위해 &lt;a href=&#34;https://wiki.wireshark.org/Gratuitous_ARP&#34;&gt;Gratuitous ARP&lt;/a&gt;를 전송하는 시점에는 스크립트가 실행되지 않는다.&lt;/p&gt;
+&lt;h2 id=&#34;arg_ignore&#34;&gt;arg_ignore&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;ARP request를 받았을 때 응답을 할지 여부를 결정한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;L4 로드 밸런서의 VIP를 real server의 loopback interface에 추가했을 때, real server의 default 동작은 이 VIP에 대한 ARP request에 응답을 하는 것이다&lt;/li&gt;
+&lt;li&gt;real server가 VIP에 대한 ARP request에 응답하면 안되니 arp_ignore 설정을 default 값인 0이 아닌 1로 해야 한다&lt;/li&gt;
+&lt;li&gt;arp_ignore는 interface 별로 설정할 수 있는데, loopback interface에 하는 것이 아니라 실제로 통신이 일어나는 interface에 해야 한다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;설정값의 의미&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;0 (default) : ARP request가 도착했을 때, 조회 대상 IP가 이 시스템의 어떤 interface이건 (loopback 포함) 있기만 하면 응답&lt;/li&gt;
+&lt;li&gt;1 : arp_ignore가 1로 설정된 interface를 통해 ARP request가 도착하면 조회 대상 IP가 이 interface에 직접 설정되어 있을 때만 응답&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ARP request는 loopback이 아니라 실제 통신이 일어나는 interface에 도착하므로 그 interface의 arp_ignore 가 1이어야 한다. lookback interface에는 ARP request 등 외부 패킷이 도달하지 않으므로 lo에 설정하는 것은 의미가 없다.&lt;/p&gt;
+&lt;h2 id=&#34;arp_announce&#34;&gt;arp_announce&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;ARP request를 보낼 때 &amp;lsquo;sender IP 주소&amp;rsquo;에 어떤 값을 쓸지 정하는 parameter이다.&lt;/p&gt;
+&lt;p&gt;여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ARP 패킷의 구조:&lt;/strong&gt;
+&lt;figure&gt;&lt;img src=&#34;https://pseonghoon.github.io/images/arp.gif&#34;/&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;이 parameter를 사용하는 목적은 아래와 같다.&lt;/p&gt;
+&lt;p&gt;호스트의 ARP cache는 ARP reply를 받았을 때 업데이트되는 것이 기본이다.
+그런데 호스트가 ARP request를 수신했을 때도 패킷의 내용(payload)에 포함된 sender IP 주소와 sender MAC 주소를 사용해서 ARP cache를 업데이트한다.
+따라서 real server에서 ARP request를 보낼 때 sender IP 값이 VIP이면 이 패킷을 받는 서버들이 자신의 ARP cache에서 VIP의 MAC 주소를 real server의 것으로 업데이트한다. 이렇게 되면 트래픽이 엉뚱한 곳으로 가게되는데 이 parameter를 이용해 방지할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;설정값의 의미&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;0 (default) : sender IP 주소로 시스템에 설정된 어떤 IP든 사용할 수 있음&lt;/li&gt;
+&lt;li&gt;2 : sender IP 주소로 가능하면 ARP request를 실제 전송하는 interface에 설정된 IP를 사용. 실제 기준은 좀 더 복잡하니 정확한 것은 &lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;여기&lt;/a&gt;를 참고할 것&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;테스트-방법&#34;&gt;테스트 방법&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;설정을 잘못해서 real server가 VIP에 대한 ARP request에 응답하는 현상을 확인하는 방법이다.&lt;/p&gt;
+&lt;p&gt;host A, host B 모두 eth0 으로 10.41.66.0/24 네트웍에서 통신하고 있을 때 아래처럼 확인할 수 있다.
+host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로드 밸런서의 로드밸런싱 구성에 포함되지 않는 서버이다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;host A:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo sysctl -w net.ipv4.conf.eth0.arp_ignore &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;  
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;sudo ifconfig lo:0 10.41.66.100 netmask 255.255.255.255  &lt;span class=&#34;c1&#34;&gt;# lo에 VIP 추가&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;host B:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ sudo arping -I eth0 -b 10.41.66.100  &lt;span class=&#34;c1&#34;&gt;# VIP에 대한 ARP request를 L2 network에 broadcast&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;ARPING 10.41.66.100 from 10.41.66.45 eth0
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;Unicast reply from 10.41.66.100 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;00:22:19:BA:D1:DF&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  0.641ms   &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; 00:22:19:BA:D1:DF 은  host A의 MAC 주소
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;Unicast reply from 10.41.66.100 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;00:22:19:BA:D1:DF&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  0.609ms
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;Unicast reply from 10.41.66.100 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;00:22:19:BA:D1:DF&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  0.614ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;위의 결과에서 보다시피 host A는 lookback interface에 설정된 10.41.66.100 에 대한 ARP request를 받았을 때도 자신의 MAC 주소로 응답한다.&lt;/p&gt;
+&lt;p&gt;참고로, 이런 테스트 환경은 &lt;a href=&#34;https://www.vagrantup.com/&#34;&gt;Vagrant&lt;/a&gt;로 VM들의 로컬 네트워크를 구성하면 쉽게 만들수 있다.&lt;/p&gt;
+&lt;h2 id=&#34;참고-문서&#34;&gt;참고 문서&lt;/h2&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;https://www.kernel.org/ documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469&#34;&gt;TCP/IP Illustrated, Volume 1&lt;/a&gt;: Chapter 4 ARP&lt;/li&gt;
+&lt;/ul&gt;
+        
+      </description>
     </item>
     
   </channel>

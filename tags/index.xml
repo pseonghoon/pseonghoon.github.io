@@ -1,92 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on PSH&#39;s Blog</title>
+    <title>Tags on 박성훈의 블로그</title>
     <link>https://pseonghoon.github.io/tags/</link>
-    <description>Recent content in Tags on PSH&#39;s Blog</description>
+    <description>Recent content in Tags on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
     <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>AWS</title>
-      <link>https://pseonghoon.github.io/tags/aws/</link>
-      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/aws/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>EKS</title>
-      <link>https://pseonghoon.github.io/tags/eks/</link>
-      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/eks/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
-      <link>https://pseonghoon.github.io/tags/kubernetes/</link>
-      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>DevOps</title>
-      <link>https://pseonghoon.github.io/tags/devops/</link>
-      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>IaC</title>
-      <link>https://pseonghoon.github.io/tags/iac/</link>
-      <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/iac/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>linux</title>
-      <link>https://pseonghoon.github.io/tags/linux/</link>
-      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/linux/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Oracle</title>
-      <link>https://pseonghoon.github.io/tags/oracle/</link>
-      <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/oracle/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>index</title>
-      <link>https://pseonghoon.github.io/tags/index/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/index/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tcp/ip</title>
-      <link>https://pseonghoon.github.io/tags/tcp/ip/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://pseonghoon.github.io/tags/tcp/ip/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>
