@@ -93,13 +93,6 @@
 <div class='follow'>
     
     
-  <a href="https://www.linkedin.com/in/seonghoon-park-1aa84358/">
-    <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-  </a>
-    
-    
     
   <a href="https://pseonghoon.github.io/index.xml">
     <svg class="icon">
@@ -122,11 +115,11 @@
 
 <div class="grid-inverse wrap content">
   <ul class="posts" id="posts">
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/post/eks-subnet/'>오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
+        <a href="https://pseonghoon.github.io/post/eks-subnet/" title="오해하기 쉬운 EKS 클러스터의 subnet 설정">오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
       </h3>
       
   <div class="post_meta">
@@ -134,8 +127,7 @@
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Oct 17, 2020</span>
-    <span class="post_time"> · 2 min read</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
+      Oct 17, 2020</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
         </a><a href='https://pseonghoon.github.io/tags/eks' title="EKS" class="post_tag button button_translucent">EKS
         </a><a href='https://pseonghoon.github.io/tags/aws' title="AWS" class="post_tag button button_translucent">AWS
         </a>
@@ -168,27 +160,29 @@
   </div>
 
     </div>
-    <div class = 'excerpt_footer partition'>
-      <div class = 'excerpt_thumbnail'>
-      <img src = 'https://pseonghoon.github.io/post/img/eks.png'>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://pseonghoon.github.io/post/img/eks.png' alt="오해하기 쉬운 EKS 클러스터의 subnet 설정">
       </div>
       
         <div>
-          
-          <p>EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
+
+            
+              <p>EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
 만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면, IP 대역을 늘리기 위해 EKS 클러스터(master)를 재생성하게 될 수 있다.</p>
-          <a href='https://pseonghoon.github.io/post/eks-subnet/' class='excerpt_more button'>Read More</a>
+            
+
+          <a href="https://pseonghoon.github.io/post/eks-subnet/" title="Read More" class="excerpt_more button">Read More</a>
         </div>
       </div>
     </div>
   </li>
-  
 
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/post/k8s-and-nfs/'>Kubernetes에서 NFS(EFS) 사용하기</a>
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
+        <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" title="Kubernetes에서 NFS(EFS) 사용하기">Kubernetes에서 NFS(EFS) 사용하기</a>
       </h3>
       
   <div class="post_meta">
@@ -196,8 +190,7 @@
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Oct 11, 2020</span>
-    <span class="post_time"> · 3 min read</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
+      Oct 11, 2020</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
         </a><a href='https://pseonghoon.github.io/tags/eks' title="EKS" class="post_tag button button_translucent">EKS
         </a><a href='https://pseonghoon.github.io/tags/aws' title="AWS" class="post_tag button button_translucent">AWS
         </a>
@@ -230,26 +223,28 @@
   </div>
 
     </div>
-    <div class = 'excerpt_footer partition'>
-      <div class = 'excerpt_thumbnail'>
-      <img src = 'https://pseonghoon.github.io/post/img/nfs.jpeg'>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://pseonghoon.github.io/post/img/nfs.jpeg' alt="Kubernetes에서 NFS(EFS) 사용하기">
       </div>
       
         <div>
-          
-          <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 <strong>efs-provisioner</strong> 도 간략하게 소개하려고 한다.</p>
-          <a href='https://pseonghoon.github.io/post/k8s-and-nfs/' class='excerpt_more button'>Read More</a>
+
+            
+              <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것이다. 예제를 제대로 활용하기 위해선 보완 설명이 필요해 이 글을 썼다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 <strong>efs-provisioner</strong> 도 간략하게 소개하려고 한다.</p>
+            
+
+          <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" title="Read More" class="excerpt_more button">Read More</a>
         </div>
       </div>
     </div>
   </li>
-  
 
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/post/infrastructure-as-code/'>코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" title="코드로 인프라 관리하기">코드로 인프라 관리하기</a>
       </h3>
       
   <div class="post_meta">
@@ -257,8 +252,7 @@
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Oct 5, 2020</span>
-    <span class="post_time"> · 1 min read</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/iac' title="IaC" class="post_tag button button_translucent">IaC
+      Oct 5, 2020</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/iac' title="IaC" class="post_tag button button_translucent">IaC
         </a><a href='https://pseonghoon.github.io/tags/devops' title="DevOps" class="post_tag button button_translucent">DevOps
         </a><a href='https://pseonghoon.github.io/tags/aws' title="AWS" class="post_tag button button_translucent">AWS
         </a>
@@ -266,12 +260,12 @@
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0%20%28Games%20on%20AWS%20%eb%b0%9c%ed%91%9c%20%ec%9e%90%eb%a3%8c%29&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&t=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0%20%28Games%20on%20AWS%20%eb%b0%9c%ed%91%9c%20%ec%9e%90%eb%a3%8c%29" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&t=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -291,28 +285,30 @@
   </div>
 
     </div>
-    <div class = 'excerpt_footer partition'>
-      <div class = 'excerpt_thumbnail'>
-      <img src = 'https://pseonghoon.github.io/post/img/git-terraform.png'>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://pseonghoon.github.io/post/img/git-terraform.png' alt="코드로 인프라 관리하기">
       </div>
       
         <div>
-          
-          <p><code>링크</code>: <a href="https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing">코드로 인프라 관리하기 (ppt)</a></p>
+
+            
+              <p><code>링크</code>: <a href="https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing">코드로 인프라 관리하기 (ppt)</a></p>
 <p>Games on AWS 2019에서 발표한 자료다. 당시 청중 설문에서 가장 좋은 평가를 받았다.
 Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.</p>
-          <a href='https://pseonghoon.github.io/post/infrastructure-as-code/' class='excerpt_more button'>Read More</a>
+            
+
+          <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" title="Read More" class="excerpt_more button">Read More</a>
         </div>
       </div>
     </div>
   </li>
-  
 
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/'>L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기</a>
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
+        <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" title="L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기">L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기</a>
       </h3>
       
   <div class="post_meta">
@@ -320,8 +316,7 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Oct 4, 2020</span>
-    <span class="post_time"> · 5 min read</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/linux' title="linux" class="post_tag button button_translucent">linux
+      Oct 4, 2020</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/linux' title="linux" class="post_tag button button_translucent">linux
         </a><a href='https://pseonghoon.github.io/tags/tcp/ip' title="tcp/ip" class="post_tag button button_translucent">tcp/ip
         </a>
     </span>
@@ -353,27 +348,29 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
   </div>
 
     </div>
-    <div class = 'excerpt_footer partition'>
-      <div class = 'excerpt_thumbnail'>
-      <img src = 'https://pseonghoon.github.io/post/img/dsr2.png'>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://pseonghoon.github.io/post/img/dsr2.png' alt="L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기">
       </div>
       
         <div>
-          
-          <p>on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
+
+            
+              <p>on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
 이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.</p>
-          <a href='https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/' class='excerpt_more button'>Read More</a>
+            
+
+          <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" title="Read More" class="excerpt_more button">Read More</a>
         </div>
       </div>
     </div>
   </li>
-  
 
-      <li class = 'post_item'>
-  <div class = 'excerpt'>
-    <div class = 'excerpt_header'>
-      <h3 class = 'post_link'>
-        <a href='https://pseonghoon.github.io/post/oracle-myth/'>다시 생각하는 오라클 데이터베이스 운영</a>
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
+        <a href="https://pseonghoon.github.io/post/oracle-myth/" title="다시 생각하는 오라클 데이터베이스 운영">다시 생각하는 오라클 데이터베이스 운영</a>
       </h3>
       
   <div class="post_meta">
@@ -381,8 +378,7 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Oct 4, 2020</span>
-    <span class="post_time"> · 8 min read</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/oracle' title="Oracle" class="post_tag button button_translucent">Oracle
+      Oct 4, 2020</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/oracle' title="Oracle" class="post_tag button button_translucent">Oracle
         </a>
     </span>
     <span class="page_only">&nbsp;·
@@ -413,35 +409,37 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
   </div>
 
     </div>
-    <div class = 'excerpt_footer partition'>
-      <div class = 'excerpt_thumbnail'>
-      <img src = 'https://pseonghoon.github.io/post/img/oracle.png'>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://pseonghoon.github.io/post/img/oracle.png' alt="다시 생각하는 오라클 데이터베이스 운영">
       </div>
       
         <div>
-          
-          <p>DBA는 보수적이라는 인식이 흔히 있다. 새로운 시도를 하다가 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 것이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다.</p>
-          <a href='https://pseonghoon.github.io/post/oracle-myth/' class='excerpt_more button'>Read More</a>
+
+            
+              <p>DBA는 보수적이라는 인식이 흔히 있다. 새로운 시도를 하다가 큰 문제가 발생할 수 있어서 기존 방식을 변경하기가 쉽지 않기 때문이다. 그래서 익숙한 것이 후임자에게 이어지는 것이 반복되고 나중엔 이유는 모르지만 어쨌든 기존 방식을 유지하게 된다.</p>
+            
+
+          <a href="https://pseonghoon.github.io/post/oracle-myth/" title="Read More" class="excerpt_more button">Read More</a>
         </div>
       </div>
     </div>
   </li>
-  
 
     <li>
     </li>
   </ul>
 <aside class="sidebar">
   <section class="sidebar_inner">
-        <h2>박성훈</h2>
+        <h2>Park Seong-hoon</h2>
       <div class="author_bio">
-        Cloud, Automation
+        Posting on Unix / Cloud / Automation
       </div>
       <a href='https://pseonghoon.github.io/about/' class="button mt-1" role="button" title='Read More'>Read More</a>
     <h2 class="mt-4">Featured Posts</h2>
     <ul>
       <li>
-        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기 (Games on AWS 발표 자료)">코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기">코드로 인프라 관리하기</a>
       </li>
     </ul>
     <h2 class="mt-4">Recent Posts</h2>
@@ -453,7 +451,7 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
         <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" class="nav-link" title="Kubernetes에서 NFS(EFS) 사용하기">Kubernetes에서 NFS(EFS) 사용하기</a>
       </li>
       <li>
-        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기 (Games on AWS 발표 자료)">코드로 인프라 관리하기 (Games on AWS 발표 자료)</a>
+        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기">코드로 인프라 관리하기</a>
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기">L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기</a>

@@ -74,7 +74,7 @@ Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.te
       <guid>https://pseonghoon.github.io/post/k8s-and-nfs/</guid>
       <description>
         
-          &lt;p&gt;Pod에서 NFS를 volume으로 사용하기 위해 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#nfs&#34;&gt;공식 문서&lt;/a&gt;의 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;를 참고하는 경우가 많을 것이다. 그런데 실무에서 활용하려면 그 내용을 보완 설명할 필요가 있어서 이 포스트를 작성했다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 &lt;strong&gt;efs-provisioner&lt;/strong&gt; 도 간략하게 소개하려고 한다.&lt;/p&gt;
+          &lt;p&gt;Pod에서 NFS를 volume으로 사용하기 위해 &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#nfs&#34;&gt;공식 문서&lt;/a&gt;의 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;를 참고하는 경우가 많을 것이다. 예제를 제대로 활용하기 위해선 보완 설명이 필요해 이 글을 썼다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 &lt;strong&gt;efs-provisioner&lt;/strong&gt; 도 간략하게 소개하려고 한다.&lt;/p&gt;
 &lt;p&gt;공식 문서에서 소개하는 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;(PersistentVolume)와 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml&#34;&gt;PVC&lt;/a&gt;(PersistentVolumeClaim)를 정의해서 Pod이 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30&#34;&gt;PVC를 volume으로 지정&lt;/a&gt;하는 방식을 쓰고 있다.&lt;/p&gt;
 &lt;p&gt;더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다.  AWS라면 &lt;a href=&#34;https://aws.amazon.com/efs/&#34;&gt;EFS 서비스&lt;/a&gt;를 사용하면 된다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
@@ -105,20 +105,19 @@ Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.te
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;readOnly&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;em&gt;nfs 타입의 volume에서 설정할 수 있는 field는 &lt;a href=&#34;https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#nfsvolumesource-v1-core&#34;&gt;API reference&lt;/a&gt;를 참고했다.&lt;/em&gt;&lt;/p&gt;
-&lt;h2 id=&#34;official-nfs-example&#34;&gt;공식 문서의 예제에 대한 보완 설명&lt;/h2&gt;
-&lt;hr&gt;
+&lt;h1 id=&#34;official-nfs-example&#34;&gt;공식 문서의 예제에 대한 보완 설명&lt;/h1&gt;
 &lt;p&gt;먼저 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/&#34;&gt;예제&lt;/a&gt;의 내용을 따라하면서 충분히 이해한 후 이 포스트를 읽으면 더 도움이 될 것이다.
-예제는 도움이 많이 되는 좋은 내용이라고 생각한다. 하지만 실무에서 활용하려면 유의할 점이 있다.&lt;/p&gt;
+예제는 관련 개념을 파악하는데 도움이 되지만 실무에서 활용하려면 유의할 점이 있다.&lt;/p&gt;
 &lt;p&gt;우선 NFS 서버를 클러스터 내부에서 운영하고 있다. 예제로는 좋은 접근이지만 그대로 활용하기에는 아래와 같은 한계가 있다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;NFS 서버의 위치를 DNS name 대신 IP로 하드코딩한다.&lt;/li&gt;
 &lt;li&gt;Google Cloud의 Persistent Disk를 사용했다. Persistent Disk는 zone에 종속된다. (AWS라면 EBS와 AZ에 해당)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;그리고 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV&lt;/a&gt;와 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml&#34;&gt;PVC&lt;/a&gt;를 정의한 후 Pod이 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30&#34;&gt;PVC를 volume으로 지정&lt;/a&gt;하는데, 맥락 상 어색한 방법이다.&lt;/p&gt;
-&lt;h3 id=&#34;hardcodedip&#34;&gt;IP 하드코딩&lt;/h3&gt;
+&lt;h4 id=&#34;hardcodedip&#34;&gt;IP 하드코딩&lt;/h4&gt;
 &lt;p&gt;예제에선 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-server-service.yaml&#34;&gt;nfs-server&lt;/a&gt; 라는 Service를 정의한다. 그래서 &lt;a href=&#34;https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml&#34;&gt;PV 정의&lt;/a&gt;에서 DNS name인 &lt;strong&gt;nfs-server.default.svc.cluster.local&lt;/strong&gt; 로 NFS 서버의 위치를 지정하고 있지만 이렇게는 접속이 안된다. 해결하기 위한 임시방편으로 Service의 clusterIP를 사람이 확인해서 코드를 고치는 방식을 안내하고 있다.&lt;/p&gt;
 &lt;p&gt;여기서 DNS name을 사용할 수 없는 이유가 있다. NFS mount는 Pod이 직접 하는 것이 아니라 node에서 해줘야 한다. 그런데 node는 클러스터 내의 DNS(coreDNS 등)에 쿼리를 하지 않기 때문이다. 그렇게 하도록 설정하는 것이 가능하겠지만 node의 DNS lookup이 Kubernetes 클러스터 내부 DNS를 의존하는 것은 좋은 구성이 아닐 수 있다.&lt;/p&gt;
-&lt;h3 id=&#34;pvc&#34;&gt;PVC와 PV의 어색한 활용&lt;/h3&gt;
+&lt;h4 id=&#34;pvc&#34;&gt;PVC와 PV의 어색한 활용&lt;/h4&gt;
 &lt;p&gt;Pod의 생애와 관계 없이 계속 유지되는 데이터가 필요하면 PV(PersistentVolume)를 반드시 써야 한다고 생각하기 쉽다. 하지만 꼭 그런 것은 아니다.&lt;/p&gt;
 &lt;p&gt;PV는 PVC(PersistentVolumeClaim)없이 단독으로 volume으로 사용할 수 없다.
 그럼 PVC는 왜 필요한가? PVC는 대부분의 경우 dynamic provisioning 하기 위해 사용한다. 클라우드 환경이라면 더욱 그렇다.&lt;/p&gt;
@@ -126,12 +125,11 @@ Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.te
 이 포스트에서 한 것처럼 Pod의 volume에서 바로 nfs를 사용하는 것이 더 간단하고 직관적이다.&lt;/p&gt;
 &lt;p&gt;그리고, 예제에서 PVC와 PV를 binding한 방식도 적절하지 않다.
 이 주제에서 별로 중요한 포인트는 아니라서 각주&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;에서 설명했으니 관심 있는 분들은 참고하셨으면 한다.&lt;/p&gt;
-&lt;h2 id=&#34;efs-provisioner-소개&#34;&gt;efs-provisioner 소개&lt;/h2&gt;
-&lt;hr&gt;
+&lt;h1 id=&#34;efs-provisioner-소개&#34;&gt;efs-provisioner 소개&lt;/h1&gt;
 &lt;p&gt;AWS에서 EFS를 사용한다면, &lt;a href=&#34;https://github.com/kubernetes-retired/external-storage/tree/master/aws/efs&#34;&gt;efs-provisioner&lt;/a&gt;를 쓰면 편리하다.&lt;/p&gt;
 &lt;p&gt;오해하기 쉬운데, EFS를 Kubernets에서 사용하기 위해서 반드시 efs-provisioner를 써야하는 것은 아니다. efs-provisioner는 EFS에 기반한 volume을 dynamic provisioning할 때 사용하는 것이다. 이 포스트에서 주로 다룬 경우처럼 이미 NFS 서버와 mount할 path가 존재한다면 적합하지 않은 도구이다.&lt;/p&gt;
 &lt;p&gt;이것을 사용하려면 PVC를 정의해야 하는데 PVC는 namespaced resource라서 동일한 namespace 안의 Pod만 접근할 수 있는 한계가 있다.&lt;/p&gt;
-&lt;h3 id=&#34;사용-방법&#34;&gt;사용 방법&lt;/h3&gt;
+&lt;h4 id=&#34;사용-방법&#34;&gt;사용 방법&lt;/h4&gt;
 &lt;p&gt;PVC를 여럿 만드는 경우에도, EFS file system을 하나만 생성하고 efs-provisioner &lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/efs-provisioner&#34;&gt;Helm chart&lt;/a&gt;도 하나만 설치하면 된다.&lt;/p&gt;
 &lt;p&gt;Helm chart를 설치할 때 EFS filesystem ID를 알려주면, 이것과 연계된 StorageClass를 생성한다.
 여러 Pod들이 공유해야 하는 데이터가 있으면 이 StorageClass를 사용하는 PVC를 생성한 후 여러 Pod들이 동일하게 이 PVC를 volume으로 지정하면 된다.
