@@ -6,7 +6,178 @@
     <description>Recent content in Posts on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
-    <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 08 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git 직접 동기화로 회사 밖에서도 효율적으로 일하는 방법</title>
+      <link>https://pseonghoon.github.io/post/working-from-home-with-git/</link>
+      <pubDate>Mon, 08 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/post/working-from-home-with-git/</guid>
+      <description>
+        
+          &lt;p&gt;출근과 재택 근무를 병행하면서 한곳에서 하던 작업을 편하게 이어서 하기 위해 여러가지 시도를 했다.
+&lt;u&gt;집에서 회사 컴퓨터에 로그인해서 일하는 대신 로컬 컴퓨터에서 쾌적하게 작업&lt;/u&gt;하는 것이 목표였다.&lt;/p&gt;
+&lt;p&gt;몇가지 시행착오 후 만족스런 방법을 찾았는데, 회사 아이맥에서 작업하던 Git repository를 집에서 쓰는 맥북과 Git으로 &amp;lsquo;직접 동기화&amp;rsquo;하는 것이다. 두 local repository를 GitHub이나 GitLab 같은 서버 역할을 하는 remote를 거치지 않고 직접 연결하는 방법이다.&lt;/p&gt;
+&lt;p&gt;맥을 사용하는 것을 전제로 설명하지만 Git을 활용하는 방법이 주요 내용이라 맥 사용자가 아니라도 참고해서 활용할 수 있을 것이다.&lt;/p&gt;
+&lt;h1 id=&#34;시행착오&#34;&gt;시행착오&lt;/h1&gt;
+&lt;p&gt;처음에는 집에서 회사 아이맥에 SSH로 접속하는 방법을 썼다. 일을 주로 CLI에서 하니 그럭저럭 할만하긴 했다. 하지만 SourceTree나 VS Code 같은 GUI 앱이 필요할 때 사용할 수 없어서 불편했다. Screen Sharing으로 실행할 수는 있지만 속도가 느리고 한/영 전환 등 키매핑 관련 문제 때문에 불편하다.&lt;/p&gt;
+&lt;p&gt;다음 시도는 SSHFS나 맥의 File Sharing 으로 회사 아이맥의 파일을 맥북에서 로컬 파일처럼 접근하는 것이었다.
+논리적으로는 첫번째 방법의 문제를 해결할 수 있을 것 같았지만 파일 시스템의 반응이 너무 느려서 쓸 수 없었다.&lt;/p&gt;
+&lt;p&gt;다음은 rsync로 파일을 동기화하는 방법이다. 로컬 파일을 사용할 수 있어서 반응이 빠르지만 역시 아래와 같은 문제로 해결책이 되지 못했다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;단방향 동기화만 지원.&lt;/li&gt;
+&lt;li&gt;동기화 대상에서 제외해야 하는 파일을 일일히 rsync의 설정으로 관리해야 함. 대상을 .gitignore 에서 이미 관리하고 있는데 그것을 다시 rysnc의 설정으로 만들어야 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;찾아보니 양방향 파일 동기화를 지원하는 &lt;a href=&#34;https://wiki.archlinux.org/title/unison&#34;&gt;Unison&lt;/a&gt;이라는 도구가 있었다. 이것도 해결책이 될 수 없었는데 아래와 같은 문제 때문이다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;사용법이 직관적이지 않음&lt;/li&gt;
+&lt;li&gt;양쪽에서 동일한 곳을 수정했을 때 충돌(conflict) 해결이 쉽지 않다.&lt;/li&gt;
+&lt;li&gt;파일을 잘못 변경하거나 삭제하면 복구하기가 어렵다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;git으로-해결&#34;&gt;Git으로 해결&lt;/h1&gt;
+&lt;p&gt;작업 내용을 양방향으로 동기화할 수 있고 conflict를 잘 처리할 수 있으며 뭔가 문제가 생겼을 때 쉽게 복구할 수 있는 도구가 필요한 것인데,
+등잔 밑이 어둡다고 이런 일을 가장 잘 해내는 도구가 이미 쓰고 있는 Git이었다. 동기화 대상에서 제외해야하는 파일들이 이미 .gitignore에 설정되어 있으니 따로 신경쓸 필요도 없다.&lt;/p&gt;
+&lt;p&gt;하지만 일반적인 작업 플로우처럼 GitHub이나 GitLab 같은 origin으로 push한 후 다른 컴퓨터에서 pull하는 방식은 부적합하다. push하기 전에 논리적인 작업 단위로 commit들을 나누고 commit 메시지도 잘 정리해서 써야 하는데 두 컴퓨터 간 동기화를 위해 급하게 commit을 해야 하면 제대로 하기 어렵기 때문이다.&lt;/p&gt;
+&lt;h1 id=&#34;git-repository-간-직접-동기화&#34;&gt;Git repository 간 직접 동기화&lt;/h1&gt;
+&lt;p&gt;해결책은 origin을 거치지 않고 두 컴퓨터의 Git resository 간 직접 동기화를 하는 것이다. Git은 각 repository가 동등한 위상을 가지는 분산 시스템이기 때문에 origin을 거치지 않아도 동기화를 할 수 있다.&lt;/p&gt;
+&lt;p&gt;Git의 강점 중 하나는 동료들과 함께 사용하는 remote에 push하기 전에는 로컬에서 얼마든지 commit history를 수정할 수 있다는 것이다.  언제든 변경을 저장하고 싶으면 임시 commit들을 대강 만들면 된다. 이후 적절한 시점에 git reset 명령으로 임시 commit들을 취소한 후에 정식으로 commit할 수 있다.&lt;/p&gt;
+&lt;p&gt;혼자 사용하는 두 컴퓨터의 repositoy 를 pull 또는 push로 동기화하는 것도 동료에게 commit을 공유하지 않는 것이라 마찬가지 방법을 쓸 수 있다. 즉 동기화가 필요하면 임시 commit을 대강 만들어서 다른 쪽에 넘긴다. 임시 commit을 받아간 곳에서 작업을 이어 하다가 적절한 시점에 reset 후 commit을 다시 다듬어서 만들면 된다.&lt;/p&gt;
+&lt;h1 id=&#34;git-fetch-pull로-동기화하는-예제&#34;&gt;git fetch (pull)로 동기화하는 예제&lt;/h1&gt;
+&lt;p&gt;회사 아이맥에서 하던 작업을 임시 commit한 후 맥북으로 넘기는 명령어 예제이다.&lt;/p&gt;
+&lt;p&gt;아래와 같은 환경이다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;맥북에서 아이맥으로 SSH 연결이 가능하다.&lt;/li&gt;
+&lt;li&gt;맥북에서 아이맥을 &amp;lsquo;imac&amp;rsquo; 으로 name lookup 할 수 있는 상황이다. DNS에 등록되어 있지 않아서 /etc/hosts 에 설정했다.&lt;/li&gt;
+&lt;li&gt;두 컴퓨터 간에 서로 SSH 접속이 되는 상황이다. 집에서는 회사 VPN을 통해 아이맥에 접속한다. 출근할 때는 회사로 맥북을 가져가서 아이맥에서 맥북으로 접속하는 방법을 쓴다. 집에 컴퓨터를 둔 상태에서 회사에서 접속하려면 집 인터넷 공유기에 적절한 설정을 하면 되겠다.&lt;/li&gt;
+&lt;li&gt;두 컴퓨터 모두 ~/sample_proj/ 에 Git local environment&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; 가 위치한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;아이맥에서 하던 작업을 맥북으로 넘기는 명령어를 요약하면 아래와 같다. 두 컴퓨터에서 모두 current branch(HEAD)는 master다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac에서 실행&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~/sample_proj
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;$ touch b
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;$ git add .
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;$ git commit -m &lt;span class=&#34;s1&#34;&gt;&amp;#39;Temparary save&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook에서 실행&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~/sample_proj
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;$ git remote add imac psh@imac:sample_proj/
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;$ git fetch imac
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;$ git merge imac/master
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;$ git reset HEAD^ &lt;span class=&#34;c1&#34;&gt;# 임시 commit은 없애고 변경한 내용만 남김&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac에서 실행&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;$ git reset --hard HEAD^ &lt;span class=&#34;c1&#34;&gt;# 임시 commit과 변경한 내용 모두 없앰.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;하나씩 설명하면 아래와 같다.&lt;/p&gt;
+&lt;p&gt;1. 작업 전 아이맥의 ~/sample_project/ 에서 상태를 확인한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac에서 실행. current branch(HEAD)는 master다. &lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~/sample_proj
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ git log --oneline
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;f5bffbb &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master, origin/master&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; first commit
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;$ ls
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;2. 아이맥에서 파일 b를 추가하고 임시 commit을 한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ touch b
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ git add .
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;$ git commit -m &lt;span class=&#34;s1&#34;&gt;&amp;#39;Temparary save&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;3. 맥북에서 아래처럼 imac 이라는 remote를 추가한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~/sample_proj
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ git remote add imac psh@imac:sample_proj/ &lt;span class=&#34;c1&#34;&gt;# SSH 프로토콜로 리모트 설정&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;SSH 프로토콜을 사용했다. 만약 SSH를 사용할 수 없다면 다른 &lt;a href=&#34;https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols&#34;&gt;프로토콜&lt;/a&gt;을 사용할 수 있다.&lt;/p&gt;
+&lt;p&gt;4.  imac의 commit들을 fetch하고 아이맥에서 만든 임시 commit을 master branch에 merge한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook에서 실행. current branch(HEAD)는 master다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git fetch imac
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ git merge imac/master &lt;span class=&#34;c1&#34;&gt;# 두개 명령을 묶어서 git pull imac master 라고 해도 된다.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;5. 임시 commit이 맥북에도 추가된 것을 확인할 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git log --oneline
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;e88d46f &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master, imac/master&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; Temparary save
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;f5bffbb &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;origin/master, origin/HEAD&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; first commit
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;6. 임시 commit에 의한 변경 내용만 working directory에 남기고 임시 commit 자체는 취소한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#macbook&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git reset HEAD^  &lt;span class=&#34;c1&#34;&gt;# current commit 에서 1개만 되돌리면 되므로 HEAD^ 을 지정&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;git reset에 따로 옵션을 지정하지 않았으니 --mixed 옵션이 있는 것과 마찬가지다.
+이렇게 하면 current branch인 master의 위치를 임시 commit 이전으로 돌리지만 working directory는 그대로 둔다.
+즉 임시 commit 의 작업 내용은 working directory 에 그대로 있기 때문에 새로 잘 다듬어서 commit할 수 있다.&lt;/p&gt;
+&lt;p&gt;7. git reset에 의한 결과를 아래처럼 확인할 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git log --oneline
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;f5bffbb &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master, origin/master, origin/HEAD&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; first commit
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;$ ls
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;a b
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;임시 commit은 없어졌지만 그것에 의해 추가된 b는 working 디렉토리에 있다.&lt;/p&gt;
+&lt;p&gt;8. 아이맥에서 임시 commit을 삭제하고 그것에 의한 working directory 변경까지 모두 되돌린다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git reset --hard HEAD^
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;맥북으로 작업을 넘겼기 때문에 아이맥에선 변경한 내용을 깨끗이 지운 것이다.&lt;/p&gt;
+&lt;p&gt;reset 에 --hard 옵션을 주었기 때문에 working directory까지 HEAD^(f5bffbb) 의 것으로 되돌렸다.&lt;/p&gt;
+&lt;p&gt;9. git reset &amp;ndash;hard 의 결과를 아래처럼 확인할 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git log --oneline
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;f5bffbb &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master, origin/master&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; first commit
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;$ ls
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;git-push로-동기화-하는-방법&#34;&gt;git push로 동기화 하는 방법&lt;/h1&gt;
+&lt;p&gt;fetch (또는 pull) 대신 push를 쓸 수도 있다.
+위에서 설명한 fetch 방식이 더 이해하기 쉽고 편리하니 그렇게 할 수 있다면 이 방법은 사용할 필요가 없다.
+하지만 두 컴퓨터 간의 SSH 연결을 한 방향으로만 할 수 있는 환경이라면 해결책이 될 수 있다.&lt;/p&gt;
+&lt;p&gt;맥북의 master branch에서 임시 commit한 것을 아이맥의 master branch로 push하려면 아래처럼 한다.&lt;/p&gt;
+&lt;p&gt;1. 아이맥의 current branch 를 push 대상인 master가 아닌 다른 것으로 바꿔둔다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git branch tmp
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ git checkout tmp  &lt;span class=&#34;c1&#34;&gt;# push 대상 branch에서 다른 곳으로 잠시 피한다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;Switched to branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;tmp&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이렇게 하지 않으면 push할 때 에러가 발생한다.&lt;/p&gt;
+&lt;p&gt;2. 맥북에서 아이맥으로 push한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git push imac master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;checkout된-branch에-push하면-에러가-발생하는-이유&#34;&gt;checkout된 branch에 push하면 에러가 발생하는 이유&lt;/h1&gt;
+&lt;p&gt;위에서 맥북에서 master branch를 아이맥의 master로 push하기 전에 아이맥에서 먼저 master가 아닌 다른 branch로 checkout 했다.&lt;/p&gt;
+&lt;p&gt;만약 아이맥에서 master branch에 checkout한 상태에서 push하면 아래와 같은 에러가 발생한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# macbook&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;$ git push imac master
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;...
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;remote: error: refusing to update checked out branch: refs/heads/master
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;remote: error: By default, updating the current branch in a non-bare repository
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;remote: is denied, because it will make the index and work tree inconsistent
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;remote: with what you pushed, and will require &lt;span class=&#34;s1&#34;&gt;&amp;#39;git reset --hard&amp;#39;&lt;/span&gt; to match
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;remote: the work tree to HEAD.
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;remote:
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;remote: You can &lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; the &lt;span class=&#34;s1&#34;&gt;&amp;#39;receive.denyCurrentBranch&amp;#39;&lt;/span&gt; configuration variable
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;remote: to &lt;span class=&#34;s1&#34;&gt;&amp;#39;ignore&amp;#39;&lt;/span&gt; or &lt;span class=&#34;s1&#34;&gt;&amp;#39;warn&amp;#39;&lt;/span&gt; in the remote repository to allow pushing into
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;remote: its current branch&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; however, this is not recommended unless you
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;remote: arranged to update its work tree to match what you pushed in some
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;remote: other way.
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;remote:
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;remote: To squelch this message and still keep the default behaviour, &lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;remote: &lt;span class=&#34;s1&#34;&gt;&amp;#39;receive.denyCurrentBranch&amp;#39;&lt;/span&gt; configuration variable to &lt;span class=&#34;s1&#34;&gt;&amp;#39;refuse&amp;#39;&lt;/span&gt;.
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;To imac:sample_proj/
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt; ! &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;remote rejected&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; master -&amp;gt; master &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;branch is currently checked out&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;error: failed to push some refs to &lt;span class=&#34;s1&#34;&gt;&amp;#39;imac:sample_proj/&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;위 에러 메시지의 안내대로 아래처럼 receive.denyCurrentBranch를 ignore로 설정하면 에러가 발생하지 않는다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# imac&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ git config receive.denyCurrentBranch ignore
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;하지만 이렇게 하는 것은 좋지 않은 방법이다. 아이맥의 local environment 가 혼란스러운 상태에 빠질 수 있기 때문이다.&lt;/p&gt;
+&lt;p&gt;chekout한 branch( current branch )에 push하면 push된 commit들이 current branch 에는 추가되지만 working directory는 그대로 두기 때문에 문제가 된다. 즉 push 전에 clean한 상태 (git diff를 실행하면 아무것도 나오지 않는 상태) 였다고 해도 push 후에 current commit(HEAD)의 내용과 working directory의 내용이 달라진다.&lt;/p&gt;
+&lt;p&gt;예를 들어 push된 commit에 의해 기존에 없던 a.txt 라는 파일이 추가되었다면 working directory에는 그 파일이 여전히 없기 때문에 마치 이전 commit에 있었던 a.txt를 working directory에서 삭제한 것처럼 보이게 된다.&lt;/p&gt;
+&lt;p&gt;GitLab 이나 GitHub 을 가리키는 remote에 push할 때는 이런 문제가 없는데, 그곳에 있는 것은 working directory가 없는 bare repository 이기 때문이다.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;local repository, staging area, working directory를 포괄하는 용어이다. git clone 명령으로 생성되는 디렉토리의 내용물 전체가 local environment이다. Git 을 제대로 배우고 싶은 분들께 추천하고 싶은 &lt;a href=&#34;https://www.amazon.com/Professional-Git-Brent-Laster/dp/111928497X&#34;&gt;Professional Git&lt;/a&gt; 에서 이 용어를 사용하는데 공식 용어인지는 확실치 않다.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>오해하기 쉬운 EKS 클러스터의 subnet 설정</title>
       <link>https://pseonghoon.github.io/post/eks-subnet/</link>
