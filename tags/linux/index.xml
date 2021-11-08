@@ -8,7 +8,7 @@
     <copyright>2020</copyright>
     <lastBuildDate>Sun, 04 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>L4 DSR 에서 arp_ignore, arp_announce 설정 정확히 이해하기</title>
+      <title>L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</title>
       <link>https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/</link>
       <pubDate>Sun, 04 Oct 2020 00:00:00 +0000</pubDate>
       
@@ -16,7 +16,7 @@
       <description>
         
           &lt;p&gt;on-premise 환경에서 L4 로드 밸런서를 DSR(Direct Server Return) 모드로 구성할 때, 리눅스 서버의 kernel parameter 중 arp_ignore, arp_announce를 적절히 설정해야 한다.
-이 포스트에서 이 parameter들에 대해 잘못 알려진 정보를 바로잡고, 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;
+이 parameter들의 용도에 대해 잘못 이해하고 있는 경우가 많아서 그 정확한 의미를 정리했다. ARP의 동작 방식에 대해 더 깊이 이해하는 데도 도움이 될 것이다.&lt;/p&gt;
 &lt;h1 id=&#34;dsr-모드의-개요&#34;&gt;DSR 모드의 개요&lt;/h1&gt;
 &lt;p&gt;Direct Server Return의 준말인데, 정식 용어가 아니라 편의상 이렇게 부르는 것이다.
 L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트에 패킷을 바로 전송하게 하는 구성이다.&lt;/p&gt;

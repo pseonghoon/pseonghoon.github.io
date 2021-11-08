@@ -67,7 +67,7 @@ Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.te
     </item>
     
     <item>
-      <title>Kubernetes에서 NFS(EFS) 사용하기</title>
+      <title>Kubernetes에서 NFS 사용하기</title>
       <link>https://pseonghoon.github.io/post/k8s-and-nfs/</link>
       <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
       
