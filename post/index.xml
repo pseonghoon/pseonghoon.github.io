@@ -187,7 +187,7 @@
       <description>
         
           &lt;p&gt;EKS 클러스터를 생성할 때 subnet 설정의 의미를 오해하기 쉽다.&lt;/p&gt;
-&lt;p&gt;이것은 &lt;strong&gt;EKS master가 worker node와 통신하기 위해 사용할 subnet&lt;/strong&gt;을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하고 설정하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다. 특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.&lt;/p&gt;
+&lt;p&gt;이 설정은 &lt;strong&gt;EKS master가 worker node와 통신하기 위해 사용할 subnet&lt;/strong&gt;을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하고 설정하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다. 특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options&#34;&gt;AWSCLI 문서&lt;/a&gt; 중 클러스터 subnetIds에 대한 설명이 아래와 같다.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;subnetIds -&amp;gt; (list)&lt;/strong&gt;&lt;/p&gt;

@@ -18,14 +18,14 @@
 
 <meta property="og:type" content="article">
 <meta name="description" content="EKS 클러스터를 생성할 때 subnet 설정의 의미를 오해하기 쉽다.
-이것은 EKS master가 worker node와 통신하기 위해 사용할 subnet을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet …">
+이 설정은 EKS master가 worker node와 통신하기 위해 사용할 subnet을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="오해하기 쉬운 EKS 클러스터의 subnet 설정" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/eks-subnet/" />
 <meta property="og:title" content="오해하기 쉬운 EKS 클러스터의 subnet 설정" />
 <meta property="og:description" content="EKS 클러스터를 생성할 때 subnet 설정의 의미를 오해하기 쉽다.
-이것은 EKS master가 worker node와 통신하기 위해 사용할 subnet을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet …" />
+이 설정은 EKS master가 worker node와 통신하기 위해 사용할 subnet을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet …" />
 <meta property="og:image" content="https://pseonghoon.github.io/post/img/eks.png" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
@@ -150,7 +150,7 @@
 
     
     <p>EKS 클러스터를 생성할 때 subnet 설정의 의미를 오해하기 쉽다.</p>
-<p>이것은 <strong>EKS master가 worker node와 통신하기 위해 사용할 subnet</strong>을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하고 설정하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다. 특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.</p>
+<p>이 설정은 <strong>EKS master가 worker node와 통신하기 위해 사용할 subnet</strong>을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하고 설정하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다. 특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.</p>
 <p><a href="https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options">AWSCLI 문서</a> 중 클러스터 subnetIds에 대한 설명이 아래와 같다.</p>
 <blockquote>
 <p><strong>subnetIds -&gt; (list)</strong></p>
