@@ -160,8 +160,8 @@ subnets to allow communication between your worker nodes and the Kubernetes cont
 <p>(string)</p>
 </blockquote>
 <p>첫 문장을 보고 worker node들이 사용하는 모든 subnet으로 설정해야 한다고 생각할 수 있는데 그렇지 않다. 첫 문장에 오해의 소지가 있다.</p>
-<p>이어지는 내용을 차분히 읽으면 알 수 있듯이, control plance (master)이 해당 subnet에 network interface를 생성해서 worker node들과 통신할 수 있으면 된다.
-VPC 내의 subnet들은 서로 routing이 되니 <mark> VPC 내의 private subnet 중 아무 것이나 사용해도 된다</mark>. 단, 서로 다른 AZ에 있는 2개 이상의 subnet으로 설정해야 한다.</p>
+<p>이어지는 내용을 차분히 읽으면 알 수 있듯이, control plane (master)이 해당 subnet에 network interface를 생성해서 worker node들과 통신할 수 있으면 된다.
+VPC 내의 subnet들은 서로 라우팅이 되니 <mark> VPC 내의 private subnet 중 아무 것이나 사용해도 된다</mark>. 단, 서로 다른 AZ에 있는 2개 이상의 subnet으로 설정해야 한다.</p>
 <h2 id="잘못-이해했을-때의-문제">잘못 이해했을 때의 문제</h2>
 <p>이것을 잘못 이해하면 곤란한 상황에 처할 수 있다.
 EKS에선 Pod들도 실제 VPC의 IP를 사용하니 많은 IP가 필요하다.</p>
