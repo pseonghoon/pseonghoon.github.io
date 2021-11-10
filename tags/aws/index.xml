@@ -15,19 +15,17 @@
       <guid>https://pseonghoon.github.io/post/eks-subnet/</guid>
       <description>
         
-          &lt;p&gt;EKS 클러스터를 생성할 때 클러스터의 subnet 설정의 의미를 오해하기 쉬운 것 같다.
-만약 이것을 worker node가 사용하는 모든 subnet을 설정하는 것으로 이해하면, IP 대역을 늘리기 위해 EKS 클러스터(master)를 재생성하게 될 수 있다.&lt;/p&gt;
-&lt;p&gt;특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.
-AWS 콘솔을 사용한다면 콘솔 UI가 전체 subnet을 우선 후보로 제시하기 때문에 별로 헷갈리지 않을 것 같다.&lt;/p&gt;
+          &lt;p&gt;EKS 클러스터를 생성할 때 subnet 설정의 의미를 오해하기 쉽다.&lt;/p&gt;
+&lt;p&gt;이것은 &lt;strong&gt;EKS master가 worker node와 통신하기 위해 사용할 subnet&lt;/strong&gt;을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하고 설정하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다. 특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options&#34;&gt;AWSCLI 문서&lt;/a&gt; 중 클러스터 subnetIds에 대한 설명이 아래와 같다.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;subnetIds -&amp;gt; (list)&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;subnetIds -&amp;gt; (list)&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Specify subnets for your Amazon EKS worker nodes.
 Amazon EKS creates cross-account elastic network interfaces in these
 subnets to allow communication between your worker nodes and the Kubernetes control plane.&lt;/p&gt;
 &lt;p&gt;(string)&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;첫 문장을 보고 worker node들이 사용하는 모든 subnet으로 설정해야 한다고 생각할 수 있는데 그렇지 않다(첫 문장 자체에 오해의 소지가 있다).&lt;/p&gt;
+&lt;p&gt;첫 문장을 보고 worker node들이 사용하는 모든 subnet으로 설정해야 한다고 생각할 수 있는데 그렇지 않다. 첫 문장에 오해의 소지가 있다.&lt;/p&gt;
 &lt;p&gt;이어지는 내용을 차분히 읽으면 알 수 있듯이, control plance (master)이 해당 subnet에 network interface를 생성해서 worker node들과 통신할 수 있으면 된다.
 VPC 내의 subnet들은 서로 routing이 되니 &lt;mark&gt; VPC 내의 private subnet 중 아무 것이나 사용해도 된다&lt;/mark&gt;. 단, 서로 다른 AZ에 있는 2개 이상의 subnet으로 설정해야 한다.&lt;/p&gt;
 &lt;h2 id=&#34;잘못-이해했을-때의-문제&#34;&gt;잘못 이해했을 때의 문제&lt;/h2&gt;
@@ -43,7 +41,7 @@ At this time, you can not update the subnets or security group IDs for an existi
 &lt;/blockquote&gt;
 &lt;p&gt;Terraform에서 &lt;a href=&#34;https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster#subnet_ids&#34;&gt;subnet_ids&lt;/a&gt; 값을 변경하고 terraform apply를 실행하면 클러스터를 삭제하고 새로 생성한다.&lt;/p&gt;
 &lt;p&gt;결국 IP 대역을 늘리기 위해 불필요하게 cluster를 삭제하고 새로 만드는 수고를 하게 될 수 있다.
-아니면 IP 대역을 늘리는 것이 쉬운 일이 아니라고 생각해서 처음부터 지나치게 큰 IP 대역을 할당하게 될 수도 있다.&lt;/p&gt;
+아니면 IP 대역을 늘리는 것이 쉬운 일이 아니라고 생각해서 처음부터 지나치게 큰 IP 대역을 할당할 수도 있다.&lt;/p&gt;
 &lt;h2 id=&#34;올바른-설정의-예&#34;&gt;올바른 설정의 예&lt;/h2&gt;
 &lt;p&gt;범용으로 사용하는 private subnet (private_subnet이라 하자)과 eks worker 전용 subnet (eks_worker_subnet)을 따로 만들었다고 가정하자.&lt;/p&gt;
 &lt;p&gt;EKS 클러스터에는 private_subnet을 설정하면 된다.&lt;/p&gt;
@@ -150,7 +148,7 @@ Terraform 이라면 aws_autoscaling_group의 &lt;a href=&#34;https://registry.te
     </item>
     
     <item>
-      <title>코드로 인프라 관리하기</title>
+      <title>코드로 인프라 관리하기 (IaC)</title>
       <link>https://pseonghoon.github.io/post/infrastructure-as-code/</link>
       <pubDate>Mon, 05 Oct 2020 00:00:00 +0000</pubDate>
       
