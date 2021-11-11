@@ -8,7 +8,7 @@
     <copyright>2020</copyright>
     <lastBuildDate>Mon, 08 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Git 직접 동기화로 회사 밖에서도 로컬 컴퓨터에서 쾌적하게 일하는 방법</title>
+      <title>Git 직접 동기화로 재택근무 생산성 높이기</title>
       <link>https://pseonghoon.github.io/post/working-from-home-with-git/</link>
       <pubDate>Mon, 08 Nov 2021 00:00:00 +0000</pubDate>
       
@@ -16,7 +16,7 @@
       <description>
         
           &lt;p&gt;출근과 재택 근무를 병행하면서 한곳에서 하던 작업을 편하게 이어서 하기 위해 여러가지 시도를 했다.
-&lt;u&gt;집에서 회사 컴퓨터에 로그인해서 일하는 대신 로컬 컴퓨터에서 쾌적하게 작업&lt;/u&gt;하는 것이 목표였다.&lt;/p&gt;
+&lt;u&gt;집에서 회사 컴퓨터에 로그인해서 일하는 대신 로컬 컴퓨터에서 CLI와 GUI를 함께 쓰는 쾌적한 작업 환경을 구성&lt;/u&gt;하는 것이 목표였다.&lt;/p&gt;
 &lt;p&gt;몇가지 시행착오 후 만족스런 방법을 찾았는데, 회사 아이맥에서 작업하던 Git repository를 집에서 쓰는 맥북과 Git으로 &amp;lsquo;직접 동기화&amp;rsquo;하는 것이다. 두 local repository를 GitHub이나 GitLab 같은 서버 역할을 하는 remote를 거치지 않고 직접 연결하는 방법이다.&lt;/p&gt;
 &lt;p&gt;맥을 사용하는 것을 전제로 설명하지만 Git을 활용하는 방법이 주요 내용이라 맥 사용자가 아니라도 참고해서 활용할 수 있을 것이다.&lt;/p&gt;
 &lt;h1 id=&#34;시행착오&#34;&gt;시행착오&lt;/h1&gt;
