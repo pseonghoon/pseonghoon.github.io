@@ -217,15 +217,28 @@
 <p>공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8">PVC의 storageClassName 설정</a>을 “”로 했는데 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector">label selector</a>를 설정해야 할 것이다.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
-
-<script src="https://utteranc.es/client.js"
-        repo="pseonghoon/blog-comments"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
+</section><div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
 
   </article>
 <aside class="sidebar">
