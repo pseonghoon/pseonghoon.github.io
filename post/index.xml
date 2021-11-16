@@ -55,7 +55,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 스크립트는 role들을 roles/ 디렉토리에 다운로드 받는다.
 Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾게 되어있다.&lt;/p&gt;
 &lt;p&gt;--force 옵션은 이미 다운받은 role을 최신 코드로 업데이트하기 위해 필요하다.&lt;/p&gt;
-&lt;p&gt;&lt;u&gt;--ignore-errors 옵션은 뒤에 설명할 symbolic link를 이용해 테스트하는 방법을 쓸 때 ansible-galaxy가 중간에 에러를 내고 멈추지 않게 하기 위한 것&lt;/u&gt;이다.&lt;/p&gt;
+&lt;p&gt;--ignore-errors 옵션은 뒤에 설명할 symbolic link를 이용해 테스트하는 방법을 쓸 때 ansible-galaxy가 중간에 에러를 내고 멈추지 않게 하기 위한 것이다.&lt;/p&gt;
 &lt;p&gt;아래는 &lt;code&gt;roles/.gitignore&lt;/code&gt; 의 내용이다. &lt;code&gt;.gitignore&lt;/code&gt;를 제외한 모든 다운받은 role 코드를 Git이 무시하게 한다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;*
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;!.gitignore
