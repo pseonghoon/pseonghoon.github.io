@@ -28,7 +28,7 @@
 &lt;/ul&gt;
 &lt;h1 id=&#34;ansible-role&#34;&gt;Ansible Role&lt;/h1&gt;
 &lt;p&gt;Ansible playbook을 여러개 만들면 중복되는 코드가 생긴다. 동일한 코드가 여러 벌이 되면 관리가 불가능해지기 때문에 이런 것들은 &amp;lsquo;모듈&amp;rsquo; 혹은 &amp;lsquo;라이브러리&amp;rsquo; 로 만들어 재사용해야 하는데 Ansible에선 role이 그런 역할을 한다.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html&#34;&gt;https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html&#34;&gt;Ansible 공식 문서: Roles&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&#34;ansible-role을-다루는-정석&#34;&gt;Ansible role을 다루는 정석&lt;/h1&gt;
 &lt;h3 id=&#34;1-role-당-git-repository-하나&#34;&gt;1. role 당 Git repository 하나&lt;/h3&gt;
 &lt;p&gt;모든 코드는 Git으로 관리해야 한다.&lt;/p&gt;
