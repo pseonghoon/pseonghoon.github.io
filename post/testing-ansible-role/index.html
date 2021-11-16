@@ -173,12 +173,12 @@
 </ul>
 <h3 id="2-ansible-galaxy로-다운로드">2. ansible-galaxy로 다운로드</h3>
 <p>playbook이 있는 디렉토리에 <code>requirements.yml</code> 을 만들고 다운로드할 role의 목록을 작성한다. 예를 들어 아래처럼 한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span>- <span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l">https://git.nwz.kr/ansible_role/ec2_linux_common.git</span><span class="w">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span>- <span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l">https://git.psh.kr/ansible_role/ec2_linux_common.git</span><span class="w">
 </span><span class="ln">2</span><span class="w">  </span><span class="nt">scm</span><span class="p">:</span><span class="w"> </span><span class="l">git</span><span class="w">
 </span><span class="ln">3</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">ec2_linux_common</span><span class="w">
 </span><span class="ln">4</span><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l">master </span><span class="w">
 </span><span class="ln">5</span><span class="w">
-</span><span class="ln">6</span><span class="w"></span>- <span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l">https://git.nwz.kr/ansible_role/cloudwatch_agent.git</span><span class="w">
+</span><span class="ln">6</span><span class="w"></span>- <span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l">https://git.psh.kr/ansible_role/cloudwatch_agent.git</span><span class="w">
 </span><span class="ln">7</span><span class="w">  </span><span class="nt">scm</span><span class="p">:</span><span class="w"> </span><span class="l">git</span><span class="w">
 </span><span class="ln">8</span><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l">master</span><span class="w">
 </span></code></pre></div><p>아래처럼 필요한 role들을 다운로드 받는 스크립트를 만들어 쓰면 편리하다. 파일 이름은 <code>get_roles.sh</code> 이라고 하자.</p>
