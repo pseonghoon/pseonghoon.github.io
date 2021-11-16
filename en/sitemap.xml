@@ -18,6 +18,9 @@
     <loc>https://pseonghoon.github.io/tags/ansible/</loc>
     <lastmod>2021-11-16T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://pseonghoon.github.io/post/testing-ansible-role/</loc>
+    <lastmod>2021-11-16T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://pseonghoon.github.io/tags/iac/</loc>
     <lastmod>2021-11-16T00:00:00+00:00</lastmod>
   </url><url>
@@ -36,9 +39,6 @@
                 hreflang="en"
                 href="https://pseonghoon.github.io/tags/"
                 />
-  </url><url>
-    <loc>https://pseonghoon.github.io/post/testing-ansible-role/</loc>
-    <lastmod>2021-11-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pseonghoon.github.io/tags/git/</loc>
     <lastmod>2021-11-08T00:00:00+00:00</lastmod>
