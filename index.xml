@@ -8,7 +8,7 @@
     <copyright>2020</copyright>
     <lastBuildDate>Tue, 16 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>개발 중인 Ansible role 편하게 테스트하기</title>
+      <title>개발 중인 Ansible role 편하게 테스트하는 방법</title>
       <link>https://pseonghoon.github.io/post/testing-ansible-role/</link>
       <pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate>
       
