@@ -150,7 +150,8 @@
 
     
     <p>EKS 클러스터를 생성할 때 subnet 설정의 의미를 오해하기 쉽다.</p>
-<p>이 설정은 <strong>EKS master가 worker node와 통신하기 위해 사용할 subnet</strong>을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다. 특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.</p>
+<p>이 설정은 <u>EKS master가 worker node와 통신하기 위해 사용할 subnet</u>을 지정하는 것이다. 그런데 worker node가 사용하는 모든 subnet을 지정하는 것으로 잘못 이해하면 나중에 worker node들이 사용할 subnet을 추가하기 위해 EKS 클러스터(master)를 재생성해야 하는 것으로 오해할 수 있다.</p>
+<p>특히 Terraform 등 코드로 클러스터를 만들 때 argument의 이름만 보고 오해하기 쉽다.</p>
 <p><a href="https://docs.aws.amazon.com/cli/latest/reference/eks/create-cluster.html#options">AWSCLI 문서</a> 중 클러스터 subnetIds에 대한 설명이 아래와 같다.</p>
 <blockquote>
 <p><strong>subnetIds -&gt; (list)</strong></p>
@@ -193,28 +194,20 @@ At this time, you can not update the subnets or security group IDs for an existi
 <span class="ln">11</span>}</code></pre></div></p>
 <p>eks_woker_subnet은 worker node를 생성하는 Auto Scaling Group에 설정하면 된다.
 Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#vpc_zone_identifier">vpc_zone_identifier</a>에 설정하면 된다.</p>
-<p>이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.</p><div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+<p>이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.</p>
+
+<style>
+    hr {
+    }
+</style>
+<HR >
+<script src="https://utteranc.es/client.js"
+        repo="pseonghoon/blog-comments"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
 
   </article>
 <aside class="sidebar">

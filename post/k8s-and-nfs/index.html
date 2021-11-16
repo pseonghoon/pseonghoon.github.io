@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Pod에서 NFS를 volume으로 사용하기 위해 공식 문서의 예제1를 참고하는 경우가 많을 것이다. 예제를 제대로 활용하기 위해선 보완 설명이 필요해 이 글을 썼다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개하려고 한 …">
+<meta name="description" content="Pod에서 NFS를 volume으로 사용하기 위해 공식 문서의 예제1를 참고하는 경우가 많을 것인데, 그것을 좀 더 보완해 설명하려고 한다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개한다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="Kubernetes에서 NFS 사용하기" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/k8s-and-nfs/" />
 <meta property="og:title" content="Kubernetes에서 NFS 사용하기" />
-<meta property="og:description" content="Pod에서 NFS를 volume으로 사용하기 위해 공식 문서의 예제1를 참고하는 경우가 많을 것이다. 예제를 제대로 활용하기 위해선 보완 설명이 필요해 이 글을 썼다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개하려고 한 …" />
+<meta property="og:description" content="Pod에서 NFS를 volume으로 사용하기 위해 공식 문서의 예제1를 참고하는 경우가 많을 것인데, 그것을 좀 더 보완해 설명하려고 한다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개한다." />
 <meta property="og:image" content="https://pseonghoon.github.io/post/img/nfs.jpeg" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
@@ -147,9 +147,9 @@
   </div>
 
     
-    <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것이다. 예제를 제대로 활용하기 위해선 보완 설명이 필요해 이 글을 썼다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 <strong>efs-provisioner</strong> 도 간략하게 소개하려고 한다.</p>
+    <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것인데, 그것을 좀 더 보완해 설명하려고 한다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개한다.</p>
 <p>공식 문서에서 소개하는 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>(PersistentVolume)와 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml">PVC</a>(PersistentVolumeClaim)를 정의해서 Pod이 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30">PVC를 volume으로 지정</a>하는 방식을 쓰고 있다.</p>
-<p>더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다.  AWS라면 <a href="https://aws.amazon.com/efs/">EFS 서비스</a>를 사용하면 된다.</p>
+<p>더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다. AWS라면 <a href="https://aws.amazon.com/efs/">EFS 서비스</a>를 사용하면 된다.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
 </span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
 </span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
@@ -178,7 +178,7 @@
 </span></span><span class="hl"><span class="ln">26</span><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/</span><span class="w">
 </span></span><span class="hl"><span class="ln">27</span><span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></code></pre></div>
 <p><em>nfs 타입의 volume에서 설정할 수 있는 field는 <a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#nfsvolumesource-v1-core">API reference</a>를 참고했다.</em></p>
-<h1 id="official-nfs-example">공식 문서의 예제에 대한 보완 설명</h1>
+<h1 id="official-nfs-example">공식 문서 예제 보완 설명</h1>
 <p>먼저 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>의 내용을 따라하면서 충분히 이해한 후 이 포스트를 읽으면 더 도움이 될 것이다.
 예제는 관련 개념을 파악하는데 도움이 되지만 실무에서 활용하려면 유의할 점이 있다.</p>
 <p>우선 NFS 서버를 클러스터 내부에서 운영하고 있다. 예제로는 좋은 접근이지만 그대로 활용하기에는 아래와 같은 한계가 있다.</p>
@@ -217,28 +217,20 @@
 <p>공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8">PVC의 storageClassName 설정</a>을 “”로 했는데 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector">label selector</a>를 설정해야 할 것이다.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section><div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+</section>
+
+<style>
+    hr {
+    }
+</style>
+<HR >
+<script src="https://utteranc.es/client.js"
+        repo="pseonghoon/blog-comments"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
 
   </article>
 <aside class="sidebar">
