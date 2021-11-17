@@ -8,7 +8,7 @@
     <copyright>2020</copyright>
     <lastBuildDate>Tue, 16 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>개발 중인 Ansible role을 편하게 테스트하는 방법</title>
+      <title>개발 중인 Ansible role 편하게 테스트하기</title>
       <link>https://pseonghoon.github.io/post/testing-ansible-role/</link>
       <pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate>
       
@@ -81,7 +81,7 @@ Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾는다.
     </item>
     
     <item>
-      <title>Git 직접 동기화로 재택근무 생산성 높이기</title>
+      <title>Git 직접 동기화로 재택근무 생산성 높이는 방법</title>
       <link>https://pseonghoon.github.io/post/working-from-home-with-git/</link>
       <pubDate>Mon, 08 Nov 2021 00:00:00 +0000</pubDate>
       

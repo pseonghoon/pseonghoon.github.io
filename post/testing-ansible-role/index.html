@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
   <head>
-<title>개발 중인 Ansible role을 편하게 테스트하는 방법 | 박성훈의 블로그</title>
+<title>개발 중인 Ansible role 편하게 테스트하기 | 박성훈의 블로그</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,9 +20,9 @@
 <meta name="description" content="개발 중인 Ansible role을 편리하게 테스트하는 방법을 공유한다. Ansible이 제시하는 정석대로 role을 다루는 경우에 적합한 방법이다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="개발 중인 Ansible role을 편하게 테스트하는 방법" />
+<meta name="twitter:title" content="개발 중인 Ansible role 편하게 테스트하기" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/testing-ansible-role/" />
-<meta property="og:title" content="개발 중인 Ansible role을 편하게 테스트하는 방법" />
+<meta property="og:title" content="개발 중인 Ansible role 편하게 테스트하기" />
 <meta property="og:description" content="개발 중인 Ansible role을 편리하게 테스트하는 방법을 공유한다. Ansible이 제시하는 정석대로 role을 다루는 경우에 적합한 방법이다." />
 <meta property="og:image" content="https://pseonghoon.github.io/post/img/ansible-logo.png" />
 
@@ -108,7 +108,7 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content" style="word-wrap:break-word;">
-    <h1 class="post_title">개발 중인 Ansible role을 편하게 테스트하는 방법</h1>
+    <h1 class="post_title">개발 중인 Ansible role 편하게 테스트하기</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -121,12 +121,12 @@
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=%ea%b0%9c%eb%b0%9c%20%ec%a4%91%ec%9d%b8%20Ansible%20role%ec%9d%84%20%ed%8e%b8%ed%95%98%ea%b2%8c%20%ed%85%8c%ec%8a%a4%ed%8a%b8%ed%95%98%eb%8a%94%20%eb%b0%a9%eb%b2%95&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2ftesting-ansible-role%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=%ea%b0%9c%eb%b0%9c%20%ec%a4%91%ec%9d%b8%20Ansible%20role%20%ed%8e%b8%ed%95%98%ea%b2%8c%20%ed%85%8c%ec%8a%a4%ed%8a%b8%ed%95%98%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2ftesting-ansible-role%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2ftesting-ansible-role%2f&t=%ea%b0%9c%eb%b0%9c%20%ec%a4%91%ec%9d%b8%20Ansible%20role%ec%9d%84%20%ed%8e%b8%ed%95%98%ea%b2%8c%20%ed%85%8c%ec%8a%a4%ed%8a%b8%ed%95%98%eb%8a%94%20%eb%b0%a9%eb%b2%95" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2ftesting-ansible-role%2f&t=%ea%b0%9c%eb%b0%9c%20%ec%a4%91%ec%9d%b8%20Ansible%20role%20%ed%8e%b8%ed%95%98%ea%b2%8c%20%ed%85%8c%ec%8a%a4%ed%8a%b8%ed%95%98%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -232,7 +232,7 @@ Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾는다.
     <h2 class="mt-4">Featured Posts</h2>
     <ul>
       <li>
-        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이기">Git 직접 동기화로 재택근무 생산성 높이기</a>
+        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이는 방법">Git 직접 동기화로 재택근무 생산성 높이는 방법</a>
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기 (IaC)">코드로 인프라 관리하기 (IaC)</a>
@@ -244,7 +244,7 @@ Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾는다.
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이기">Git 직접 동기화로 재택근무 생산성 높이기</a>
+        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이는 방법">Git 직접 동기화로 재택근무 생산성 높이는 방법</a>
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/eks-subnet/" class="nav-link" title="오해하기 쉬운 EKS 클러스터의 subnet 설정">오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
