@@ -8,7 +8,7 @@
     <copyright>2020</copyright>
     <lastBuildDate>Tue, 16 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>개발 중인 Ansible role 편하게 테스트하기</title>
+      <title>개발 중인 Ansible role 테스트를 편하게 하는 방법</title>
       <link>https://pseonghoon.github.io/post/testing-ansible-role/</link>
       <pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate>
       
@@ -72,7 +72,7 @@ Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾는다.
 &lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# symbolic link인 ec2_linux_common 이 작업 디렉토리인  ~/git/ansible_role/ec2_linux_common 을 가리키게 된다.&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;$ ln -s ~/git/ansible_role/ec2_linux_common .  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이렇게 하면 변경된 코드를 commit, push할 필요 없이 바로 테스트할 수 있다.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이렇게 하면 코드를 수정한 후 commit, push할 필요 없이 role을 사용하는 playbook을 바로 실행해 테스트할 수 있다.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;get_roles.sh&lt;/code&gt; 을 다시 실행해도 symbolic link는 보존된다.&lt;/p&gt;
 &lt;figure&gt;&lt;img src=&#34;https://pseonghoon.github.io/post/img/get_roles_result.png&#34;/&gt;
 &lt;/figure&gt;
@@ -81,7 +81,7 @@ Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾는다.
     </item>
     
     <item>
-      <title>Git 직접 동기화로 재택근무 생산성 높이는 방법</title>
+      <title>Git 직접 동기화로 재택근무 생산성 높이기</title>
       <link>https://pseonghoon.github.io/post/working-from-home-with-git/</link>
       <pubDate>Mon, 08 Nov 2021 00:00:00 +0000</pubDate>
       
