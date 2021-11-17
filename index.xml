@@ -8,40 +8,41 @@
     <copyright>2020</copyright>
     <lastBuildDate>Tue, 16 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Ansible role 개발 중 편하게 테스트하는 방법</title>
+      <title>개발 중인 Ansible role 편하게 테스트하는 방법</title>
       <link>https://pseonghoon.github.io/post/testing-ansible-role/</link>
       <pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/testing-ansible-role/</guid>
       <description>
         
-          &lt;p&gt;Ansible 이 제시하는 정석대로 role을 다루는 것을 전제로, 개발 중인 Ansible role을 테스트할 때 편리하게 쓸 수 있는 방법을 공유한다.&lt;/p&gt;
+          &lt;p&gt;Ansible이 제시하는 정석대로 role을 다루는 것을 전제로, 개발 중인 role을 편리하게 테스트하는 방법을 공유한다.&lt;/p&gt;
 &lt;p&gt;요약하면 아래와 같다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Ansible role을 다루는 정석
 &lt;ol&gt;
 &lt;li&gt;role 하나 당 Git repository 하나&lt;/li&gt;
-&lt;li&gt;ansible-galaxy로 필요한 role들을 다운로드한다.&lt;/li&gt;
+&lt;li&gt;ansible-galaxy로 필요한 role들을 다운로드&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
-&lt;li&gt;symbolic link를 써서 개발 중인 role의 테스트를 간편하게 할 수 있다.&lt;/li&gt;
+&lt;li&gt;symbolic link를 쓰면 개발 중인 role의 테스트를 편하게 할 수 있다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&#34;ansible-role&#34;&gt;Ansible Role&lt;/h1&gt;
-&lt;p&gt;Ansible playbook을 여러개 만들면 중복되는 코드가 생긴다. 동일한 코드가 여러 벌이 되면 관리가 불가능해지기 때문에 이런 것들은 &amp;lsquo;모듈&amp;rsquo; 혹은 &amp;lsquo;라이브러리&amp;rsquo; 로 만들어 재사용해야 하는데 Ansible에선 role이 그런 역할을 한다.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html&#34;&gt;Ansible 공식 문서: Roles&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Ansible playbook을 여러개 만들다 보면 중복되는 코드가 생긴다. 동일한 코드가 여러 벌이 되면 관리가 불가능해지기 때문에 이런 것들은 &amp;lsquo;모듈&amp;rsquo; 혹은 &amp;lsquo;라이브러리&amp;rsquo; 로 만들어 재사용해야 하는데 Ansible에선 role이 그런 역할을 한다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html&#34;&gt;https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&#34;ansible-role을-다루는-정석&#34;&gt;Ansible role을 다루는 정석&lt;/h1&gt;
 &lt;h3 id=&#34;1-role-당-git-repository-하나&#34;&gt;1. role 당 Git repository 하나&lt;/h3&gt;
-&lt;p&gt;모든 코드는 Git으로 관리해야 한다.&lt;/p&gt;
-&lt;p&gt;Ansible role의 Git repository는 어떤 단위로 만들어야 할까? 하나의 Git repository 에서 여러 Ansible role을 관리하는 방법을 생각할 수도 있는데 role마다 Git repository를 만드는 것이 좋은 방법이다.&lt;/p&gt;
-&lt;p&gt;전자를 생각했다면 role 하나의 코드 분량이 많지 않은데 전용 Git repository를 만드는 것은 비효율적이라는 생각 때문일 것이다. 하지만 Git repository는 관리 대상 코드가 논리적으로 독립된 것이기만 하면 코드의 분량과 관계 없이 만들 수 있고 그렇게 하는 것이 바람직하다. Git repository 하나가 방대한 리눅스 커널 코드를 관리할 수도 있지만 스크립트 파일 하나를 관리해도 문제될 것이 없다. 이런 점은 관리 비용 때문에 repository 수를 쉽게 늘리기 어려운 Subversion와 차별화되는 점이다.&lt;/p&gt;
+&lt;p&gt;모든 코드는 Git으로 관리해야 한다. Ansible role도 예외가 아니다.&lt;/p&gt;
+&lt;p&gt;Ansible role의 Git repository는 어떤 단위로 만들어야 할까? 하나의 Git repository 에서 여러 role들을 포함하는 방법을 생각할 수도 있는데 role마다 Git repository를 만드는 것이 Ansible이 제시하는 체계에 맞는 방법이다.&lt;/p&gt;
+&lt;p&gt;전자를 생각했다면 role 하나의 코드 분량이 많지 않은데 전용 Git repository를 만드는 것은 비효율적이라는 생각 때문일 것이다. &lt;u&gt;하지만 Git repository는 관리 대상 코드가 논리적으로 독립된 것이기만 하면 코드의 분량과 관계 없이 만들 수 있고 그렇게 하는 것이 바람직하다&lt;/u&gt;. Git repository 하나가 방대한 리눅스 커널 코드를 관리할 수도 있지만 스크립트 하나를 관리해도 문제될 것이 없다. 관리 비용 때문에 repository 수를 쉽게 늘리기 어려운 Subversion과 차별화되는 점이다.&lt;/p&gt;
 &lt;p&gt;개별 Git repository로 관리하면 아래와 같은 장점이 있다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ansible-galaxy가 role을 다운로드하는 체계에 부합한다. requirements.yml에서 필요한 role마다 Git repository와 branch를 설정하는 방식이다.&lt;/li&gt;
 &lt;li&gt;각각의 role 별로 원하는 branch의 코드를 사용할 수 있다. master branch에 merge되기 전 개발용 branch의 코드를 사용할 수 있다.&lt;/li&gt;
-&lt;li&gt;로컬에서 role을 개발하면서 테스트하기 편리하다.&lt;/li&gt;
+&lt;li&gt;로컬에서 role을 수정하면서 테스트하기 편리하다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;2-ansible-galaxy로-다운로드&#34;&gt;2. ansible-galaxy로 다운로드&lt;/h3&gt;
-&lt;p&gt;playbook이 있는 디렉토리에 &lt;code&gt;requirements.yml&lt;/code&gt; 을 만들고 다운로드할 role의 목록을 작성한다. 예를 들어 아래처럼 한다.&lt;/p&gt;
+&lt;p&gt;playbook이 있는 디렉토리에 &lt;code&gt;requirements.yml&lt;/code&gt; 을 만들고 다운로드할 role의 목록을 작성한다.
+예를 들어 아래처럼 한다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://git.psh.kr/ansible_role/ec2_linux_common.git&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;scm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;git&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ec2_linux_common&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
@@ -50,25 +51,29 @@
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://git.psh.kr/ansible_role/cloudwatch_agent.git&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;scm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;git&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;master&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;아래처럼 필요한 role들을 다운로드 받는 스크립트를 만들어 쓰면 편리하다. 파일 이름은 &lt;code&gt;get_roles.sh&lt;/code&gt; 이라고 하자.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;ansible-galaxy  install --force --ignore-errors -r requirements.yml -p roles
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 스크립트는 role들을 roles/ 디렉토리에 다운로드 받는다.
-Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾게 되어있다.&lt;/p&gt;
-&lt;p&gt;--force 옵션은 이미 다운받은 role을 최신 코드로 업데이트하기 위해 필요하다.&lt;/p&gt;
-&lt;p&gt;--ignore-errors 옵션은 뒤에 설명할 symbolic link를 이용해 테스트하는 방법을 쓸 때 ansible-galaxy가 중간에 에러를 내고 멈추지 않게 하기 위한 것이다.&lt;/p&gt;
-&lt;p&gt;아래는 &lt;code&gt;roles/.gitignore&lt;/code&gt; 의 내용이다. &lt;code&gt;.gitignore&lt;/code&gt;를 제외한 모든 다운받은 role 코드를 Git이 무시하게 한다.&lt;/p&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;아래처럼 필요한 role들을 다운로드하는 스크립트를 만들어 쓰면 편리하다. 파일 이름은 &lt;code&gt;get_roles.sh&lt;/code&gt; 이라고 하자.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;ansible-galaxy install --force --ignore-errors -r requirements.yml -p roles
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 스크립트는 &lt;code&gt;requirements.yml&lt;/code&gt;에 기술된 role들을 roles/ 디렉토리에 다운로드한다.
+Ansible playbook은 기본적으로 roles/ 디렉토리에서 role을 찾는다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;--force 옵션은 이미 다운받은 role을 최신 코드로 업데이트하기 위해 필요하다.&lt;/li&gt;
+&lt;li&gt;--ignore-errors 옵션은 뒤에 설명할 symbolic link를 이용해 테스트하는 방법을 쓸 때 ansible-galaxy가 중간에 에러를 내고 멈추지 않게 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;아래는 &lt;code&gt;roles/.gitignore&lt;/code&gt; 의 내용이다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;*
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;!.gitignore
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;symbolic-link로-테스트&#34;&gt;Symbolic link로 테스트&lt;/h1&gt;
-&lt;p&gt;위에서 설명한 것처럼 &lt;code&gt;requirements.yml&lt;/code&gt;에 필요한 role을 기술해서 다운로드 받아 써야 한다. 하지만 로컬에서 개발 중인 role을 테스트할 때도 같은 방식을 쓰면 코드 변경을 할때마다 git commit, push 후 &lt;code&gt;get_roles.sh&lt;/code&gt; 실행을 반복해야 해서 불편하다.&lt;/p&gt;
-&lt;p&gt;해결책은 &lt;U&gt;roles/ 아래에 해당 role의 디렉토리를 삭제하고 개발 중인 Git working directory 를 가리키는 symbolic link를 만드는 것이다&lt;/U&gt;.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;.gitignore&lt;/code&gt;를 제외한 모든 다운받은 role 코드를 Git이 무시하게 한다.&lt;/p&gt;
+&lt;h1 id=&#34;symbolic-link로-테스트&#34;&gt;Symbolic link로 테스트&lt;/h1&gt;
+&lt;p&gt;위에서 설명한 것처럼 &lt;code&gt;requirements.yml&lt;/code&gt;에 필요한 role을 기술해서 다운로드 받아 써야 한다. 하지만 로컬에서 수정 중인 role을 테스트할 때도 같은 방식을 쓰면 코드 변경을 할때마다 git commit, push 후 &lt;code&gt;get_roles.sh&lt;/code&gt; 실행을 반복해야 해서 불편하다.&lt;/p&gt;
+&lt;p&gt;해결책은 &lt;U&gt;roles/ 아래에서 해당 role의 디렉토리를 삭제하고 작업 중인 Git working directory 를 가리키는 symbolic link를 만들어 대체하는 것이다&lt;/U&gt;.  ansible-galaxy 명령이 symbolic link를 다운로드한 role 디렉토리로 교체하지 않는다는 점을 활용한 것이다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; roles 
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# 다운로드한 role 삭제&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ rm -rf ec2_linux_common
 &lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# symbolic link인 ec2_linux_common 이 개발 중인 ~/git/ansible_role/ec2_linux_common 을 가리키게 된다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# symbolic link인 ec2_linux_common 이 작업 디렉토리인  ~/git/ansible_role/ec2_linux_common 을 가리키게 된다.&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;$ ln -s ~/git/ansible_role/ec2_linux_common .  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;u&gt;이렇게 하면 변경된 코드를 commit, push할 필요 없이 바로 테스트할 수 있다.&lt;/u&gt; &lt;code&gt;get_roles.sh&lt;/code&gt; 을 다시 실행해도 symbolic link는 보존된다. 즉 다운로드한 role로 symbolic link를 덮어쓰지 않는다.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이렇게 하면 변경된 코드를 commit, push할 필요 없이 바로 테스트할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;get_roles.sh&lt;/code&gt; 을 다시 실행해도 symbolic link는 보존된다.&lt;/p&gt;
 &lt;figure&gt;&lt;img src=&#34;https://pseonghoon.github.io/post/img/get_roles_result.png&#34;/&gt;
 &lt;/figure&gt;
         
