@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
   <head>
-<title>About | 박성훈의 블로그</title>
+<title>[Kubernetes] Cluster Autocaler의 scale-down 튜닝 | 박성훈의 블로그</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,20 +17,22 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content=" Park Seong-hoon Working for NEOWIZ seonghoon@gmail.com  ">
+<meta name="description" content="Cluster Autoscaler(CA)는 클러스터의 노드 개수를 적절하게 유지하는 역할을 한다.
+새로 생성된 pod이 실행될 노드가 없어 Pending 상태라면 노드를 생성하고, …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="About" />
-<meta property="og:url" content="https://pseonghoon.github.io/about/" />
-<meta property="og:title" content="About" />
-<meta property="og:description" content=" Park Seong-hoon Working for NEOWIZ seonghoon@gmail.com  " />
-<meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
+<meta name="twitter:title" content="[Kubernetes] Cluster Autocaler의 scale-down 튜닝" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/ca-scale-down-optimization/" />
+<meta property="og:title" content="[Kubernetes] Cluster Autocaler의 scale-down 튜닝" />
+<meta property="og:description" content="Cluster Autoscaler(CA)는 클러스터의 노드 개수를 적절하게 유지하는 역할을 한다.
+새로 생성된 pod이 실행될 노드가 없어 Pending 상태라면 노드를 생성하고, …" />
+<meta property="og:image" content="https://pseonghoon.github.io/post/img/ca.png" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://pseonghoon.github.io/icons/favicon-32x32.png">
 <link rel="manifest" href="https://pseonghoon.github.io/icons/site.webmanifest">
 
-<link rel="canonical" href="https://pseonghoon.github.io/about/">
+<link rel="canonical" href="https://pseonghoon.github.io/post/ca-scale-down-optimization/">
 
     
 
@@ -70,7 +72,7 @@
   <div class="nav_parent">
     <a href="https://pseonghoon.github.io/" class="nav_item" title="Home">Home </a>
   </div>
-  <div class="nav_parent nav_active">
+  <div class="nav_parent">
     <a href="https://pseonghoon.github.io/about/" class="nav_item" title="About">About </a>
   </div>
       
@@ -108,22 +110,25 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content" style="word-wrap:break-word;">
-    <h1 class="post_title">About</h1>
+    <h1 class="post_title">[Kubernetes] Cluster Autocaler의 scale-down 튜닝</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Sep 28, 2020</span>
+      Nov 24, 2021</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
+        </a><a href='https://pseonghoon.github.io/tags/devops' title="DevOps" class="post_tag button button_translucent">DevOps
+        </a>
+    </span>
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=About&url=https%3a%2f%2fpseonghoon.github.io%2fabout%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=%5bKubernetes%5d%20Cluster%20Autocaler%ec%9d%98%20scale-down%20%ed%8a%9c%eb%8b%9d&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fca-scale-down-optimization%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fabout%2f&t=About" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fca-scale-down-optimization%2f&t=%5bKubernetes%5d%20Cluster%20Autocaler%ec%9d%98%20scale-down%20%ed%8a%9c%eb%8b%9d" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -133,7 +138,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://pseonghoon.github.io/about/" title="Copy Link" class="link link_yank">
+    <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -143,12 +148,133 @@
   </div>
 
     
-    <ul>
-<li>Park Seong-hoon</li>
-<li><a href="https://www.linkedin.com/in/seonghoon-park-1aa84358/">Working for NEOWIZ</a></li>
-<li><a href="mailto:seonghoon@gmail.com">seonghoon@gmail.com</a></li>
+    <p><a href="https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler">Cluster Autoscaler(CA)</a>는 클러스터의 노드 개수를 적절하게 유지하는 역할을 한다.
+새로 생성된 pod이 실행될 노드가 없어 <code>Pending</code> 상태라면 노드를 생성하고,
+반대로 필요한 리소스에 비해 노드 수가 불필요하게 많다면 한가한 노드를 없애서 리소스 집적도를 높이는 scale-down을 한다.</p>
+<p>CA가 특정 노드를 없애려면 몇가지 제약 조건에 해당하지 않아야 하는데, 이런 제약 조건 때문에 scale-down 효율이 떨어지면 불필요한 비용을 지출하게 될 수 있다.</p>
+<p>CA의 scale-down 효율을 높여서 비용 절감에 효과를 본 방법을 공유한다. 요약하면 아래와 같다.</p>
+<ul>
+<li>--skip-nodes-with-local-storage 옵션을 false로 설정</li>
+<li>--scale-down-utilization-threshold 옵션값 올리기</li>
+<li>application의 PodDisruptionBudget(PDB)가 scale-down을 막고 있는 경우 PDB 수정</li>
+<li>kube-system namespace에 속한 pod에 PodDisruptionBudget을 설정 (kube-dns 등)</li>
 </ul>
+<h1 id="cluster-autoscaler의-scale-down-조건">Cluster Autoscaler의 scale-down 조건</h1>
+<p>Clusster Autosacler <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-types-of-pods-can-prevent-ca-from-removing-a-node">FAQ 문서</a>에 잘 기술되어 있다.</p>
+<p>노드에 아래 조건에 해당하는 pod이 있으면 CA가 노드를 제거할 수 없다. 이 포스트의 맥락에 해당하는 것만 추렸다.</p>
+<ul>
+<li>로컬 스토리지를 사용하는 경우</li>
+<li>PodDisruptionBudget에 의해 pod을 종료할 수 없는 경우</li>
+<li>kube-system namespace에 속한 pod. 적절한 PodDisruptionBudget 설정을 해주면 이 제한을 풀 수 있다.</li>
+</ul>
+<h1 id="현재-노드-개수가-적절한지-확인하는-방법">현재 노드 개수가 적절한지 확인하는 방법</h1>
+<p>우선 현재 scale-down을 충분히 효율적으로 하고 있는지 확인해야 한다.
+노드의 &lsquo;리소스 활용률&rsquo; 이 충분히 높아야 하는데, 아래처럼 계산할 수 있다.</p>
+<p><code>리소스 활용률 = (노드에서 실행되는 container 들의 resource request 합)/(노드의 resource capacity)</code></p>
+<p>컨테이너에서 실행되는 프로세스들이 실제 사용하는 수치가 아니라 컨테이너의 resource 설정에서 cpu나 memory request 값을 따지는 것이다.</p>
+<p>노드별 리스스 활용률은 kubectl로 대략 파악할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl describe nodes | grep Resource --after=3
+</code></pre></div><p>kubectl에 <a href="https://github.com/etopeter/kubectl-view-utilization">view-utilization plugin</a>을 설치하면 더 쉽게 확인할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ kubectl view-utilization <span class="c1"># 클러스터 전체 현황</span>
+<span class="ln">2</span>$ kubectl view-utilization nodes <span class="c1"># 노드별 현황</span>
+</code></pre></div><p>아래는 kubectl view-utilization 명령의 실행 결과 예시이다.</p>
+<figure><img src="/post/img/kubectl_view_utilization.png"/>
+</figure>
 
+<p>제대로 관리하려면 결국 Prometheus 같은 모니터링 시스템의 관리 대상에 포함해야 한다.</p>
+<p>Prometheus query는 아래와 같다.</p>
+<p>클러스터 CPU 리소스 활용률 평균: <code>sum(kube_pod_container_resource_requests_cpu_cores) / sum(kube_node_status_allocatable_cpu_cores)</code></p>
+<p>클러스터 메모리 리소스 활용률 평균: <code>sum(kube_pod_container_resource_requests_memory_bytes) / sum(kube_node_status_allocatable_memory_bytes)</code></p>
+<h1 id="ca의-로그로-scale-down을-하지-않는-이유-확인">CA의 로그로 scale-down을 하지 않는 이유 확인</h1>
+<p>CA는 특정 노드를 scale-down 대상으로 취급하지 않는지 이유를 로그로 자세히 알려준다.
+아래 명령으로 확인할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ kubectl logs -f  -n kube-system <span class="k">$(</span>kubectl get pod -o Name -n kube-system -l app.kubernetes.io/instance<span class="o">=</span>cluster-autoscaler<span class="k">)</span>
+</code></pre></div><p>로그에서 아래처럼 이유를 알려준다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>I1119 16:13:22.567346       1 cluster.go:148] Fast evaluation: ip-10-76-141-178.ap-northeast-2.compute.internal for removal
+<span class="ln">2</span>I1119 16:13:22.567357       1 cluster.go:169] Fast evaluation: node ip-10-76-141-178.ap-northeast-2.compute.internal cannot be removed: pod with local storage present: istiod-1-10-4-6c66f78678-7wl5r
+<span class="ln">3</span>...
+<span class="ln">4</span>
+<span class="ln">5</span>I1119 16:18:57.113554       1 scale_down.go:443] Node ip-10-91-71-213.ap-northeast-2.compute.internal is not suitable for removal - cpu utilization too big (0.917098)
+<span class="ln">6</span>I1119 16:18:57.113607       1 scale_down.go:443] Node ip-10-91-70-122.ap-northeast-2.compute.internal is not suitable for removal - memory utilization too big (0.962740)
+<span class="ln">7</span>
+</code></pre></div><h1 id="튜닝-방법">튜닝 방법</h1>
+<h3 id="1-ca의-skip-nodes-with-local-storage-옵션을-false로-설정">1. CA의 skip-nodes-with-local-storage 옵션을 false로 설정</h3>
+<p><a href="https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler">Helm chart</a>의 디폴트 값은 true지만 항상 false로 설정하는 것을 권장한다. 경우에 따라 노드 절감 효과가 상당히 클 수도 있다.</p>
+<p>Helm chart를 설치할 때 values.yaml을 아래처럼 설정하면 된다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
+</span><span class="ln">2</span><span class="w">  </span><span class="nt">skip-nodes-with-local-storage</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></code></pre></div><p>이 옵션이 true이면 emptyDir이나 hostPath를 volume으로 사용하는 pod들이 있는 노드를 scale-down 대상에서 제외한다.</p>
+<p>노드가 없어져서 데이터가 유실되는 경우를 막기 true로 설정하는 것이 일견 자연스러워 보이지만 그렇지 않다.
+보존해야 하는 데이터라면 애초에 로컬 스토리지를 사용하면 안된다. AWS라면 persistentVolumeClaim을 통해 EBS volume 등에 데이터를 저장해야 한다<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>그런데 이미 모든 app들이 로컬 스토리지에 &lsquo;보존이 필요한 데이터&rsquo;를 저장하지 않는다면 이 옵션을 false로 설정하는 것이 scale-down 효율에 무슨 도움이 될지 의문이 들 수 있다.</p>
+<p>그것은 Istio같은 소프트웨어들에서 emptyDir volume을 다른 용도로 사용하기 때문이다.
+로컬 스토리지에 데이터를 저장하기 위한 것이 아니라 RAM 기반의 tmpfs 파일시스템을 사용하거나 이것을 매개로 pod 내의 여러 container들이 서로 데이터를 교환하기 위한 목적이다.
+이런 것들은 pod이 실행되는 동안에만 의미가 있기 때문에 노드가 없어져도 데이터가 유실되는 문제가 없다.</p>
+<p>경험을 공유하면, scale-down 효율이 떨어지는 클러스터의 CA 로그를 확인해 봤더니 로컬 스토리지 문제 때문에 많은 노드를 scale-down 대상에서 제외한 경우가 있었다. 해당 pod들을 확인하니 Istiod, Istio에 포함된 Prometheus, Redis, SonarQube에 포함된 PostgreSQL이 위에서 설명한 용도로 emptyDir volume을 사용하고 있었다.</p>
+<p>아래는 Istiod pod 설정에서 발췌한 것이다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">  </span><span class="l">...</span><span class="w">
+</span><span class="ln"> 5</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">istiod-1-10-4-6c66f78678-7wl5r</span><span class="w">
+</span><span class="ln"> 6</span><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">istio-system</span><span class="w">
+</span><span class="ln"> 7</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">  </span><span class="l">...</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span><span class="ln">10</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">discovery</span><span class="w">
+</span><span class="ln">11</span><span class="w">    </span><span class="l">...</span><span class="w">
+</span><span class="ln">12</span><span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span><span class="ln">13</span><span class="w">    </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/var/run/secrets/istio-dns</span><span class="w">
+</span><span class="ln">14</span><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">local-certs</span><span class="w">
+</span><span class="ln">15</span><span class="w">    </span><span class="l">...</span><span class="w">
+</span><span class="ln">16</span><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span><span class="ln">17</span><span class="w">  </span>- <span class="nt">emptyDir</span><span class="p">:</span><span class="w">
+</span><span class="ln">18</span><span class="w">      </span><span class="nt">medium</span><span class="p">:</span><span class="w"> </span><span class="l">Memory</span><span class="w">
+</span><span class="ln">19</span><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">local-certs</span><span class="w">
+</span></code></pre></div><p><code>emptyDir.medium: Memory</code> 로 설정하고 있으니 RAM 기반의 tmpfs 파일 시스템을 사용하기 위한 것이다.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<h3 id="2-ca의---scale-down-utilization-threshold-옵션-값을-더-크게-설정">2. CA의 &ndash;scale-down-utilization-threshold 옵션 값을 더 크게 설정.</h3>
+<p><a href="https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler">Helm chart</a>를 설치할 때 values.yaml을 아래처럼 설정하면 된다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
+</span><span class="ln">2</span><span class="w">  </span><span class="nt">scale-down-utilization-threshold</span><span class="p">:</span><span class="w"> </span><span class="m">0.6</span><span class="w"> </span><span class="c"># 디폴트는 0.5. 배포 속도를 고려해 적당한 값으로 설정</span><span class="w">
+</span></code></pre></div><p>디폴트 값은 0.5다.
+CA가 리소스 활용률이 낮은 노드를 판단하는 기준이다. 노드의 CPU, 메모리 리소스 활용률 중 더 큰 값이 이 설정보다 작으면 scale-down 대상이 된다. 따라서 이 수치를 높이면 대상이 늘어날 수 있다. 하지만 너무 높게 설정하면 pod의 scale-out 이나 배포 속도가 느려질 수 있다. 새로 생성된 pod이 들어갈 공간이 기존 노드에 없어서 새로운 노드를 생성해야 할 확률이 높아지기 때문이다. 실서비스 환경이 아니라면 더 과감하게 올려볼 수 있다.</p>
+<h3 id="3-poddisruptionbudgetpdb-설정이-scale-down을-막고-있는-경우-해소">3. PodDisruptionBudget(PDB) 설정이 scale-down을 막고 있는 경우 해소</h3>
+<p>잘못 설정된 PodDisruptionBudget이 scale-down을 막을 수 있다.</p>
+<p>PDB의 개념이 아직 생소하다면 아래 문서를 통해 개념을 정확히 이해할 필요가 있다. 서비스 안정성이나 클러스터 관리 작업에 많은 영향을 주는 중요한 요소이기 때문에 application 개발자와 클러스터 관리자 모두 개념을 정확히 알고 있어야 한다.</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets">https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">https://kubernetes.io/docs/tasks/run-application/configure-pdb/</a></li>
+</ul>
+<p>예를 들어, 개발 환경에선 application 당 pod을 1개만 실행하면서 실서비스 환경의 PDB 설정을 그대로 사용하면 문제가 된다.
+아래처럼 minAvailable을 30% 로 설정하면 1개만 있는 pod을 종료할 수 없다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">policy/v1beta1</span><span class="w">
+</span><span class="ln">2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PodDisruptionBudget</span><span class="w">
+</span><span class="ln">3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln">4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">demo</span><span class="w">
+</span><span class="ln">5</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span><span class="ln">6</span><span class="w">  </span><span class="nt">minAvailable</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="l">%</span><span class="w">
+</span><span class="ln">7</span><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span><span class="ln">8</span><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span><span class="ln">9</span><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">demo</span><span class="w">
+</span></code></pre></div><p>이런 경우 minAvailable을 0으로 설정하든지 pod 개수를 2개 이상으로 늘려야 한다. 비용이 더 들겠지만 후자가 적절한 방법이라고 생각한다. 개발 환경이 실서비스 환경과 구조적으로 동일해야 개발 환경에서 미리 여러가지 검증을 할 수 있기 때문이다.</p>
+<h3 id="4-kube-system-namespace-에서-실행되는-pod에-poddisruptionbudget-설정">4. kube-system namespace 에서 실행되는 pod에 PodDisruptionBudget 설정</h3>
+<p>CA는 kube-system namespace에 속하는 pod이 실행되는 노드를 scale-down 대상에서 기본적으로 제외하지만 PDB로 명시적으로 허용하면 대상에 포함한다.</p>
+<p><a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-to-set-pdbs-to-enable-ca-to-move-kube-system-pods">https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-to-set-pdbs-to-enable-ca-to-move-kube-system-pods</a></p>
+<p>AWS EKS 클러스터라면 아래처럼 CoreDNS에 PDB 설정을 할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl create poddisruptionbudget coredns --namespace=kube-system --selector  eks.amazonaws.com/component=coredns --max-unavailable 1
+</code></pre></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>만약 어쩔 수 없이 로컬 스토리지를 써야하고 노드 종료를 막아야 하는 상황이 있다면 --skip-nodes-with-local-storage 옵션을 true로 설정하는 것 대신 PodDistruptionBudget을 적절히 설정해 주거나
+pod의 annotation에 <code>&quot;cluster-autoscaler.kubernetes.io/safe-to-evict&quot;: &quot;false&quot;</code> 를 붙이는 방법이 있다.하지만 노드가 다른 이유로 셧다운될 때 데이터를 잃어버리는 것은 마찬가지다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>emptyDir.medium 이 Memory인 경우는 로컬 스토리지를 사용하지 것으로 보지 않는 것이 합리적일 것 같은데
+CA는 emptyDir은 모두 로컬 스토리지 사용으로 본다. 이것은 <a href="https://github.com/kubernetes/autoscaler/issues/2048">의도된 동작</a>이라고 한다. --skip-nodes-with-local-storage 옵션이 true일 때 로컬 스토리지를 사용하는 pod을 scale-down 대상에 포함시키려면 pod에 <code>&quot;cluster-autoscaler.kubernetes.io/safe-to-evict&quot;: &quot;true&quot;</code> 라고 annotation을 붙이면 된다.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
 
 <style>
     hr {
@@ -185,9 +311,6 @@
     </ul>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
-      <li>
-        <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" class="nav-link" title="[Kubernetes] Cluster Autocaler의 scale-down 튜닝">[Kubernetes] Cluster Autocaler의 scale-down 튜닝</a>
-      </li>
       <li>
         <a href="https://pseonghoon.github.io/post/testing-ansible-role/" class="nav-link" title="로컬에서 개발 중인 Ansible role을 편하게 테스트하는 방법">로컬에서 개발 중인 Ansible role을 편하게 테스트하는 방법</a>
       </li>

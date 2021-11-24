@@ -113,6 +113,71 @@
   <div class="excerpt">
     <div class="excerpt_header">
       <h3 class="post_link">
+        <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" title="[Kubernetes] Cluster Autocaler의 scale-down 튜닝">[Kubernetes] Cluster Autocaler의 scale-down 튜닝</a>
+      </h3>
+      
+  <div class="post_meta">
+    <span><svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg></span>
+    <span class="post_date">
+      Nov 24, 2021</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
+        </a><a href='https://pseonghoon.github.io/tags/devops' title="DevOps" class="post_tag button button_translucent">DevOps
+        </a>
+    </span>
+    <span class="page_only">&nbsp;·
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=%5bKubernetes%5d%20Cluster%20Autocaler%ec%9d%98%20scale-down%20%ed%8a%9c%eb%8b%9d&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fca-scale-down-optimization%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fca-scale-down-optimization%2f&t=%5bKubernetes%5d%20Cluster%20Autocaler%ec%9d%98%20scale-down%20%ed%8a%9c%eb%8b%9d" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
+  </span>
+  </div>
+
+    </div>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://pseonghoon.github.io/post/img/ca.png' alt="[Kubernetes] Cluster Autocaler의 scale-down 튜닝">
+      </div>
+      
+        <div>
+
+            
+              <p><a href="https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler">Cluster Autoscaler(CA)</a>는 클러스터의 노드 개수를 적절하게 유지하는 역할을 한다.
+새로 생성된 pod이 실행될 노드가 없어 <code>Pending</code> 상태라면 노드를 생성하고,
+반대로 필요한 리소스에 비해 노드 수가 불필요하게 많다면 한가한 노드를 없애서 리소스 집적도를 높이는 scale-down을 한다.</p>
+<p>CA가 특정 노드를 없애려면 몇가지 제약 조건에 해당하지 않아야 하는데, 이런 제약 조건 때문에 scale-down 효율이 떨어지면 불필요한 비용을 지출하게 될 수 있다.</p>
+<p>CA의 scale-down 효율을 높여서 비용 절감에 효과를 본 방법을 공유한다. …</p>
+            
+
+          <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" title="Read More" class="excerpt_more button">Read More</a>
+        </div>
+      </div>
+    </div>
+  </li>
+
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
         <a href="https://pseonghoon.github.io/post/eks-subnet/" title="오해하기 쉬운 EKS 클러스터의 subnet 설정">오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
       </h3>
       
@@ -259,6 +324,9 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" class="nav-link" title="[Kubernetes] Cluster Autocaler의 scale-down 튜닝">[Kubernetes] Cluster Autocaler의 scale-down 튜닝</a>
+      </li>
+      <li>
         <a href="https://pseonghoon.github.io/post/testing-ansible-role/" class="nav-link" title="로컬에서 개발 중인 Ansible role을 편하게 테스트하는 방법">로컬에서 개발 중인 Ansible role을 편하게 테스트하는 방법</a>
       </li>
       <li>
@@ -290,7 +358,12 @@
         
         <a href='https://pseonghoon.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
           DEVOPS
-          <span class="button_tally">2</span>
+          <span class="button_tally">3</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
+          KUBERNETES
+          <span class="button_tally">3</span>
         </a>
         
         <a href='https://pseonghoon.github.io/tags/eks/' class="post_tag button button_translucent" title="eks">
@@ -300,11 +373,6 @@
         
         <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent" title="iac">
           IAC
-          <span class="button_tally">2</span>
-        </a>
-        
-        <a href='https://pseonghoon.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
-          KUBERNETES
           <span class="button_tally">2</span>
         </a>
         
@@ -328,7 +396,7 @@
             </a>
             
             
-            <a href='https://pseonghoon.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=2 title="devops">DEVOPS<span class="button_tally">2</span>
+            <a href='https://pseonghoon.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=3 title="devops">DEVOPS<span class="button_tally">3</span>
             </a>
             
             
@@ -348,7 +416,7 @@
             </a>
             
             
-            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=2 title="kubernetes">KUBERNETES<span class="button_tally">2</span>
+            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=3 title="kubernetes">KUBERNETES<span class="button_tally">3</span>
             </a>
             
             
