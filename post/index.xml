@@ -19,7 +19,7 @@
 새로 생성된 pod이 실행될 노드가 없어 &lt;code&gt;Pending&lt;/code&gt; 상태라면 노드를 생성하고,
 반대로 필요한 리소스에 비해 노드 수가 불필요하게 많다면 한가한 노드를 없애서 리소스 집적도를 높이는 scale-down을 한다.&lt;/p&gt;
 &lt;p&gt;CA가 특정 노드를 없애려면 몇가지 제약 조건에 해당하지 않아야 하는데, 이런 제약 조건 때문에 scale-down 효율이 떨어지면 불필요한 비용을 지출하게 될 수 있다.&lt;/p&gt;
-&lt;p&gt;CA의 scale-down 효율을 높여서 비용 절감에 효과를 본 방법을 공유한다. 요약하면 아래와 같다.&lt;/p&gt;
+&lt;p&gt;CA의 scale-down 효율을 높여서 비용 절감에 효과를 본 방법을 정리했다. 요약하면 아래와 같다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;--skip-nodes-with-local-storage 옵션을 false로 설정&lt;/li&gt;
 &lt;li&gt;--scale-down-utilization-threshold 옵션값 올리기&lt;/li&gt;
@@ -37,7 +37,7 @@
 &lt;h1 id=&#34;현재-노드-개수가-적절한지-확인하는-방법&#34;&gt;현재 노드 개수가 적절한지 확인하는 방법&lt;/h1&gt;
 &lt;p&gt;우선 현재 scale-down을 충분히 효율적으로 하고 있는지 확인해야 한다.
 노드의 &amp;lsquo;리소스 활용률&amp;rsquo; 이 충분히 높아야 하는데, 아래처럼 계산할 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;리소스 활용률 = (노드에서 실행되는 container 들의 resource request 합)/(노드의 resource capacity)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;리소스 활용률 = (노드에서 실행되는 컨테이너들의 resource request 합)/(노드의 resource capacity)&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;컨테이너에서 실행되는 프로세스들이 실제 사용하는 수치가 아니라 컨테이너의 resource 설정에서 cpu나 memory request 값을 따지는 것이다.&lt;/p&gt;
 &lt;p&gt;노드별 리스스 활용률은 kubectl로 대략 파악할 수 있다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ kubectl describe nodes | grep Resource --after=3
@@ -56,7 +56,7 @@
 &lt;p&gt;CA는 특정 노드를 scale-down 대상으로 취급하지 않는지 이유를 로그로 자세히 알려준다.
 아래 명령으로 확인할 수 있다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ kubectl logs -f  -n kube-system &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get pod -o Name -n kube-system -l app.kubernetes.io/instance&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cluster-autoscaler&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;로그에서 아래처럼 이유를 알려준다.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;로그의 예는 아래와 같다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;I1119 16:13:22.567346       1 cluster.go:148] Fast evaluation: ip-10-76-141-178.ap-northeast-2.compute.internal for removal
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;I1119 16:13:22.567357       1 cluster.go:169] Fast evaluation: node ip-10-76-141-178.ap-northeast-2.compute.internal cannot be removed: pod with local storage present: istiod-1-10-4-6c66f78678-7wl5r
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;...
@@ -66,15 +66,15 @@
 &lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;튜닝-방법&#34;&gt;튜닝 방법&lt;/h1&gt;
 &lt;h3 id=&#34;1-ca의-skip-nodes-with-local-storage-옵션을-false로-설정&#34;&gt;1. CA의 skip-nodes-with-local-storage 옵션을 false로 설정&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler&#34;&gt;Helm chart&lt;/a&gt;의 디폴트 값은 true지만 항상 false로 설정하는 것을 권장한다. 경우에 따라 노드 절감 효과가 상당히 클 수도 있다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler&#34;&gt;Helm chart&lt;/a&gt;의 디폴트 값은 true지만 항상 false로 설정하는 것을 권장한다. 경우에 따라 비용 절감 효과가 상당히 클 수도 있다.&lt;/p&gt;
 &lt;p&gt;Helm chart를 설치할 때 values.yaml을 아래처럼 설정하면 된다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;extraArgs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;skip-nodes-with-local-storage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 옵션이 true이면 emptyDir이나 hostPath를 volume으로 사용하는 pod들이 있는 노드를 scale-down 대상에서 제외한다.&lt;/p&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이 옵션이 true이면 emptyDir이나 hostPath를 volume으로 사용하는 pod이 있는 노드를 scale-down 대상에서 제외한다.&lt;/p&gt;
 &lt;p&gt;노드가 없어져서 데이터가 유실되는 경우를 막기 true로 설정하는 것이 일견 자연스러워 보이지만 그렇지 않다.
 보존해야 하는 데이터라면 애초에 로컬 스토리지를 사용하면 안된다. AWS라면 persistentVolumeClaim을 통해 EBS volume 등에 데이터를 저장해야 한다&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;p&gt;그런데 이미 모든 app들이 로컬 스토리지에 &amp;lsquo;보존이 필요한 데이터&amp;rsquo;를 저장하지 않는다면 이 옵션을 false로 설정하는 것이 scale-down 효율에 무슨 도움이 될지 의문이 들 수 있다.&lt;/p&gt;
-&lt;p&gt;그것은 Istio같은 소프트웨어들에서 emptyDir volume을 다른 용도로 사용하기 때문이다.
+&lt;p&gt;이 옵션 설정이 효과가 있는 이유는 Istio같은 소프트웨어들에서 emptyDir volume을 다른 용도로 사용하기 때문이다.
 로컬 스토리지에 데이터를 저장하기 위한 것이 아니라 RAM 기반의 tmpfs 파일시스템을 사용하거나 이것을 매개로 pod 내의 여러 container들이 서로 데이터를 교환하기 위한 목적이다.
 이런 것들은 pod이 실행되는 동안에만 의미가 있기 때문에 노드가 없어져도 데이터가 유실되는 문제가 없다.&lt;/p&gt;
 &lt;p&gt;경험을 공유하면, scale-down 효율이 떨어지는 클러스터의 CA 로그를 확인해 봤더니 로컬 스토리지 문제 때문에 많은 노드를 scale-down 대상에서 제외한 경우가 있었다. 해당 pod들을 확인하니 Istiod, Istio에 포함된 Prometheus, Redis, SonarQube에 포함된 PostgreSQL이 위에서 설명한 용도로 emptyDir volume을 사용하고 있었다.&lt;/p&gt;
@@ -125,7 +125,7 @@ CA가 리소스 활용률이 낮은 노드를 판단하는 기준이다. 노드�
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;이런 경우 minAvailable을 0으로 설정하든지 pod 개수를 2개 이상으로 늘려야 한다. 비용이 더 들겠지만 후자가 적절한 방법이라고 생각한다. 개발 환경이 실서비스 환경과 구조적으로 동일해야 개발 환경에서 미리 여러가지 검증을 할 수 있기 때문이다.&lt;/p&gt;
 &lt;h3 id=&#34;4-kube-system-namespace-에서-실행되는-pod에-poddisruptionbudget-설정&#34;&gt;4. kube-system namespace 에서 실행되는 pod에 PodDisruptionBudget 설정&lt;/h3&gt;
-&lt;p&gt;CA는 kube-system namespace에 속하는 pod이 실행되는 노드를 scale-down 대상에서 기본적으로 제외하지만 PDB로 명시적으로 허용하면 대상에 포함한다.&lt;/p&gt;
+&lt;p&gt;CA는 kube-system namespace에 속하는 pod이 실행되는 노드를 scale-down 대상에서 제외하지만 PDB로 명시적으로 허용하면 대상에 포함한다.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-to-set-pdbs-to-enable-ca-to-move-kube-system-pods&#34;&gt;https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-to-set-pdbs-to-enable-ca-to-move-kube-system-pods&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;AWS EKS 클러스터라면 아래처럼 CoreDNS에 PDB 설정을 할 수 있다.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ kubectl create poddisruptionbudget coredns --namespace=kube-system --selector  eks.amazonaws.com/component=coredns --max-unavailable 1
