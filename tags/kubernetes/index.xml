@@ -105,7 +105,7 @@
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;scale-down-utilization-threshold&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0.6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# 디폴트는 0.5. 배포 속도를 고려해 적당한 값으로 설정&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;디폴트 값은 0.5다.
 CA가 리소스 활용률이 낮은 노드를 판단하는 기준이다. 노드의 CPU, 메모리 리소스 활용률 중 더 큰 값이 이 설정보다 작으면 scale-down 대상이 된다. 따라서 이 수치를 높이면 대상이 늘어날 수 있다. 하지만 너무 높게 설정하면 pod의 scale-out 이나 배포 속도가 느려질 수 있다. 새로 생성된 pod이 들어갈 공간이 기존 노드에 없어서 새로운 노드를 생성해야 할 확률이 높아지기 때문이다. 실서비스 환경이 아니라면 더 과감하게 올려볼 수 있다.&lt;/p&gt;
-&lt;h3 id=&#34;3-poddisruptionbudgetpdb-설정이-scale-down을-막고-있는-경우-해소&#34;&gt;3. PodDisruptionBudget(PDB) 설정이 scale-down을 막고 있는 경우 해소&lt;/h3&gt;
+&lt;h3 id=&#34;3-poddisruptionbudgetpdb-설정이-scale-down을-막고-있는-상태-해소&#34;&gt;3. PodDisruptionBudget(PDB) 설정이 scale-down을 막고 있는 상태 해소&lt;/h3&gt;
 &lt;p&gt;잘못 설정된 PodDisruptionBudget이 scale-down을 막을 수 있다.&lt;/p&gt;
 &lt;p&gt;PDB의 개념이 아직 생소하다면 아래 문서를 통해 개념을 정확히 이해할 필요가 있다. 서비스 안정성이나 클러스터 관리 작업에 많은 영향을 주는 중요한 요소이기 때문에 application 개발자와 클러스터 관리자 모두 개념을 정확히 알고 있어야 한다.&lt;/p&gt;
 &lt;ul&gt;
