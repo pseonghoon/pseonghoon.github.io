@@ -37,8 +37,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" as="script" integrity=
+    "sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -172,7 +172,8 @@
 IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에서 잘 정리된 설명을 쉽게 찾을 수 있을 것이니 여기선 자세한 설명보다 그 유용성을 강조하려고 한다.</p>
 <p>아래 &lt;그림1&gt;은 지난 2005년에  IOT로 성능 개선 효과를 본 사례이다.</p>
 <p><strong>&lt;그림1&gt; 친구 목록 데이터에 대해 IOT 적용 전후 CPU 사용량 비교</strong></p>
-<figure><img src="../img/iot.png"/>
+<figure>
+    <img src="../img/iot.png"/> 
 </figure>
 
 <p>하지만 IOT는 아직 소극적으로 사용되는 경우가 많은데, 효과에 대해서는 덜 알려지고 약점은 실제보다 부각되었기 때문이다</p>
@@ -233,7 +234,7 @@ SAN 스위치를 중심으로 스토리지들과 그것을 사용할 호스트�
 <li>RMAN repository에 백업과 관련된 세세한 메타데이터를 기록해서 사용자 작업을 쉽고 단순하게 한다.</li>
 </ul>
 <p>아직 RMAN을 사용하고 있지 않은 독자가 쉽게 실행해 볼 수 있도록 사용 중인 스크립트를 공유한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>rman target / <span class="s">&lt;&lt;_EOF  | tee logs/backup.log.`date +%m%d`
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>rman target / <span class="s">&lt;&lt;_EOF  | tee logs/backup.log.`date +%m%d`
 </span><span class="ln">2</span><span class="s">RECOVER COPY OF DATABASE with TAG &#34;whole_db_copy&#34; UNTIL TIME &#39;trunc(SYSDATE)-7&#39;;
 </span><span class="ln">3</span><span class="s">DELETE NOPROMPT OBSOLETE;
 </span><span class="ln">4</span><span class="s">BACKUP INCREMENTAL LEVEL 1
@@ -266,14 +267,14 @@ VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항�
 결국 VARCHAR2에 저장하려면 꼼꼼한 관리가 필요하다. 그러니 애초에 그런 수고가 필요 없는 방법을 사용하자.</p>
 <h4 id="3-연산의-편리함과-sql문의-간결함">3. 연산의 편리함과 SQL문의 간결함</h4>
 <p>전체적으로 SQL문이 간결해진다. 예를 들면, 날짜 데이터가 INSERT되거나 비교의 기준으로 sysdate 가 사용되는 경우가 많은데 이럴 때 DATE 라면 아래처럼 sysdate를 그대로 사용하면 된다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="p">(</span><span class="n">DATE_DATE</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">sysdate</span><span class="p">)</span><span class="w"> 
-</span></code></pre></div><p>그렇지 않으면 아래처럼 <code>TO_CHAR()</code>로 일일이 변환을 해야 한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="p">(</span><span class="n">STR_DATE</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">))</span><span class="w">
-</span></code></pre></div><p>DATE 연산에서 간결함의 차이가 잘 보이는데, 예를 들어 어떤 날짜보다 하루 뒤의 값을 구하려면 DATE 는 아래처럼 단순하다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">DATE_DATE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
-</span></code></pre></div><p>VARCHAR2는 깔끔하지 않은 문자열 연산을 하거나, DATE 타입으로 변환했다가 다시 VARCHAR2로 변환해야 한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="n">STR_DATE</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span><span class="w">
-</span></code></pre></div><p>이런 연산은 자주 하는 것이라 누적되면 SQL문의 가독성이 나빠진다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">T</span> <span class="p">(</span><span class="n">DATE_DATE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="n">sysdate</span><span class="p">)</span> 
+</code></pre></div><p>그렇지 않으면 아래처럼 <code>TO_CHAR()</code>로 일일이 변환을 해야 한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">T</span> <span class="p">(</span><span class="n">STR_DATE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">))</span>
+</code></pre></div><p>DATE 연산에서 간결함의 차이가 잘 보이는데, 예를 들어 어떤 날짜보다 하루 뒤의 값을 구하려면 DATE 는 아래처럼 단순하다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">DATE_DATE</span> <span class="o">+</span> <span class="mi">1</span>
+</code></pre></div><p>VARCHAR2는 깔끔하지 않은 문자열 연산을 하거나, DATE 타입으로 변환했다가 다시 VARCHAR2로 변환해야 한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="n">STR_DATE</span><span class="p">,</span><span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">,</span> <span class="s1">&#39;YYYYMMDDHH24MISS&#39;</span><span class="p">)</span>
+</code></pre></div><p>이런 연산은 자주 하는 것이라 누적되면 SQL문의 가독성이 나빠진다.</p>
 <h4 id="4-optimizer에-더-많은-정보를-제공">4. Optimizer에 더 많은 정보를 제공</h4>
 <p>Oracle optimizer 는 실행 계획을 만들 때 DATE 타입의 특성을 이해하고  활용한다.
 2012년 1월 1일 과 2012년 1월 3일 사이에 들어갈 수 있는 날짜는 1월 2일 하루 뿐이지만
@@ -282,27 +283,27 @@ VARCHAR2를 사용하면 특정한 날짜 포맷을 표준으로 정하고 항�
 <h4 id="date-타입을-더-편리하게-쓰는-팁">DATE 타입을 더 편리하게 쓰는 팁</h4>
 <p>DATE를 사용하면 형 변환을 위해 to_date() 와 to_char()를 매번 실행해야 해서 번거로울 것 같지만 알고 보면 그렇지 않다.
 우선, NLS_DATE_FORMAT 파라미터로 시스템 디폴트 날짜 포맷을 지정할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">NLS_DATE_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span><span class="w">
-</span></code></pre></div><p>기본적으로 to_date() 와 to_char() 는 두 번째 인자로 날짜 포맷을 받는데 이것을 생략하면
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">ALTER</span> <span class="k">SYSTEM</span> <span class="k">SET</span> <span class="n">NLS_DATE_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span>
+</code></pre></div><p>기본적으로 to_date() 와 to_char() 는 두 번째 인자로 날짜 포맷을 받는데 이것을 생략하면
 NLS_DATE_FORMAT의 값이 디폴트로 사용된다. 그리고 이 함수들은 형 변환이 필요할 때 암묵적으로 호출되므로 이 함수들을 명시적으로 쓸 필요가 없다.</p>
 <p>그리고 값을 입력할 때, 지정된 날짜 포맷과 정확히 일치하지 않더라도 비슷한 형태면 대부분 인식이 된다. 예를 들어 아래처럼 테이블을 만들고 입력할 때</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">DATE_TEST</span><span class="w"> </span><span class="p">(</span><span class="n">D</span><span class="w"> </span><span class="nb">DATE</span><span class="p">);</span><span class="w">
-</span></code></pre></div><p>정석은 아래와 같지만</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">DATE_TEST</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="s1">&#39;2008-01-01 10:00:01&#39;</span><span class="p">,</span><span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span><span class="p">))</span><span class="w">
-</span></code></pre></div><p>아래처럼 해도 성공한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">DATE_TEST</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2008-01-01 10:00:01&#39;</span><span class="p">);</span><span class="w">
-</span><span class="ln">2</span><span class="w"></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">DATE_TEST</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;20080101100001&#39;</span><span class="p">);</span><span class="w">
-</span><span class="ln">3</span><span class="w"></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">DATE_TEST</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2008:01:01 10&#39;</span><span class="p">);</span><span class="w">
-</span></code></pre></div><p>데이터의 값은 포맷과는 독립되어 있기 때문에 표현이 달라도 실제로 저장되는 값에는 차이가 없다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DATE_TEST</span><span class="p">;</span><span class="w">
-</span><span class="ln">2</span><span class="w"></span><span class="n">D</span><span class="w">
-</span><span class="ln">3</span><span class="w"></span><span class="c1">-------------------
-</span><span class="ln">4</span><span class="c1"></span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="w">
-</span><span class="ln">5</span><span class="w"></span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="w">
-</span><span class="ln">6</span><span class="w"></span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="w">
-</span><span class="ln">7</span><span class="w"></span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="w"> </span><span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="w">
-</span><span class="ln">8</span><span class="w">
-</span></code></pre></div><h2 id="단순한-테이블스페이스-구성">단순한 테이블스페이스 구성</h2>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">DATE_TEST</span> <span class="p">(</span><span class="n">D</span> <span class="nb">DATE</span><span class="p">);</span>
+</code></pre></div><p>정석은 아래와 같지만</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="s1">&#39;2008-01-01 10:00:01&#39;</span><span class="p">,</span><span class="s1">&#39;YYYY-MM-DD HH24:MI:SS&#39;</span><span class="p">))</span>
+</code></pre></div><p>아래처럼 해도 성공한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;2008-01-01 10:00:01&#39;</span><span class="p">);</span>
+<span class="ln">2</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;20080101100001&#39;</span><span class="p">);</span>
+<span class="ln">3</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">DATE_TEST</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;2008:01:01 10&#39;</span><span class="p">);</span>
+</code></pre></div><p>데이터의 값은 포맷과는 독립되어 있기 때문에 표현이 달라도 실제로 저장되는 값에는 차이가 없다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">DATE_TEST</span><span class="p">;</span>
+<span class="ln">2</span><span class="n">D</span>
+<span class="ln">3</span><span class="c1">-------------------
+</span><span class="ln">4</span><span class="c1"></span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="ln">5</span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="ln">6</span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="ln">7</span><span class="mi">2008</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="ln">8</span>
+</code></pre></div><h2 id="단순한-테이블스페이스-구성">단순한 테이블스페이스 구성</h2>
 <hr>
 <p><code>Point:</code></p>
 <ul>
@@ -319,7 +320,7 @@ NLS_DATE_FORMAT의 값이 디폴트로 사용된다. 그리고 이 함수들은 
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Thomas Kyte의 <a href="https://www.amazon.com/Effective-Oracle-Design-Osborne-ORACLE/dp/0072230657">Effective Oracle by Design</a> 은 이런 것들을 myths 라고 표현하며 여러 사례를 알려준다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Thomas Kyte의 <a href="https://www.amazon.com/Effective-Oracle-Design-Osborne-ORACLE/dp/0072230657">Effective Oracle by Design</a> 은 이런 것들을 myths 라고 표현하며 여러 사례를 알려준다. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
@@ -553,7 +554,7 @@ NLS_DATE_FORMAT의 값이 디폴트로 사용된다. 그리고 이 함수들은 
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" integrity="sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous"></script>
     
   </body>
 </html>

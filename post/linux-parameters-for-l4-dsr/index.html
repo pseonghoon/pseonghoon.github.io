@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" as="script" integrity=
+    "sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -159,7 +159,7 @@ L4 로드 밸런서의 부담을 줄이기 위해 real server가 클라이언트
 <p>이 포스트에서 DSR 모드의 전반적인 구성이나 설정 방법을 자세히 다루지는 않는다. 만약 DSR 모드나 ARP에 대한 사전 지식이 충분치 않다면 관련 내용을 먼저 파악하고 이 포스트를 읽으면 더 쉽게 이해할 수 있을 것이다.</p>
 <h1 id="요점">요점</h1>
 <p>인터넷에서 찾을 수 있는 문서들은 대부분 <code>/etc/sysctl.conf</code>를 아래처럼 설정하도록 안내한다. 대부분 이렇게 설정하고 있을 것이다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="ln">1</span><span class="na">net.ipv4.conf.all.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
+<div class="highlight"><pre class="chroma"><code class="language-ini" data-lang="ini"><span class="ln">1</span><span class="na">net.ipv4.conf.all.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
 <span class="ln">2</span><span class="na">net.ipv4.conf.all.arp_announce</span> <span class="o">=</span> <span class="s">2</span>
 <span class="ln">3</span>
 <span class="ln">4</span><span class="na">net.ipv4.conf.lo.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
@@ -178,14 +178,14 @@ L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destina
 그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.</p>
 <h1 id="올바른-설정-방법">올바른 설정 방법</h1>
 <p><code>/etc/sysctl.conf</code> 의 내용이 아래와 같아야 한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="ln">1</span><span class="c1">#/etc/sysctl.conf </span>
+<div class="highlight"><pre class="chroma"><code class="language-ini" data-lang="ini"><span class="ln">1</span><span class="c1">#/etc/sysctl.conf </span>
 <span class="ln">2</span><span class="na">net.ipv4.conf.default.arp_ignore</span> <span class="o">=</span> <span class="s">1</span>
 <span class="ln">3</span><span class="na">net.ipv4.conf.default.arp_announce</span> <span class="o">=</span> <span class="s">2</span>
 <span class="ln">4</span><span class="c1">#loopback interface에는 설정할 필요가 없지만 맥락을 분명하게 하기 위해 아래처럼 했다.</span>
 <span class="ln">5</span><span class="na">net.ipv4.conf.lo.arp_ignore</span> <span class="o">=</span> <span class="s">0 </span>
 <span class="ln">6</span><span class="na">net.ipv4.conf.lo.arp_announce</span> <span class="o">=</span> <span class="s">0 </span>
 </code></pre></div><p>이 parameter들은 아래와 같은 형식으로 사용한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span> * net.ipv4.conf.(&lt;target-interface&gt;|all|default).arp_ignore
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span> * net.ipv4.conf.(&lt;target-interface&gt;|all|default).arp_ignore
 <span class="ln">2</span> * net.ipv4.conf.(&lt;target-interface&gt;|all|default).arp_announce
 </code></pre></div><p>&lsquo;default&rsquo; 대신 &lsquo;all&rsquo;을 써도 원하는 결과를 얻을 수 있으나  all을 선택하면 개별 interface마다 다른 설정을 할 수 없으니 default가 더 유연하다.</p>
 <p>default는 interace가 처음 생성될 때 복사되는 값이고 all은 모든 interace에 영향을 주는 값이다.<br>
@@ -208,7 +208,8 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <p>ARP request를 보낼 때 &lsquo;sender IP 주소&rsquo;에 어떤 값을 쓸지 정하는 parameter이다.</p>
 <p>여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.</p>
 <p><strong>ARP 패킷의 구조:</strong>
-<figure><img src="/images/arp.gif"/>
+<figure>
+    <img src="/images/arp.gif"/> 
 </figure>
 </p>
 <p>이 parameter를 사용하는 목적은 아래와 같다.</p>
@@ -225,10 +226,10 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <p>host A, host B 모두 eth0 으로 10.41.66.0/24 네트웍에서 통신하고 있을 때 아래처럼 확인할 수 있다.
 host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로드 밸런서의 로드밸런싱 구성에 포함되지 않는 서버이다.</p>
 <p><strong>host A:</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>sudo sysctl -w net.ipv4.conf.eth0.arp_ignore <span class="o">=</span> <span class="m">0</span>  
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>sudo sysctl -w net.ipv4.conf.eth0.arp_ignore <span class="o">=</span> <span class="m">0</span>  
 <span class="ln">2</span>sudo ifconfig lo:0 10.41.66.100 netmask 255.255.255.255  <span class="c1"># lo에 VIP 추가</span>
 </code></pre></div><p><strong>host B:</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ sudo arping -I eth0 -b 10.41.66.100  <span class="c1"># VIP에 대한 ARP request를 L2 network에 broadcast</span>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ sudo arping -I eth0 -b 10.41.66.100  <span class="c1"># VIP에 대한 ARP request를 L2 network에 broadcast</span>
 <span class="ln">2</span>
 <span class="ln">3</span>ARPING 10.41.66.100 from 10.41.66.45 eth0
 <span class="ln">4</span>Unicast reply from 10.41.66.100 <span class="o">[</span>00:22:19:BA:D1:DF<span class="o">]</span>  0.641ms   <span class="o">=</span>&gt; 00:22:19:BA:D1:DF 은  host A의 MAC 주소
@@ -468,7 +469,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" integrity="sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous"></script>
     
   </body>
 </html>
