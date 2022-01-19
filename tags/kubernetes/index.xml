@@ -49,9 +49,9 @@
 &lt;/figure&gt;
 
 &lt;p&gt;제대로 관리하려면 결국 Prometheus 같은 모니터링 시스템의 관리 대상에 포함해야 한다.&lt;/p&gt;
-&lt;p&gt;Prometheus query는 아래와 같다.&lt;/p&gt;
-&lt;p&gt;클러스터 CPU 리소스 활용률 평균: &lt;code&gt;sum(kube_pod_container_resource_requests_cpu_cores) / sum(kube_node_status_allocatable_cpu_cores)&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;클러스터 메모리 리소스 활용률 평균: &lt;code&gt;sum(kube_pod_container_resource_requests_memory_bytes) / sum(kube_node_status_allocatable_memory_bytes)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;kube-state-metrics가 제공하는 metric을 조회하는 Prometheus 쿼리는 아래와 같다.&lt;/p&gt;
+&lt;p&gt;클러스터 CPU 리소스 활용률 평균: &lt;code&gt;sum (kube_pod_container_resource_requests{resource=&amp;quot;cpu&amp;quot;}) / sum (kube_node_status_capacity{resource=&amp;quot;cpu&amp;quot;} )&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;클러스터 메모리 리소스 활용률 평균: &lt;code&gt;sum (kube_pod_container_resource_requests{resource=&amp;quot;memory&amp;quot;}) / sum (kube_node_status_capacity{resource=&amp;quot;memory&amp;quot;} )&lt;/code&gt;&lt;/p&gt;
 &lt;h1 id=&#34;ca의-로그로-scale-down을-하지-않는-이유-확인&#34;&gt;CA의 로그로 scale-down을 하지 않는 이유 확인&lt;/h1&gt;
 &lt;p&gt;CA는 특정 노드를 scale-down 대상으로 취급하지 않는지 이유를 로그로 자세히 알려준다.
 아래 명령으로 확인할 수 있다.&lt;/p&gt;
