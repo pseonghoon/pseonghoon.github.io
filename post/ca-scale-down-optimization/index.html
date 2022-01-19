@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" as="script" integrity=
+    "sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -173,12 +173,13 @@
 <p><code>리소스 활용률 = (노드에서 실행되는 컨테이너들의 resource request 합)/(노드의 resource capacity)</code></p>
 <p>컨테이너에서 실행되는 프로세스들이 실제 사용하는 수치가 아니라 컨테이너의 resource 설정에서 cpu나 memory request 값을 따지는 것이다.</p>
 <p>노드별 리스스 활용률은 kubectl로 대략 파악할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl describe nodes | grep Resource --after=3
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl describe nodes | grep Resource --after=3
 </code></pre></div><p>kubectl에 <a href="https://github.com/etopeter/kubectl-view-utilization">view-utilization plugin</a>을 설치하면 더 쉽게 확인할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ kubectl view-utilization <span class="c1"># 클러스터 전체 현황</span>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ kubectl view-utilization <span class="c1"># 클러스터 전체 현황</span>
 <span class="ln">2</span>$ kubectl view-utilization nodes <span class="c1"># 노드별 현황</span>
 </code></pre></div><p>아래는 kubectl view-utilization 명령의 실행 결과 예시이다.</p>
-<figure><img src="/post/img/kubectl_view_utilization.png"/>
+<figure>
+    <img src="/post/img/kubectl_view_utilization.png"/> 
 </figure>
 
 <p>제대로 관리하려면 결국 Prometheus 같은 모니터링 시스템의 관리 대상에 포함해야 한다.</p>
@@ -188,9 +189,9 @@
 <h1 id="ca의-로그로-scale-down을-하지-않는-이유-확인">CA의 로그로 scale-down을 하지 않는 이유 확인</h1>
 <p>CA는 특정 노드를 scale-down 대상으로 취급하지 않는지 이유를 로그로 자세히 알려준다.
 아래 명령으로 확인할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ kubectl logs -f  -n kube-system <span class="k">$(</span>kubectl get pod -o Name -n kube-system -l app.kubernetes.io/instance<span class="o">=</span>cluster-autoscaler<span class="k">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ kubectl logs -f  -n kube-system <span class="k">$(</span>kubectl get pod -o Name -n kube-system -l app.kubernetes.io/instance<span class="o">=</span>cluster-autoscaler<span class="k">)</span>
 </code></pre></div><p>로그의 예는 아래와 같다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>I1119 16:13:22.567346       1 cluster.go:148] Fast evaluation: ip-10-76-141-178.ap-northeast-2.compute.internal for removal
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>I1119 16:13:22.567346       1 cluster.go:148] Fast evaluation: ip-10-76-141-178.ap-northeast-2.compute.internal for removal
 <span class="ln">2</span>I1119 16:13:22.567357       1 cluster.go:169] Fast evaluation: node ip-10-76-141-178.ap-northeast-2.compute.internal cannot be removed: pod with local storage present: istiod-1-10-4-6c66f78678-7wl5r
 <span class="ln">3</span>...
 <span class="ln">4</span>
@@ -201,7 +202,7 @@
 <h3 id="1-ca의-skip-nodes-with-local-storage-옵션을-false로-설정">1. CA의 skip-nodes-with-local-storage 옵션을 false로 설정</h3>
 <p><a href="https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler">Helm chart</a>의 디폴트 값은 true지만 항상 false로 설정하는 것을 권장한다. 경우에 따라 비용 절감 효과가 상당히 클 수도 있다.</p>
 <p>Helm chart를 설치할 때 values.yaml을 아래처럼 설정하면 된다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
 </span><span class="ln">2</span><span class="w">  </span><span class="nt">skip-nodes-with-local-storage</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></code></pre></div><p>이 옵션이 true이면 emptyDir이나 hostPath를 volume으로 사용하는 pod이 있는 노드를 scale-down 대상에서 제외한다.</p>
 <p>노드가 없어져서 데이터가 유실되는 경우를 막기 true로 설정하는 것이 일견 자연스러워 보이지만 그렇지 않다.
@@ -212,7 +213,7 @@
 이런 것들은 pod이 실행되는 동안에만 의미가 있기 때문에 노드가 없어져도 데이터가 유실되는 문제가 없다.</p>
 <p>경험을 공유하면, scale-down 효율이 떨어지는 클러스터의 CA 로그를 확인해 봤더니 로컬 스토리지 문제 때문에 많은 노드를 scale-down 대상에서 제외한 경우가 있었다. 해당 pod들을 확인하니 Istiod, Istio에 포함된 Prometheus, Redis, SonarQube에 포함된 PostgreSQL이 위에서 설명한 용도로 emptyDir volume을 사용하고 있었다.</p>
 <p>아래는 Istiod pod 설정에서 발췌한 것이다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
 </span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
 </span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
 </span><span class="ln"> 4</span><span class="w">  </span><span class="l">...</span><span class="w">
@@ -234,11 +235,11 @@
 </span></code></pre></div><p><code>emptyDir.medium: Memory</code> 로 설정하고 있으니 RAM 기반의 tmpfs 파일 시스템을 사용하기 위한 것이다.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
 <h3 id="2-ca의---scale-down-utilization-threshold-옵션-값을-더-크게-설정">2. CA의 &ndash;scale-down-utilization-threshold 옵션 값을 더 크게 설정.</h3>
 <p><a href="https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler">Helm chart</a>를 설치할 때 values.yaml을 아래처럼 설정하면 된다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">extraArgs</span><span class="p">:</span><span class="w">
 </span><span class="ln">2</span><span class="w">  </span><span class="nt">scale-down-utilization-threshold</span><span class="p">:</span><span class="w"> </span><span class="m">0.6</span><span class="w"> </span><span class="c"># 디폴트는 0.5. 배포 속도를 고려해 적당한 값으로 설정</span><span class="w">
 </span></code></pre></div><p>디폴트 값은 0.5다.
 CA가 리소스 활용률이 낮은 노드를 판단하는 기준이다. 노드의 CPU, 메모리 리소스 활용률 중 더 큰 값이 이 설정보다 작으면 scale-down 대상이 된다. 따라서 이 수치를 높이면 대상이 늘어날 수 있다. 하지만 너무 높게 설정하면 pod의 scale-out 이나 배포 속도가 느려질 수 있다. 새로 생성된 pod이 들어갈 공간이 기존 노드에 없어서 새로운 노드를 생성해야 할 확률이 높아지기 때문이다. 실서비스 환경이 아니라면 더 과감하게 올려볼 수 있다.</p>
-<h3 id="3-poddisruptionbudgetpdb-설정이-scale-down을-막고-있는-상태-해소">3. PodDisruptionBudget(PDB) 설정이 scale-down을 막고 있는 상태 해소</h3>
+<h3 id="3-poddisruptionbudgetpdb-설정이-scale-down을-막고-있는-경우-해소">3. PodDisruptionBudget(PDB) 설정이 scale-down을 막고 있는 경우 해소</h3>
 <p>잘못 설정된 PodDisruptionBudget이 scale-down을 막을 수 있다.</p>
 <p>PDB의 개념이 아직 생소하다면 아래 문서를 통해 개념을 정확히 이해할 필요가 있다. 서비스 안정성이나 클러스터 관리 작업에 많은 영향을 주는 중요한 요소이기 때문에 application 개발자와 클러스터 관리자 모두 개념을 정확히 알고 있어야 한다.</p>
 <ul>
@@ -247,7 +248,7 @@ CA가 리소스 활용률이 낮은 노드를 판단하는 기준이다. 노드�
 </ul>
 <p>예를 들어, 개발 환경에선 application 당 pod을 1개만 실행하면서 실서비스 환경의 PDB 설정을 그대로 사용하면 문제가 된다.
 아래처럼 minAvailable을 30% 로 설정하면 1개만 있는 pod을 종료할 수 없다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">policy/v1beta1</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">policy/v1beta1</span><span class="w">
 </span><span class="ln">2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PodDisruptionBudget</span><span class="w">
 </span><span class="ln">3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
 </span><span class="ln">4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">demo</span><span class="w">
@@ -261,17 +262,17 @@ CA가 리소스 활용률이 낮은 노드를 판단하는 기준이다. 노드�
 <p>CA는 kube-system namespace에 속하는 pod이 실행되는 노드를 scale-down 대상에서 제외하지만 PDB로 명시적으로 허용하면 대상에 포함한다.</p>
 <p><a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-to-set-pdbs-to-enable-ca-to-move-kube-system-pods">https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-to-set-pdbs-to-enable-ca-to-move-kube-system-pods</a></p>
 <p>AWS EKS 클러스터라면 아래처럼 CoreDNS에 PDB 설정을 할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl create poddisruptionbudget coredns --namespace=kube-system --selector  eks.amazonaws.com/component=coredns --max-unavailable 1
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl create poddisruptionbudget coredns --namespace=kube-system --selector  eks.amazonaws.com/component=coredns --max-unavailable 1
 </code></pre></div><section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
 <p>만약 어쩔 수 없이 로컬 스토리지를 써야하고 노드 종료를 막아야 하는 상황이 있다면 --skip-nodes-with-local-storage 옵션을 true로 설정하는 것 대신 PodDistruptionBudget을 적절히 설정해 주거나
-pod의 annotation에 <code>&quot;cluster-autoscaler.kubernetes.io/safe-to-evict&quot;: &quot;false&quot;</code> 를 붙이는 방법이 있다.하지만 노드가 다른 이유로 셧다운될 때 데이터를 잃어버리는 것은 마찬가지다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+pod의 annotation에 <code>&quot;cluster-autoscaler.kubernetes.io/safe-to-evict&quot;: &quot;false&quot;</code> 를 붙이는 방법이 있다.하지만 노드가 다른 이유로 셧다운될 때 데이터를 잃어버리는 것은 마찬가지다. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
 <p>emptyDir.medium 이 Memory인 경우는 로컬 스토리지를 사용하지 것으로 보지 않는 것이 합리적일 것 같은데
-CA는 emptyDir은 모두 로컬 스토리지 사용으로 본다. 이것은 <a href="https://github.com/kubernetes/autoscaler/issues/2048">의도된 동작</a>이라고 한다. --skip-nodes-with-local-storage 옵션이 true일 때 로컬 스토리지를 사용하는 pod을 scale-down 대상에 포함시키려면 pod에 <code>&quot;cluster-autoscaler.kubernetes.io/safe-to-evict&quot;: &quot;true&quot;</code> 라고 annotation을 붙이면 된다.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+CA는 emptyDir은 모두 로컬 스토리지 사용으로 본다. 이것은 <a href="https://github.com/kubernetes/autoscaler/issues/2048">의도된 동작</a>이라고 한다. --skip-nodes-with-local-storage 옵션이 true일 때 로컬 스토리지를 사용하는 pod을 scale-down 대상에 포함시키려면 pod에 <code>&quot;cluster-autoscaler.kubernetes.io/safe-to-evict&quot;: &quot;true&quot;</code> 라고 annotation을 붙이면 된다. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
@@ -502,7 +503,7 @@ CA는 emptyDir은 모두 로컬 스토리지 사용으로 본다. 이것은 <a h
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" integrity="sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous"></script>
     
   </body>
 </html>
