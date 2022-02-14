@@ -6,7 +6,80 @@
     <description>Recent content in AWS on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
-    <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python module이 포함된 Lambda layer 만들기 (AWSCLI 예제)</title>
+      <link>https://pseonghoon.github.io/post/awscli-in-labmda-layer/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/post/awscli-in-labmda-layer/</guid>
+      <description>
+        
+          &lt;p&gt;Python으로 작성된 Lambda function이 AWSCLI를 실행할 수 있도록 AWSCLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWSCLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.&lt;/p&gt;
+&lt;h1 id=&#34;lambda-layer&#34;&gt;Lambda layer&lt;/h1&gt;
+&lt;p&gt;Lambda layer는 AWS Lambda 서비스에서 Lambda function이 필요로 하는 라이브러리 코드를 재활용하기 위한 도구이다. 자세한 내용은 &lt;a href=&#34;https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html&#34;&gt;https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html&lt;/a&gt; 에서 찾을 수 있다.&lt;/p&gt;
+&lt;p&gt;Python 모듈을 Lambda function의 deployment package 안에 직접 넣는 것보다 Lambda layer를 만드는 것이 편리하다. 해당 모듈을 사용하는 여러 Lambda function에서 layer를 가져다 쓰면서 재활용할 수 있기 때문이다.&lt;/p&gt;
+&lt;h1 id=&#34;lambda-function에서-awscli를-써야-하는-경우&#34;&gt;Lambda function에서 AWSCLI를 써야 하는 경우&lt;/h1&gt;
+&lt;p&gt;Python runtime을 사용하는 Lambda function에서 AWS API 호출을 하려면
+AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 것이 더 좋은 방법이다.
+코딩하기도 편하고 boto3는 Python runtime에 포함되어 있기 때문에 바로 사용할 수 있다.&lt;/p&gt;
+&lt;p&gt;AWSCLI는 아래처럼 boto3에서 해당 기능을 지원하지 않는 명령에만 사용하는 것이 좋다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;aws eks update-kubeconfig&lt;/li&gt;
+&lt;li&gt;aws s3 sync&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;aws eks update-kubeconfig 명령은 Lambda function에서 EKS 클러스터에 접속할 때 kubeconfig 설정을 위해 필요하다.&lt;/p&gt;
+&lt;h1 id=&#34;lambda-layer-용-zip-파일-생성-방법&#34;&gt;Lambda layer 용 zip 파일 생성 방법&lt;/h1&gt;
+&lt;p&gt;우선 &lt;a href=&#34;https://github.com/pyenv/pyenv&#34;&gt;pyenv&lt;/a&gt;와 &lt;a href=&#34;https://virtualenv.pypa.io/en/latest/installation.html&#34;&gt;virutalenv&lt;/a&gt;를 설치해야 한다.&lt;/p&gt;
+&lt;p&gt;pyenv로 Lambda runtime에 맞는 Python 버전을 설치한다.
+예를 들어 python3.8 용 layer를 생성하기 위해 3.8.11 을 설치할 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;pyenv install 3.8.11 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc&#34;&gt;zip-lambda-layer-awscli.sh&lt;/a&gt; 스크립트를 다운로드한 후 아래처럼 layer를 구성하는 zip 파일을 만든다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ sh zip-lambda-layer-awscli.sh 3.8.11 
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# 생성되는 파일은 아래와 같다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;$ ls *.zip
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;lambda-layer-awscli-python38.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Terraform으로 아래처럼 Lambda layer와 function을 만들 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# 실제로는 아래처럼 aws_lambda_layer_version을 직접 만들지 말고, 이것을 생성하는 테라폼 모듈을 만들어서 재사용해야 한다.
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;aws_lambda_layer_version&amp;#34; &amp;#34;awscli_python38&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  filename&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;./lambda-layer-awscli-python38.zip&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  compatible_runtimes&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;python3.8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;  }
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;aws_lambda_function&amp;#34; &amp;#34;main&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  runtime&lt;/span&gt;          &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;python3.8&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;  layers&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;aws_lambda_layer_version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;awscli_python38&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;arn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Lambda function을 구성하는 Python 스크립트에서 아래처럼 사용하면 된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# PATH 환경 변수에 포함된 /opt/bin/ 아래에 aws가 있어서 경로 지정을 하지 않아도 된다.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;subprocess&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;aws --version&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shell&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;check&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;zip-lambda-layer-awsclish-스크립트&#34;&gt;zip-lambda-layer-awscli.sh 스크립트&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc&#34;&gt;zip-lambda-layer-awscli.sh&lt;/a&gt;의 내용은 아래와 같다.&lt;/p&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc.js&#34;&gt;&lt;/script&gt;
+
+&lt;h1 id=&#34;참고-zip-파일-구성&#34;&gt;[참고] zip 파일 구성&lt;/h1&gt;
+&lt;p&gt;bin/ 아래에 aws 명령과 그것이 의존하는 Python 모듈을 설치한다.&lt;/p&gt;
+&lt;p&gt;zip 파일 내의 bin/ 디렉토리는 Lambda 실행 환경에선 /opt/bin/ 디렉토리가 된다.
+/opt/bin/ 디렉토리는 Lambda function의 PATH 환경 변수에 포함되어 있기 때문에 Lambda function은 aws 명령을 경로 지정 없이 실행할 수 있다.&lt;/p&gt;
+&lt;p&gt;Python은 sys.path 변수에 포함된 디렉토리에서 import하는 module들을 찾는다. Lambda function의 sys.path 변수는 /opt/ 아래 다양한 디렉토리를 포함한다.
+하지만 이 layer에 포함된 모듈들은 lambda function이 아니라 /opt/bin/aws 스크립트에서 import 하기 위한 것이다. 그런데 aws 명령의 sys.path 변수에는 /opt/ 아래 디렉토리들이 포함되지 않는다. aws 명령이 awscli 모듈을 찾을 수 있게 하려면 명령과 동일한 디렉토리인 /opt/bin/ 아래에 모듈을 넣어야 한다.&lt;/p&gt;
+&lt;p&gt;Lambda는 layer를 포함한 &lt;a href=&#34;https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html&#34;&gt;deployment package의 크기를 제한&lt;/a&gt;한다. 따라서 zip 파일과 deployment package의 크기를 줄이기 위해 Python 버전별로 layer를 따로 만든다.&lt;/p&gt;
+&lt;h1 id=&#34;참고한-문서&#34;&gt;참고한 문서&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/lambda/latest/dg/invocation-layers.html&#34;&gt;https://docs.aws.amazon.com/lambda/latest/dg/invocation-layers.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html&#34;&gt;https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/lambda/latest/dg/python-package.html&#34;&gt;https://docs.aws.amazon.com/lambda/latest/dg/python-package.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://bezdelev.com/hacking/aws-cli-inside-lambda-layer-aws-s3-sync/&#34;&gt;https://bezdelev.com/hacking/aws-cli-inside-lambda-layer-aws-s3-sync/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>오해하기 쉬운 EKS 클러스터의 subnet 설정</title>
       <link>https://pseonghoon.github.io/post/eks-subnet/</link>
