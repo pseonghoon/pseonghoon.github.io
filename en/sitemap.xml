@@ -18,6 +18,9 @@
     <loc>https://pseonghoon.github.io/tags/aws/</loc>
     <lastmod>2022-02-14T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://pseonghoon.github.io/tags/devops/</loc>
+    <lastmod>2022-02-14T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://pseonghoon.github.io/tags/iac/</loc>
     <lastmod>2022-02-14T00:00:00+00:00</lastmod>
   </url><url>
@@ -41,9 +44,6 @@
                 />
   </url><url>
     <loc>https://pseonghoon.github.io/post/ca-scale-down-optimization/</loc>
-    <lastmod>2021-11-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://pseonghoon.github.io/tags/devops/</loc>
     <lastmod>2021-11-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pseonghoon.github.io/tags/kubernetes/</loc>
