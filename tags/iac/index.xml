@@ -81,7 +81,7 @@ AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 �
     </item>
     
     <item>
-      <title>로컬에서 개발 중인 Ansible role을 편하게 테스트하는 방법</title>
+      <title>로컬에서 개발 중인 Ansible role 테스트하기</title>
       <link>https://pseonghoon.github.io/post/testing-ansible-role/</link>
       <pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate>
       
