@@ -15,7 +15,7 @@
       <guid>https://pseonghoon.github.io/post/k8s-application-troubleshooting/</guid>
       <description>
         
-          &lt;p&gt;쿠버네티스(Kubernetes) 에서 컨테이너가 정상적으로 시작하지 못하거나 애플리케이션이 제대로 동작하지 않을 때 트러블슈팅할 수 있는 방법을 공유한다.&lt;/p&gt;
+          &lt;p&gt;쿠버네티스(Kubernetes) 에서 컨테이너가 정상적으로 시작하지 못하거나 애플리케이션이 제대로 동작하지 않을 때 트러블슈팅할 수 있는 방법을 정리한다.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; 이 포스트에 포함된 kubectl 명령을 직접 실행하는 것보다 &lt;a href=&#34;https://github.com/derailed/k9s&#34;&gt;k9s&lt;/a&gt;를 사용하는 것이 편리하다.&lt;/p&gt;
 &lt;h1 id=&#34;kubectl로-이벤트-확인&#34;&gt;kubectl로 이벤트 확인&lt;/h1&gt;
 &lt;p&gt;이벤트가 문제의 원인에 대한 중요한 정보를 제공할 수 있다.&lt;/p&gt;
