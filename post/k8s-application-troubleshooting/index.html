@@ -178,7 +178,9 @@
 <p>이벤트는 etcd의 저장 공간 제한 때문에 보통 몇 시간 정도 밖에 보관되지 않는다.
 따라서 문제가 발생 후 시간이 지나면 이벤트를 통해  원인을 파악하기 어렵게 된다.</p>
 <p>이 문제에 대응하기 위해서 클러스터에 <a href="https://github.com/opsgenie/kubernetes-event-exporter">kubernetes-event-exporter</a>를 설치하는 방법이 있다.
-이벤트가 생성될 때 event-exporter가 그 내용을 로그로 남긴다. 이 로그를 AWS CloudWatch Logs 같은 로그 저장소에 전송하고 필요할 때 검색하면 된다. AWS CloudWatch Logs 를 사용한다면 CloudWatch Logs Insights 기능으로 검색하면 편리하다.</p>
+이벤트가 생성될 때 event-exporter가 그 내용을 로그로 남긴다. 이 로그를 Elasticsearch나 AWS CloudWatch Logs 같은 로그 저장소에 전송하고 필요할 때 검색하면 된다.</p>
+<h3 id="cloudwatch-logs-에서-조회하는-예제">CloudWatch Logs 에서 조회하는 예제</h3>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-logs.html">CloudWatch Logs를 사용</a>하고 있다면 아래처럼 CloudWatch Logs Insights 쿼리로 검색할 수 있다.</p>
 <p>조회할 로그 그룹을 /aws/containerinsights/<code>&lt;cluster-name&gt;</code>/application 으로 설정한다.</p>
 <figure><img src="/post/img/log_group.png"/>
 </figure>
