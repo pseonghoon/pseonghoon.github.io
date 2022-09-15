@@ -1,8 +1,8 @@
 
 <!DOCTYPE html>
-<html lang="en" data-figures="" data-mode="lit">
+<html lang="en" data-figures="" class="page" data-mode="lit">
   <head>
-<title>IaC | 박성훈의 블로그</title>
+<title>[Kubernetes] 애플리케이션 트러블슈팅 | 박성훈의 블로그</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,29 +17,28 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="쿠버네티스(Kubernetes) 에서 컨테이너가 정상적으로 시작하지 못하거나 애플리케이션이 제대로 동작하지 않을 때 트러블슈팅할 수 있는 방법을 정리한다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="IaC" />
-<meta property="og:url" content="https://pseonghoon.github.io/tags/iac/" />
-<meta property="og:title" content="IaC" />
-<meta property="og:description" content="" />
+<meta name="twitter:title" content="[Kubernetes] 애플리케이션 트러블슈팅" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/k8s-application-troubleshooting/" />
+<meta property="og:title" content="[Kubernetes] 애플리케이션 트러블슈팅" />
+<meta property="og:description" content="쿠버네티스(Kubernetes) 에서 컨테이너가 정상적으로 시작하지 못하거나 애플리케이션이 제대로 동작하지 않을 때 트러블슈팅할 수 있는 방법을 정리한다." />
 <meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://pseonghoon.github.io/icons/favicon-32x32.png">
 <link rel="manifest" href="https://pseonghoon.github.io/icons/site.webmanifest">
 
-<link rel="canonical" href="https://pseonghoon.github.io/tags/iac/">
-<link rel="alternate" type="application/rss+xml" href="https://pseonghoon.github.io/tags/iac/index.xml" title="박성훈의 블로그" />
+<link rel="canonical" href="https://pseonghoon.github.io/post/k8s-application-troubleshooting/">
 
     
 
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" as="script" integrity=
-    "sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
+    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -106,35 +105,27 @@
 </header>
 
     <main>
-
+  
 <div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" title="AWSCLI가 포함된 Lambda layer 만들기">AWSCLI가 포함된 Lambda layer 만들기</a>
-      </h3>
-      
+  <article class="post_content" style="word-wrap:break-word;">
+    <h1 class="post_title">[Kubernetes] 애플리케이션 트러블슈팅</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Feb 14, 2022</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/aws' title="AWS" class="post_tag button button_translucent">AWS
-        </a><a href='https://pseonghoon.github.io/tags/iac' title="IaC" class="post_tag button button_translucent">IaC
-        </a><a href='https://pseonghoon.github.io/tags/devops' title="DevOps" class="post_tag button button_translucent">DevOps
+      Aug 5, 2022</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
         </a>
     </span>
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=AWSCLI%ea%b0%80%20%ed%8f%ac%ed%95%a8%eb%90%9c%20Lambda%20layer%20%eb%a7%8c%eb%93%a4%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fawscli-in-labmda-layer%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=%5bKubernetes%5d%20%ec%95%a0%ed%94%8c%eb%a6%ac%ec%bc%80%ec%9d%b4%ec%85%98%20%ed%8a%b8%eb%9f%ac%eb%b8%94%ec%8a%88%ed%8c%85&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fk8s-application-troubleshooting%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fawscli-in-labmda-layer%2f&t=AWSCLI%ea%b0%80%20%ed%8f%ac%ed%95%a8%eb%90%9c%20Lambda%20layer%20%eb%a7%8c%eb%93%a4%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fk8s-application-troubleshooting%2f&t=%5bKubernetes%5d%20%ec%95%a0%ed%94%8c%eb%a6%ac%ec%bc%80%ec%9d%b4%ec%85%98%20%ed%8a%b8%eb%9f%ac%eb%b8%94%ec%8a%88%ed%8c%85" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -144,7 +135,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" title="Copy Link" class="link link_yank">
+    <a href="https://pseonghoon.github.io/post/k8s-application-troubleshooting/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -153,146 +144,122 @@
   </span>
   </div>
 
-    </div>
-      <div class="excerpt_footer">
-        <div>
+    
+    <p>쿠버네티스(Kubernetes) 에서 컨테이너가 정상적으로 시작하지 못하거나 애플리케이션이 제대로 동작하지 않을 때 트러블슈팅할 수 있는 방법을 정리한다.</p>
+<p><em>Note:</em> 이 포스트에 포함된 kubectl 명령을 직접 실행하는 것보다 <a href="https://github.com/derailed/k9s">k9s</a>를 사용하는 것이 편리하다.</p>
+<h1 id="kubectl로-이벤트-확인">kubectl로 이벤트 확인</h1>
+<p>이벤트가 문제의 원인에 대한 중요한 정보를 제공할 수 있다.</p>
+<p><code>kubectl describe pod</code> 명령으로 파드(Pod)와 연관된 최근 이벤트를 확인할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl describe pod &lt;pod-name&gt;
+</code></pre></div><p>아래와 같이 결과의 마지막에 파드 관련 이벤트들이 표시된다. 아래 예제에선 startup probe가 실패한 것이 원인이다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln"> 1</span>Name:         psh-test-5bd7d665c8-24vfn
+<span class="ln"> 2</span>Namespace:    psh
+<span class="ln"> 3</span>Priority:     0
+<span class="ln"> 4</span>Node:         ip-10-73-3-41.ap-northeast-2.compute.internal/10.73.3.41
+<span class="ln"> 5</span>Start Time:   Mon, 08 Aug 2022 23:53:44 +0900
+<span class="ln"> 6</span>
+<span class="ln"> 7</span>... 중간 생략 ... 
+<span class="ln"> 8</span>
+<span class="ln"> 9</span>Events:
+<span class="ln">10</span>  Type     Reason     Age   From               Message
+<span class="ln">11</span>  ----     ------     ----  ----               -------
+<span class="ln">12</span>  Normal   Scheduled  16s   default-scheduler  Successfully assigned psh/psh-test-5bd7d665c8-24vfn to ip-10-73-3-41.ap-northeast-2.compute.internal
+<span class="ln">13</span>  Normal   Pulled     15s   kubelet            Container image &#34;123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/helloworld/web:latest&#34; already present on machine
+<span class="ln">14</span>  Normal   Created    15s   kubelet            Created container psh-test
+<span class="ln">15</span>  Normal   Started    15s   kubelet            Started container psh-test
+<span class="ln">16</span>  Warning  Unhealthy  10s   kubelet            Startup probe failed: Get &#34;http://10.73.12.174:8080/not_exist&#34;: dial tcp 10.73.12.174:8080: connect: connection refused
+<span class="ln">17</span>  Warning  Unhealthy  6s    kubelet            Startup probe failed: HTTP probe failed with statuscode: 404
+<span class="ln">18</span>  Normal   Killing    6s    kubelet            Container psh-test failed startup probe, will be restarted
+<span class="ln">19</span>
+</code></pre></div><p><code>kubectl get event</code> 명령으로 클러스터에서 최근 발생한 이벤트들을 확인할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl get events -n &lt;namespace&gt;
+<span class="ln">2</span>$ kubectl get events --all-namespaces 
+</code></pre></div><h1 id="event-exporter로-오래된-이벤트-확인">event-exporter로 오래된 이벤트 확인</h1>
+<p>이벤트는 etcd의 저장 공간 제한 때문에 보통 몇 시간 정도 밖에 보관되지 않는다.
+따라서 문제가 발생 후 시간이 지나면 이벤트를 통해  원인을 파악하기 어렵게 된다.</p>
+<p>이 문제에 대응하기 위해서 클러스터에 <a href="https://github.com/opsgenie/kubernetes-event-exporter">kubernetes-event-exporter</a>를 설치하는 방법이 있다.
+이벤트가 생성될 때 event-exporter가 그 내용을 로그로 남긴다. 이 로그를 Elasticsearch나 AWS CloudWatch Logs 같은 로그 저장소에 전송하고 필요할 때 검색하면 된다.</p>
+<h3 id="cloudwatch-logs-에서-조회하는-예제">CloudWatch Logs 에서 조회하는 예제</h3>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-logs.html">CloudWatch Logs를 사용</a>하고 있다면 아래처럼 CloudWatch Logs Insights 쿼리로 검색할 수 있다.</p>
+<p>조회할 로그 그룹을 /aws/containerinsights/<code>&lt;cluster-name&gt;</code>/application 으로 설정한다.</p>
+<figure><img src="/post/img/log_group.png"/>
+</figure>
 
-            
-              <p>Python으로 작성된 Lambda function이 AWSCLI를 실행할 수 있도록 AWSCLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWSCLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.</p>
-            
+<p>아래 예제처럼 쿼리를 실행한다.</p>
+<!--
+```
+fields @timestamp, parsed.involvedObject.name, parsed.message
+| filter kubernetes.labels.app = 'event-exporter' and parsed.involvedObject.name like 'node-exporter-qz87v'
+| sort @timestamp asc
+```
+-->
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>fields @timestamp, @message
+<span class="ln">2</span>| filter kubernetes.container_name = &#39;event-exporter&#39;
+<span class="ln">3</span>| sort @timestamp desc
+<span class="ln">4</span>| limit 50
+</code></pre></div><p><em>Note:</em> 실제로 이벤트가 발생한 횟수보다 kubernetes-event-exporter 에 남는 로그 수가 더 적다. 쿠버네티스는 동일한 이벤트가 근접한 시간에 여러번 발생하면 기존에 etcd에 저장된 이벤트를 업데이트하는데 아마도 kubernetes-event-exporter가 이벤트가 새로 etcd에 생성되는 경우에만 로그를 남기기 때문인 것 같다.</p>
+<h1 id="kubectl-logs-명령으로-로그-확인">kubectl logs 명령으로 로그 확인</h1>
+<p>컨테이너가 표준 출력(standard out)으로 로그를 출력한다면 kubectl logs 명령으로 application의 로그를 볼 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl logs &lt;pod-name&gt;
+</code></pre></div><p>사용 방법: <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs">https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs</a></p>
+<p><strong>Pod이 CrashLoopBackOff 상태일 때는 -p 옵션 추가</strong></p>
+<p>kubectl logs 명령은 현재 실행 중인 컨테이너의 로그를 출력하기 때문에 컨테이너가 에러를 내고 종료해버리면 에러 로그를 확인할 수 없다. 이럴 때는 <mark> -p ( --previous=true ) 옵션을 추가하면 종료된 컨테이너의 로그를 볼 수 있다.</mark></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ kubectl logs -p &lt;pod-name&gt;
+</code></pre></div><h1 id="로그-저장소에서-로그-조회">로그 저장소에서 로그 조회</h1>
+<p>application 로그는 CloudWatch Logs, Elasticsearch, Loki 등의 로그 저장소에 전송해야 한다. 문제가 발생했을 때 해당하는 로그를 조회해서 확인할 수 있다.</p>
+<p>예를 들어 <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-logs.html">CloudWatch Logs에 컨테이너 로그를 전송</a>하고 있다면 CloudWatch Logs Insights의 쿼리를 사용해서 로그를 조회할 수 있다.</p>
+<p>먼저 로그 그룹을 /aws/containerinsights/<code>&lt;cluster-name&gt;</code>/application 으로 지정한다.</p>
+<p>Pod 이름을 이용하여 아래처럼 조회할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>fields @timestamp, log,  @message
+<span class="ln">2</span>| filter kubernetes.pod_name like &#34;cluster-autoscaler&#34;   
+<span class="ln">3</span>| sort @timestamp desc
+<span class="ln">4</span>| limit 20
+</code></pre></div><h1 id="컨테이터의-last-state-확인">컨테이터의 Last State 확인</h1>
+<p>컨테이너가 application 내부적인 이유로 에러를 내고 종료,재시작을 반복하면 Pod과 컨테이너가 CrashLoopBackOff 상태가 된다.</p>
+<p>kubectl logs -p 명령에서도 유용한 내용이 없다면 kubectl describe Pod 명령으로 Last State의 Reason, Exit Code를 확인한다.</p>
+<p>OOM으로 죽은 경우에는 Reason에 그렇게 표시가 된다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">Containers</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 2</span><span class="w">  </span><span class="nt">nginx</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 3</span><span class="w">    </span><span class="nt">Container ID</span><span class="p">:</span><span class="w">   </span><span class="l">docker://513cab3de8be8754d054a4eff45e291d33b63e11b2143d0ff782dccc286ba05e</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">    </span><span class="nt">Image</span><span class="p">:</span><span class="w">          </span><span class="l">nginx</span><span class="w">
+</span><span class="ln"> 5</span><span class="w">    </span><span class="nt">Image ID</span><span class="p">:</span><span class="w">       </span><span class="l">docker-pullable://nginx@sha256:c4ee0ecb376636258447e1d8effb56c09c75fe7acf756bf7c13efadf38aa0aca</span><span class="w">
+</span><span class="ln"> 6</span><span class="w">    </span><span class="nt">Port</span><span class="p">:</span><span class="w">           </span><span class="l">&lt;none&gt;</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">    </span><span class="nt">State</span><span class="p">:</span><span class="w">          </span><span class="l">Waiting</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">      </span><span class="nt">Reason</span><span class="p">:</span><span class="w">       </span><span class="l">CrashLoopBackOff</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">    </span><span class="nt">Last State</span><span class="p">:</span><span class="w">     </span><span class="l">Terminated</span><span class="w">
+</span><span class="ln">10</span><span class="w">      </span><span class="nt">Reason</span><span class="p">:</span><span class="w">       </span><span class="l">Error</span><span class="w">
+</span><span class="ln">11</span><span class="w">      </span><span class="nt">Exit Code</span><span class="p">:</span><span class="w">    </span><span class="m">1</span><span class="w">
+</span><span class="ln">12</span><span class="w">      </span><span class="nt">Started</span><span class="p">:</span><span class="w">      </span><span class="l">Tue, 27 Mar 2018 19:13:15 +0200</span><span class="w">
+</span><span class="ln">13</span><span class="w">      </span><span class="nt">Finished</span><span class="p">:</span><span class="w">     </span><span class="l">Tue, 27 Mar 2018 19:13:16 +0200</span><span class="w">
+</span></code></pre></div><p>지금까지 기술한 방법으로 원인을 알 수 없다면 각 application에 맞는 디버거를 사용해야 한다.</p>
+<h1 id="kubectl-exec로-컨테이너-내부에서-쉘-실행하기">kubectl exec로 컨테이너 내부에서 쉘 실행하기</h1>
+<p>아래 문서를 참고한다.</p>
+<p><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/">https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/</a></p>
+<h1 id="kubectl-port-foward-명령으로-acl에-제약-받지-않고-연결-테스트">kubectl port-foward 명령으로 ACL에 제약 받지 않고 연결 테스트</h1>
+<p>Service, Pod의 port 로 포워딩되는 로컬 포트를 열수 있다.</p>
+<p>kubectl 명령만 실행할 수 있으면 클러스터 내부 통신만 하는 앱이거나 ACL에서 허용하지 않는 경우라도 로컬 컴퓨터에서 접속할 수 있다.</p>
+<p><a href="https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/">https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/</a></p><div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-          <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://pseonghoon.github.io/post/testing-ansible-role/" title="로컬에서 개발 중인 Ansible role 테스트하기">로컬에서 개발 중인 Ansible role 테스트하기</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Nov 16, 2021</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/iac' title="IaC" class="post_tag button button_translucent">IaC
-        </a><a href='https://pseonghoon.github.io/tags/devops' title="DevOps" class="post_tag button button_translucent">DevOps
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    Share on:
-    <a href="https://twitter.com/intent/tweet?text=%eb%a1%9c%ec%bb%ac%ec%97%90%ec%84%9c%20%ea%b0%9c%eb%b0%9c%20%ec%a4%91%ec%9d%b8%20Ansible%20role%20%ed%85%8c%ec%8a%a4%ed%8a%b8%ed%95%98%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2ftesting-ansible-role%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2ftesting-ansible-role%2f&t=%eb%a1%9c%ec%bb%ac%ec%97%90%ec%84%9c%20%ea%b0%9c%eb%b0%9c%20%ec%a4%91%ec%9d%b8%20Ansible%20role%20%ed%85%8c%ec%8a%a4%ed%8a%b8%ed%95%98%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://pseonghoon.github.io/post/testing-ansible-role/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
-
-    </div>
-      <div class="excerpt_footer">
-        <div>
-
-            
-              <p>개발 중인 Ansible role을 편리하게 테스트하기 위해 사용하고 있는 방법을 공유한다. Ansible이 제시하는 정석대로 role을 다루는 경우에 적합한 방법이라 그 정석에 대해서도 살펴본다.</p>
-            
-
-          <a href="https://pseonghoon.github.io/post/testing-ansible-role/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" title="코드로 인프라 관리하기 (IaC)">코드로 인프라 관리하기 (IaC)</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Oct 5, 2020</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/iac' title="IaC" class="post_tag button button_translucent">IaC
-        </a><a href='https://pseonghoon.github.io/tags/devops' title="DevOps" class="post_tag button button_translucent">DevOps
-        </a><a href='https://pseonghoon.github.io/tags/aws' title="AWS" class="post_tag button button_translucent">AWS
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    Share on:
-    <a href="https://twitter.com/intent/tweet?text=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0%20%28IaC%29&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2finfrastructure-as-code%2f&t=%ec%bd%94%eb%93%9c%eb%a1%9c%20%ec%9d%b8%ed%94%84%eb%9d%bc%20%ea%b4%80%eb%a6%ac%ed%95%98%ea%b8%b0%20%28IaC%29" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
-
-    </div>
-    <div class="excerpt_footer partition">
-      <div class="excerpt_thumbnail">
-        <img src='https://pseonghoon.github.io/post/img/git-terraform.png' alt="코드로 인프라 관리하기 (IaC)">
-      </div>
-      
-        <div>
-
-            
-              <p><code>링크</code>: <a href="https://drive.google.com/file/d/1Bsc5hic_p8nNfGTSa8Dz4UXx49PVFOd4/view?usp=sharing">코드로 인프라 관리하기 (ppt)</a></p>
-<p>Games on AWS 2019에서 발표한 자료다. 당시 청중 설문에서 가장 좋은 평가를 받았다.
-Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 있는지, 잘 정착되게 하려면 어떤 것을 신경써야 하는지를 정리했다.</p>
-            
-
-          <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-    <li>
-
-
-    </li>
-  </ul>
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
         <h2>Park SeongHoon</h2>
@@ -318,9 +285,6 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://pseonghoon.github.io/post/k8s-application-troubleshooting/" class="nav-link" title="[Kubernetes] 애플리케이션 트러블슈팅">[Kubernetes] 애플리케이션 트러블슈팅</a>
-      </li>
-      <li>
         <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" class="nav-link" title="AWSCLI가 포함된 Lambda layer 만들기">AWSCLI가 포함된 Lambda layer 만들기</a>
       </li>
       <li>
@@ -340,6 +304,9 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기 (IaC)">코드로 인프라 관리하기 (IaC)</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해">L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</a>
       </li>
     </ul>
     <div>
@@ -437,9 +404,8 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
   </section>
 </aside>
 
+  
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
@@ -515,7 +481,7 @@ Infrastructure as Code, 더 나아가 자동화를 통해 무엇을 얻을 수 �
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" integrity="sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
     
   </body>
 </html>
