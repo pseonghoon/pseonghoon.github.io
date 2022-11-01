@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" as="script" integrity=
-    "sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
+    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -184,7 +184,7 @@
 <li>두 컴퓨터 모두 ~/sample_proj/ 에 Git local environment<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 가 위치한다.</li>
 </ul>
 <p>아이맥에서 하던 작업을 맥북으로 넘기는 명령어를 요약하면 아래와 같다. 두 컴퓨터에서 모두 current branch(HEAD)는 master다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span><span class="c1"># imac에서 실행</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span><span class="c1"># imac에서 실행</span>
 <span class="ln"> 2</span>$ <span class="nb">cd</span> ~/sample_proj
 <span class="ln"> 3</span>$ touch b
 <span class="ln"> 4</span>$ git add .
@@ -202,7 +202,7 @@
 <span class="ln">16</span>
 </code></pre></div><p>하나씩 설명하면 아래와 같다.</p>
 <p>1. 작업 전 아이맥의 ~/sample_project/ 에서 상태를 확인한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac에서 실행. current branch(HEAD)는 master다. </span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac에서 실행. current branch(HEAD)는 master다. </span>
 <span class="ln">2</span>$ <span class="nb">cd</span> ~/sample_proj
 <span class="ln">3</span>$ git log --oneline
 <span class="ln">4</span>f5bffbb <span class="o">(</span>HEAD -&gt; master, origin/master<span class="o">)</span> first commit
@@ -210,32 +210,32 @@
 <span class="ln">6</span>$ ls
 <span class="ln">7</span>a
 </code></pre></div><p>2. 아이맥에서 파일 b를 추가하고 임시 commit을 한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh"><span class="ln">1</span><span class="c1"># imac</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="ln">1</span><span class="c1"># imac</span>
 <span class="ln">2</span>$ touch b
 <span class="ln">3</span>$ git add .
 <span class="ln">4</span>$ git commit -m <span class="s1">&#39;Temparary save&#39;</span>
 </code></pre></div><p>3. 맥북에서 아래처럼 imac 이라는 remote를 추가한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
 <span class="ln">2</span>$ <span class="nb">cd</span> ~/sample_proj
 <span class="ln">3</span>$ git remote add imac psh@imac:sample_proj/ <span class="c1"># SSH 프로토콜로 리모트 설정</span>
 </code></pre></div><p>SSH 프로토콜을 사용했다. 만약 SSH를 사용할 수 없다면 다른 <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols">프로토콜</a>을 사용할 수 있다.</p>
 <p>4.  imac의 commit들을 fetch하고 아이맥에서 만든 임시 commit을 master branch에 merge한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook에서 실행. current branch(HEAD)는 master다.</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook에서 실행. current branch(HEAD)는 master다.</span>
 <span class="ln">2</span>$ git fetch imac
 <span class="ln">3</span>$ git merge imac/master <span class="c1"># 두개 명령을 묶어서 git pull imac master 라고 해도 된다.</span>
 </code></pre></div><p>5. 임시 commit이 맥북에도 추가된 것을 확인할 수 있다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
 <span class="ln">2</span>$ git log --oneline
 <span class="ln">3</span>e88d46f <span class="o">(</span>HEAD -&gt; master, imac/master<span class="o">)</span> Temparary save
 <span class="ln">4</span>f5bffbb <span class="o">(</span>origin/master, origin/HEAD<span class="o">)</span> first commit
 </code></pre></div><p>6. 임시 commit에 의한 변경 내용만 working directory에 남기고 임시 commit 자체는 취소한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1">#macbook</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1">#macbook</span>
 <span class="ln">2</span>$ git reset HEAD^  <span class="c1"># current commit 에서 1개만 되돌리면 되므로 HEAD^ 을 지정</span>
 </code></pre></div><p>git reset에 따로 옵션을 지정하지 않았으니 --mixed 옵션이 있는 것과 마찬가지다.
 이렇게 하면 current branch인 master의 위치를 임시 commit 이전으로 돌리지만 working directory는 그대로 둔다.
 즉 임시 commit 의 작업 내용은 working directory 에 그대로 있기 때문에 새로 잘 다듬어서 commit할 수 있다.</p>
 <p>7. git reset에 의한 결과를 아래처럼 확인할 수 있다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
 <span class="ln">2</span>$ git log --oneline
 <span class="ln">3</span>f5bffbb <span class="o">(</span>HEAD -&gt; master, origin/master, origin/HEAD<span class="o">)</span> first commit
 <span class="ln">4</span>
@@ -243,12 +243,12 @@
 <span class="ln">6</span>a b
 </code></pre></div><p>임시 commit은 없어졌지만 그것에 의해 추가된 b는 working 디렉토리에 있다.</p>
 <p>8. 아이맥에서 임시 commit을 삭제하고 그것에 의한 working directory 변경까지 모두 되돌린다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
 <span class="ln">2</span>$ git reset --hard HEAD^
 </code></pre></div><p>맥북으로 작업을 넘겼기 때문에 아이맥에선 변경한 내용을 깨끗이 지운 것이다.</p>
 <p>reset 에 --hard 옵션을 주었기 때문에 working directory까지 HEAD^(f5bffbb) 의 것으로 되돌렸다.</p>
 <p>9. git reset &ndash;hard 의 결과를 아래처럼 확인할 수 있다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
 <span class="ln">2</span>$ git log --oneline
 <span class="ln">3</span>f5bffbb <span class="o">(</span>HEAD -&gt; master, origin/master<span class="o">)</span> first commit
 <span class="ln">4</span>$ ls
@@ -259,18 +259,18 @@
 하지만 두 컴퓨터 간의 SSH 연결을 한 방향으로만 할 수 있는 환경이라면 해결책이 될 수 있다.</p>
 <p>맥북의 master branch에서 임시 commit한 것을 아이맥의 master branch로 push하려면 아래처럼 한다.</p>
 <p>1. 아이맥의 current branch 를 push 대상인 master가 아닌 다른 것으로 바꿔둔다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
 <span class="ln">2</span>$ git branch tmp
 <span class="ln">3</span>$ git checkout tmp  <span class="c1"># push 대상 branch에서 다른 곳으로 잠시 피한다.</span>
 <span class="ln">4</span>Switched to branch <span class="s1">&#39;tmp&#39;</span>
 </code></pre></div><p>이렇게 하지 않으면 push할 때 에러가 발생한다.</p>
 <p>2. 맥북에서 아이맥으로 push한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
 <span class="ln">2</span>$ git push imac master
 </code></pre></div><h1 id="checkout된-branch에-push하면-에러가-발생하는-이유">checkout된 branch에 push하면 에러가 발생하는 이유</h1>
 <p>위에서 맥북에서 master branch를 아이맥의 master로 push하기 전에 아이맥에서 먼저 master가 아닌 다른 branch로 checkout 했다.</p>
 <p>만약 아이맥에서 master branch에 checkout한 상태에서 push하면 아래와 같은 에러가 발생한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span><span class="c1"># macbook</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span><span class="c1"># macbook</span>
 <span class="ln"> 2</span>$ git push imac master
 <span class="ln"> 3</span>...
 <span class="ln"> 4</span>remote: error: refusing to update checked out branch: refs/heads/master
@@ -292,7 +292,7 @@
 <span class="ln">20</span>error: failed to push some refs to <span class="s1">&#39;imac:sample_proj/&#39;</span>
 <span class="ln">21</span>
 </code></pre></div><p>위 에러 메시지의 안내대로 아래처럼 receive.denyCurrentBranch를 ignore로 설정하면 에러가 발생하지 않는다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
 <span class="ln">2</span>$ git config receive.denyCurrentBranch ignore
 </code></pre></div><p>하지만 이렇게 하는 것은 좋지 않은 방법이다. 아이맥의 local environment 가 혼란스러운 상태에 빠질 수 있기 때문이다.</p>
 <p>chekout한 branch( current branch )에 push하면 push된 commit들이 current branch 에는 추가되지만 working directory는 그대로 두기 때문에 문제가 된다. 즉 push 전에 clean한 상태 (git diff를 실행하면 아무것도 나오지 않는 상태) 였다고 해도 push 후에 current commit(HEAD)의 내용과 working directory의 내용이 달라진다.</p>
@@ -302,7 +302,7 @@
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>local repository, staging area, working directory를 포괄하는 용어이다. git clone 명령으로 생성되는 디렉토리의 내용물 전체가 local environment이다. <a href="https://www.amazon.com/Professional-Git-Brent-Laster/dp/111928497X">Professional Git</a> 에서 이 용어를 사용하는데 공식 용어인지는 확실치 않다. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>local repository, staging area, working directory를 포괄하는 용어이다. git clone 명령으로 생성되는 디렉토리의 내용물 전체가 local environment이다. <a href="https://www.amazon.com/Professional-Git-Brent-Laster/dp/111928497X">Professional Git</a> 에서 이 용어를 사용하는데 공식 용어인지는 확실치 않다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section><div id="disqus_thread"></div>
@@ -548,7 +548,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" integrity="sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
     
   </body>
 </html>

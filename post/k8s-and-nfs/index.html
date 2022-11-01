@@ -37,8 +37,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" as="script" integrity=
-    "sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
+    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -150,7 +150,7 @@
     <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것인데, 보완 설명을 하려고 한다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개한다.</p>
 <p>공식 문서에서 소개하는 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>(PersistentVolume)와 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml">PVC</a>(PersistentVolumeClaim)를 정의해서 Pod이 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30">PVC를 volume으로 지정</a>하는 방식을 쓰고 있다.</p>
 <p>더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다. AWS라면 <a href="https://aws.amazon.com/efs/">EFS 서비스</a>를 사용하면 된다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
 </span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
 </span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
 </span><span class="ln"> 4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
@@ -211,10 +211,10 @@
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>참조하는 코드는 2020년 10월 10일 기준 master branch가 가리키는 commit으로 고정했다. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>참조하는 코드는 2020년 10월 10일 기준 master branch가 가리키는 commit으로 고정했다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8">PVC의 storageClassName 설정</a>을 “”로 했는데 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector">label selector</a>를 설정해야 할 것이다. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8">PVC의 storageClassName 설정</a>을 “”로 했는데 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector">label selector</a>를 설정해야 할 것이다.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section><div id="disqus_thread"></div>
@@ -457,7 +457,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.f1d570fb1b108d173be2273d24e131d7306f622130db98a2a189d1b7d93dc723dc6b4cb6f81cf31a40088138b5d6db2126a680aff2ec45bf7bc51b9702afaab1.js" integrity="sha512-8dVw&#43;xsQjRc74ic9JOEx1zBvYiEw25iioYnRt9k9xyPca0y2&#43;BzzGkAIgTi11tshJqaAr/LsRb97xRuXAq&#43;qsQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
     
   </body>
 </html>
