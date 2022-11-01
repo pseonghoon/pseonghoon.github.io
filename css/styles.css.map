@@ -1,18 +1,18 @@
 {
 	"version": 3,
 	"file": "styles.css",
-	"sourceRoot": "/Users/replica/blog_without_sync",
+	"sourceRoot": "/Users/replica/blog",
 	"sources": [
 		"themes/hugo-clarity/assets/sass/main.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_variables.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_override.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_fonts.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_base.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_components.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_utils.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_mobile.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_syntax.sass",
-		"../../../blog_without_sync/themes/hugo-clarity/assets/sass/_custom.sass"
+		"../../../blog/themes/hugo-clarity/assets/sass/_variables.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_override.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_fonts.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_base.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_components.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_utils.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_mobile.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_syntax.sass",
+		"../../../blog/themes/hugo-clarity/assets/sass/_custom.sass"
 	],
 	"sourcesContent": [
 		"@import 'variables';\n@import 'override';\n@import 'fonts';\n@import 'base';\n@import 'components';\n@import 'utils';\n@import 'mobile';\n@import 'syntax';\n@import 'custom';\n",
