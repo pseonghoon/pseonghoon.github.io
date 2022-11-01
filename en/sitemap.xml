@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://pseonghoon.github.io/</loc>
-    <lastmod>2022-02-14T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ko"
@@ -13,6 +13,28 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://pseonghoon.github.io/"
+                />
+  </url><url>
+    <loc>https://pseonghoon.github.io/post/kubernetes-event-exporter/</loc>
+    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://pseonghoon.github.io/tags/kubernetes/</loc>
+    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://pseonghoon.github.io/post/</loc>
+    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://pseonghoon.github.io/tags/</loc>
+    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ko"
+                href="https://pseonghoon.github.io/ko/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://pseonghoon.github.io/tags/"
                 />
   </url><url>
     <loc>https://pseonghoon.github.io/tags/aws/</loc>
@@ -27,26 +49,7 @@
     <loc>https://pseonghoon.github.io/tags/iac/</loc>
     <lastmod>2022-02-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://pseonghoon.github.io/post/</loc>
-    <lastmod>2022-02-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://pseonghoon.github.io/tags/</loc>
-    <lastmod>2022-02-14T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ko"
-                href="https://pseonghoon.github.io/ko/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://pseonghoon.github.io/tags/"
-                />
-  </url><url>
     <loc>https://pseonghoon.github.io/post/ca-scale-down-optimization/</loc>
-    <lastmod>2021-11-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://pseonghoon.github.io/tags/kubernetes/</loc>
     <lastmod>2021-11-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pseonghoon.github.io/post/testing-ansible-role/</loc>

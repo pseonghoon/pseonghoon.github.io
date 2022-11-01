@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
   <head>
-<title>Git 직접 동기화로 재택근무 생산성 높이기 | 박성훈의 블로그</title>
+<title>[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회하기 | 박성훈의 블로그</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,22 +17,22 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="출근과 재택 근무를 병행하면서 한곳에서 하던 작업을 편하게 이어서 하기 위해 여러가지 시도를 했다.
-집에서 회사 컴퓨터에 로그인해서 일하는 대신 로컬 컴퓨터에서 CLI와 GUI를 함께 쓰며 쾌적하게 작업하는 것이 목표였다.">
+<meta name="description" content="쿠버네티스에서 애플리케이션을 트러블슈팅할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.
+하지만 etcd의 저장 공간 제한 때문에 짧으면 몇시간, 보통 며칠 정도밖에 보관되지 않는 문제가 있다. 따라서 시간이 지나면 이벤트를 확인할 수 없어서 원인  …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Git 직접 동기화로 재택근무 생산성 높이기" />
-<meta property="og:url" content="https://pseonghoon.github.io/post/working-from-home-with-git/" />
-<meta property="og:title" content="Git 직접 동기화로 재택근무 생산성 높이기" />
-<meta property="og:description" content="출근과 재택 근무를 병행하면서 한곳에서 하던 작업을 편하게 이어서 하기 위해 여러가지 시도를 했다.
-집에서 회사 컴퓨터에 로그인해서 일하는 대신 로컬 컴퓨터에서 CLI와 GUI를 함께 쓰며 쾌적하게 작업하는 것이 목표였다." />
-<meta property="og:image" content="https://pseonghoon.github.io/post/img/git.png" />
+<meta name="twitter:title" content="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회하기" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/kubernetes-event-exporter/" />
+<meta property="og:title" content="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회하기" />
+<meta property="og:description" content="쿠버네티스에서 애플리케이션을 트러블슈팅할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.
+하지만 etcd의 저장 공간 제한 때문에 짧으면 몇시간, 보통 며칠 정도밖에 보관되지 않는 문제가 있다. 따라서 시간이 지나면 이벤트를 확인할 수 없어서 원인  …" />
+<meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://pseonghoon.github.io/icons/favicon-32x32.png">
 <link rel="manifest" href="https://pseonghoon.github.io/icons/site.webmanifest">
 
-<link rel="canonical" href="https://pseonghoon.github.io/post/working-from-home-with-git/">
+<link rel="canonical" href="https://pseonghoon.github.io/post/kubernetes-event-exporter/">
 
     
 
@@ -110,24 +110,24 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content" style="word-wrap:break-word;">
-    <h1 class="post_title">Git 직접 동기화로 재택근무 생산성 높이기</h1>
+    <h1 class="post_title">[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회하기</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Nov 8, 2021</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/git' title="Git" class="post_tag button button_translucent">Git
+      Nov 1, 2022</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
         </a>
     </span>
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Git%20%ec%a7%81%ec%a0%91%20%eb%8f%99%ea%b8%b0%ed%99%94%eb%a1%9c%20%ec%9e%ac%ed%83%9d%ea%b7%bc%eb%ac%b4%20%ec%83%9d%ec%82%b0%ec%84%b1%20%eb%86%92%ec%9d%b4%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fworking-from-home-with-git%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=%5bkubernetes-event-exporter%5d%20%ec%98%a4%eb%9e%98%eb%90%9c%20%ec%bf%a0%eb%b2%84%eb%84%a4%ed%8b%b0%ec%8a%a4%20%ec%9d%b4%eb%b2%a4%ed%8a%b8%20%ec%a1%b0%ed%9a%8c%ed%95%98%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fkubernetes-event-exporter%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fworking-from-home-with-git%2f&t=Git%20%ec%a7%81%ec%a0%91%20%eb%8f%99%ea%b8%b0%ed%99%94%eb%a1%9c%20%ec%9e%ac%ed%83%9d%ea%b7%bc%eb%ac%b4%20%ec%83%9d%ec%82%b0%ec%84%b1%20%eb%86%92%ec%9d%b4%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fkubernetes-event-exporter%2f&t=%5bkubernetes-event-exporter%5d%20%ec%98%a4%eb%9e%98%eb%90%9c%20%ec%bf%a0%eb%b2%84%eb%84%a4%ed%8b%b0%ec%8a%a4%20%ec%9d%b4%eb%b2%a4%ed%8a%b8%20%ec%a1%b0%ed%9a%8c%ed%95%98%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -137,7 +137,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" title="Copy Link" class="link link_yank">
+    <a href="https://pseonghoon.github.io/post/kubernetes-event-exporter/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -147,165 +147,114 @@
   </div>
 
     
-    <p>출근과 재택 근무를 병행하면서 한곳에서 하던 작업을 편하게 이어서 하기 위해 여러가지 시도를 했다.
-<u>집에서 회사 컴퓨터에 로그인해서 일하는 대신 로컬 컴퓨터에서 CLI와 GUI를 함께 쓰며 쾌적하게 작업</u>하는 것이 목표였다.</p>
-<p>몇가지 시행착오 후 만족스런 방법을 찾았는데, 회사 아이맥에서 작업하던 Git repository를 집에서 쓰는 맥북과 Git으로 &lsquo;직접 동기화&rsquo;하는 것이다. 두 local repository를 GitHub이나 GitLab 같은 서버 역할을 하는 remote를 거치지 않고 직접 연결하는 방법이다.</p>
-<p>맥을 사용하는 것을 전제로 설명하지만 Git을 활용하는 방법이 주요 내용이라 맥 사용자가 아니라도 참고해서 활용할 수 있을 것이다.</p>
-<h1 id="시행착오">시행착오</h1>
-<p>처음에는 집에서 회사 아이맥에 SSH로 접속하는 방법을 썼다. 일을 주로 CLI에서 하니 그럭저럭 할만하긴 했다. 하지만 SourceTree나 VS Code 같은 GUI 앱이 필요할 때 사용할 수 없어서 불편했다. Screen Sharing으로 실행할 수는 있지만 속도가 느리고 한/영 전환 등 키매핑 관련 문제 때문에 불편하다.</p>
-<p>다음 시도는 SSHFS나 맥의 File Sharing 으로 회사 아이맥의 파일을 맥북에서 로컬 파일처럼 접근하는 것이었다.
-논리적으로는 첫번째 방법의 문제를 해결할 수 있을 것 같았지만 파일 시스템의 반응이 너무 느려서 쓸 수 없었다.</p>
-<p>다음은 rsync로 파일을 동기화하는 방법이다. 로컬 파일을 사용할 수 있어서 반응이 빠르지만 역시 아래와 같은 문제로 해결책이 되지 못했다.</p>
-<ul>
-<li>단방향 동기화만 지원.</li>
-<li>동기화 대상에서 제외해야 하는 파일을 일일히 rsync의 설정으로 관리해야 함. 대상을 .gitignore 에서 이미 관리하고 있는데 그것을 다시 rysnc의 설정으로 만들어야 한다.</li>
-</ul>
-<p>찾아보니 양방향 파일 동기화를 지원하는 <a href="https://wiki.archlinux.org/title/unison">Unison</a>이라는 도구가 있었다. 이것도 해결책이 될 수 없었는데 아래와 같은 문제 때문이다.</p>
-<ul>
-<li>사용법이 직관적이지 않음</li>
-<li>양쪽에서 동일한 곳을 수정했을 때 충돌(conflict) 해결이 쉽지 않다.</li>
-<li>파일을 잘못 변경하거나 삭제하면 복구하기가 어렵다.</li>
-</ul>
-<h1 id="git으로-해결">Git으로 해결</h1>
-<p>작업 내용을 양방향으로 동기화할 수 있고 conflict를 잘 처리할 수 있으며 뭔가 문제가 생겼을 때 쉽게 복구할 수 있는 도구가 필요한 것인데,
-등잔 밑이 어둡다고 이런 일을 가장 잘 해내는 도구가 이미 쓰고 있는 Git이었다. 동기화 대상에서 제외해야하는 파일들이 이미 .gitignore에 설정되어 있으니 따로 신경쓸 필요도 없다.</p>
-<p>하지만 일반적인 작업 플로우처럼 GitHub이나 GitLab 같은 origin으로 push한 후 다른 컴퓨터에서 pull하는 방식은 부적합하다. push하기 전에 논리적인 작업 단위로 commit들을 나누고 commit 메시지도 잘 정리해서 써야 하는데 두 컴퓨터 간 동기화를 위해 급하게 commit을 해야 하면 제대로 하기 어렵기 때문이다.</p>
-<h1 id="git-repository-간-직접-동기화">Git repository 간 직접 동기화</h1>
-<p>해결책은 origin을 거치지 않고 두 컴퓨터의 Git resository 간 직접 동기화를 하는 것이다. Git은 각 repository가 동등한 위상을 가지는 분산 시스템이기 때문에 origin을 거치지 않아도 동기화를 할 수 있다.</p>
-<p>Git의 강점 중 하나는 동료들과 함께 사용하는 remote에 push하기 전에는 로컬에서 얼마든지 commit history를 수정할 수 있다는 것이다.  언제든 변경을 저장하고 싶으면 임시 commit들을 대강 만들면 된다. 이후 적절한 시점에 git reset 명령으로 임시 commit들을 취소한 후에 정식으로 commit할 수 있다.</p>
-<p>혼자 사용하는 두 컴퓨터의 repositoy 를 pull 또는 push로 동기화하는 것도 동료에게 commit을 공유하지 않는 것이라 마찬가지 방법을 쓸 수 있다. 즉 동기화가 필요하면 임시 commit을 대강 만들어서 다른 쪽에 넘긴다. 임시 commit을 받아간 곳에서 작업을 이어 하다가 적절한 시점에 reset 후 commit을 다시 다듬어서 만들면 된다.</p>
-<h1 id="git-fetch-pull로-동기화하는-예제">git fetch (pull)로 동기화하는 예제</h1>
-<p>회사 아이맥에서 하던 작업을 임시 commit한 후 맥북으로 넘기는 명령어 예제이다.</p>
-<p>아래와 같은 환경이다.</p>
-<ul>
-<li>맥북에서 아이맥으로 SSH 연결이 가능하다.</li>
-<li>맥북에서 아이맥을 &lsquo;imac&rsquo; 으로 name lookup 할 수 있는 상황이다. DNS에 등록되어 있지 않아서 /etc/hosts 에 설정했다.</li>
-<li>두 컴퓨터 간에 서로 SSH 접속이 되는 상황이다. 집에서는 회사 VPN을 통해 아이맥에 접속한다. 출근할 때는 회사로 맥북을 가져가서 아이맥에서 맥북으로 접속하는 방법을 쓴다. 집에 컴퓨터를 둔 상태에서 회사에서 접속하려면 집 인터넷 공유기에 적절한 설정을 하면 되겠다.</li>
-<li>두 컴퓨터 모두 ~/sample_proj/ 에 Git local environment<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 가 위치한다.</li>
-</ul>
-<p>아이맥에서 하던 작업을 맥북으로 넘기는 명령어를 요약하면 아래와 같다. 두 컴퓨터에서 모두 current branch(HEAD)는 master다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span><span class="c1"># imac에서 실행</span>
-<span class="ln"> 2</span>$ <span class="nb">cd</span> ~/sample_proj
-<span class="ln"> 3</span>$ touch b
-<span class="ln"> 4</span>$ git add .
-<span class="ln"> 5</span>$ git commit -m <span class="s1">&#39;Temparary save&#39;</span>
-<span class="ln"> 6</span>
-<span class="ln"> 7</span><span class="c1"># macbook에서 실행</span>
-<span class="ln"> 8</span>$ <span class="nb">cd</span> ~/sample_proj
-<span class="ln"> 9</span>$ git remote add imac psh@imac:sample_proj/
-<span class="ln">10</span>$ git fetch imac
-<span class="ln">11</span>$ git merge imac/master
-<span class="ln">12</span>$ git reset HEAD^ <span class="c1"># 임시 commit은 없애고 변경한 내용만 남김</span>
-<span class="ln">13</span>
-<span class="ln">14</span><span class="c1"># imac에서 실행</span>
-<span class="ln">15</span>$ git reset --hard HEAD^ <span class="c1"># 임시 commit과 변경한 내용 모두 없앰.</span>
-<span class="ln">16</span>
-</code></pre></div><p>하나씩 설명하면 아래와 같다.</p>
-<p>1. 작업 전 아이맥의 ~/sample_project/ 에서 상태를 확인한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac에서 실행. current branch(HEAD)는 master다. </span>
-<span class="ln">2</span>$ <span class="nb">cd</span> ~/sample_proj
-<span class="ln">3</span>$ git log --oneline
-<span class="ln">4</span>f5bffbb <span class="o">(</span>HEAD -&gt; master, origin/master<span class="o">)</span> first commit
-<span class="ln">5</span>
-<span class="ln">6</span>$ ls
-<span class="ln">7</span>a
-</code></pre></div><p>2. 아이맥에서 파일 b를 추가하고 임시 commit을 한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="ln">1</span><span class="c1"># imac</span>
-<span class="ln">2</span>$ touch b
-<span class="ln">3</span>$ git add .
-<span class="ln">4</span>$ git commit -m <span class="s1">&#39;Temparary save&#39;</span>
-</code></pre></div><p>3. 맥북에서 아래처럼 imac 이라는 remote를 추가한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
-<span class="ln">2</span>$ <span class="nb">cd</span> ~/sample_proj
-<span class="ln">3</span>$ git remote add imac psh@imac:sample_proj/ <span class="c1"># SSH 프로토콜로 리모트 설정</span>
-</code></pre></div><p>SSH 프로토콜을 사용했다. 만약 SSH를 사용할 수 없다면 다른 <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols">프로토콜</a>을 사용할 수 있다.</p>
-<p>4.  imac의 commit들을 fetch하고 아이맥에서 만든 임시 commit을 master branch에 merge한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook에서 실행. current branch(HEAD)는 master다.</span>
-<span class="ln">2</span>$ git fetch imac
-<span class="ln">3</span>$ git merge imac/master <span class="c1"># 두개 명령을 묶어서 git pull imac master 라고 해도 된다.</span>
-</code></pre></div><p>5. 임시 commit이 맥북에도 추가된 것을 확인할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
-<span class="ln">2</span>$ git log --oneline
-<span class="ln">3</span>e88d46f <span class="o">(</span>HEAD -&gt; master, imac/master<span class="o">)</span> Temparary save
-<span class="ln">4</span>f5bffbb <span class="o">(</span>origin/master, origin/HEAD<span class="o">)</span> first commit
-</code></pre></div><p>6. 임시 commit에 의한 변경 내용만 working directory에 남기고 임시 commit 자체는 취소한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1">#macbook</span>
-<span class="ln">2</span>$ git reset HEAD^  <span class="c1"># current commit 에서 1개만 되돌리면 되므로 HEAD^ 을 지정</span>
-</code></pre></div><p>git reset에 따로 옵션을 지정하지 않았으니 --mixed 옵션이 있는 것과 마찬가지다.
-이렇게 하면 current branch인 master의 위치를 임시 commit 이전으로 돌리지만 working directory는 그대로 둔다.
-즉 임시 commit 의 작업 내용은 working directory 에 그대로 있기 때문에 새로 잘 다듬어서 commit할 수 있다.</p>
-<p>7. git reset에 의한 결과를 아래처럼 확인할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
-<span class="ln">2</span>$ git log --oneline
-<span class="ln">3</span>f5bffbb <span class="o">(</span>HEAD -&gt; master, origin/master, origin/HEAD<span class="o">)</span> first commit
-<span class="ln">4</span>
-<span class="ln">5</span>$ ls
-<span class="ln">6</span>a b
-</code></pre></div><p>임시 commit은 없어졌지만 그것에 의해 추가된 b는 working 디렉토리에 있다.</p>
-<p>8. 아이맥에서 임시 commit을 삭제하고 그것에 의한 working directory 변경까지 모두 되돌린다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
-<span class="ln">2</span>$ git reset --hard HEAD^
-</code></pre></div><p>맥북으로 작업을 넘겼기 때문에 아이맥에선 변경한 내용을 깨끗이 지운 것이다.</p>
-<p>reset 에 --hard 옵션을 주었기 때문에 working directory까지 HEAD^(f5bffbb) 의 것으로 되돌렸다.</p>
-<p>9. git reset &ndash;hard 의 결과를 아래처럼 확인할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
-<span class="ln">2</span>$ git log --oneline
-<span class="ln">3</span>f5bffbb <span class="o">(</span>HEAD -&gt; master, origin/master<span class="o">)</span> first commit
-<span class="ln">4</span>$ ls
-<span class="ln">5</span>a
-</code></pre></div><h1 id="git-push로-동기화-하는-방법">git push로 동기화 하는 방법</h1>
-<p>fetch (또는 pull) 대신 push를 쓸 수도 있다.
-위에서 설명한 fetch 방식이 더 이해하기 쉽고 편리하니 그렇게 할 수 있다면 이 방법은 사용할 필요가 없다.
-하지만 두 컴퓨터 간의 SSH 연결을 한 방향으로만 할 수 있는 환경이라면 해결책이 될 수 있다.</p>
-<p>맥북의 master branch에서 임시 commit한 것을 아이맥의 master branch로 push하려면 아래처럼 한다.</p>
-<p>1. 아이맥의 current branch 를 push 대상인 master가 아닌 다른 것으로 바꿔둔다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
-<span class="ln">2</span>$ git branch tmp
-<span class="ln">3</span>$ git checkout tmp  <span class="c1"># push 대상 branch에서 다른 곳으로 잠시 피한다.</span>
-<span class="ln">4</span>Switched to branch <span class="s1">&#39;tmp&#39;</span>
-</code></pre></div><p>이렇게 하지 않으면 push할 때 에러가 발생한다.</p>
-<p>2. 맥북에서 아이맥으로 push한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># macbook</span>
-<span class="ln">2</span>$ git push imac master
-</code></pre></div><h1 id="checkout된-branch에-push하면-에러가-발생하는-이유">checkout된 branch에 push하면 에러가 발생하는 이유</h1>
-<p>위에서 맥북에서 master branch를 아이맥의 master로 push하기 전에 아이맥에서 먼저 master가 아닌 다른 branch로 checkout 했다.</p>
-<p>만약 아이맥에서 master branch에 checkout한 상태에서 push하면 아래와 같은 에러가 발생한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span><span class="c1"># macbook</span>
-<span class="ln"> 2</span>$ git push imac master
-<span class="ln"> 3</span>...
-<span class="ln"> 4</span>remote: error: refusing to update checked out branch: refs/heads/master
-<span class="ln"> 5</span>remote: error: By default, updating the current branch in a non-bare repository
-<span class="ln"> 6</span>remote: is denied, because it will make the index and work tree inconsistent
-<span class="ln"> 7</span>remote: with what you pushed, and will require <span class="s1">&#39;git reset --hard&#39;</span> to match
-<span class="ln"> 8</span>remote: the work tree to HEAD.
-<span class="ln"> 9</span>remote:
-<span class="ln">10</span>remote: You can <span class="nb">set</span> the <span class="s1">&#39;receive.denyCurrentBranch&#39;</span> configuration variable
-<span class="ln">11</span>remote: to <span class="s1">&#39;ignore&#39;</span> or <span class="s1">&#39;warn&#39;</span> in the remote repository to allow pushing into
-<span class="ln">12</span>remote: its current branch<span class="p">;</span> however, this is not recommended unless you
-<span class="ln">13</span>remote: arranged to update its work tree to match what you pushed in some
-<span class="ln">14</span>remote: other way.
-<span class="ln">15</span>remote:
-<span class="ln">16</span>remote: To squelch this message and still keep the default behaviour, <span class="nb">set</span>
-<span class="ln">17</span>remote: <span class="s1">&#39;receive.denyCurrentBranch&#39;</span> configuration variable to <span class="s1">&#39;refuse&#39;</span>.
-<span class="ln">18</span>To imac:sample_proj/
-<span class="ln">19</span> ! <span class="o">[</span>remote rejected<span class="o">]</span> master -&gt; master <span class="o">(</span>branch is currently checked out<span class="o">)</span>
-<span class="ln">20</span>error: failed to push some refs to <span class="s1">&#39;imac:sample_proj/&#39;</span>
-<span class="ln">21</span>
-</code></pre></div><p>위 에러 메시지의 안내대로 아래처럼 receive.denyCurrentBranch를 ignore로 설정하면 에러가 발생하지 않는다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="c1"># imac</span>
-<span class="ln">2</span>$ git config receive.denyCurrentBranch ignore
-</code></pre></div><p>하지만 이렇게 하는 것은 좋지 않은 방법이다. 아이맥의 local environment 가 혼란스러운 상태에 빠질 수 있기 때문이다.</p>
-<p>chekout한 branch( current branch )에 push하면 push된 commit들이 current branch 에는 추가되지만 working directory는 그대로 두기 때문에 문제가 된다. 즉 push 전에 clean한 상태 (git diff를 실행하면 아무것도 나오지 않는 상태) 였다고 해도 push 후에 current commit(HEAD)의 내용과 working directory의 내용이 달라진다.</p>
-<p>예를 들어 push된 commit에 의해 기존에 없던 a.txt 라는 파일이 추가되었다면 working directory에는 그 파일이 여전히 없기 때문에 마치 이전 commit에 있었던 a.txt를 working directory에서 삭제한 것처럼 보이게 된다.</p>
-<p>GitLab 이나 GitHub 을 가리키는 remote에 push할 때는 이런 문제가 없는데, 그곳에 있는 것은 working directory가 없는 bare repository 이기 때문이다.</p>
-<section class="footnotes" role="doc-endnotes">
-<hr>
+    <p>쿠버네티스에서 <a href="https://kubernetes.io/docs/tasks/debug/debug-application/">애플리케이션을 트러블슈팅</a>할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.</p>
+<p>하지만 etcd의 저장 공간 제한 때문에 짧으면 몇시간, 보통 며칠 정도밖에 보관되지 않는 문제가 있다. 따라서 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워진다.</p>
+<p><a href="https://github.com/opsgenie/kubernetes-event-exporter">kubernetes-event-exporter</a>를 활용하면 이벤트를 로그로 남겨 AWS CloudWatch Logs 나 Elasticsearch 같은 로그 처리 시스템에 저장하고 필요할 때 조회할 수 있다.</p>
+<p><em>Note:</em> 쿠버네티스 이벤트는 kubectl get event, kubectl describe 명령으로 확인할 수 있다.</p>
+<h1 id="kubernetes-event-exporter">kubernetes-event-exporter</h1>
+<p><a href="https://github.com/opsgenie/kubernetes-event-exporter">https://github.com/opsgenie/kubernetes-event-exporter</a></p>
+<p>위 사용 가이드에선 이벤트를 모니터링해서 통보하는 설정을 좀 더 비중있게 다루고 있으나 이벤트는 로그로 남기는 것이 더 적합한 것 같다. 모니터링은 Prometehus metric 같은 것으로 하고 문제의 원인을 파악할 때 이벤트 로그를 꺼내보면 된다.</p>
+<h1 id="예제-구성">예제 구성</h1>
+<p>AWS의 CloudWatch Logs를 활용하는 예제이다.</p>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>local repository, staging area, working directory를 포괄하는 용어이다. git clone 명령으로 생성되는 디렉토리의 내용물 전체가 local environment이다. <a href="https://www.amazon.com/Professional-Git-Brent-Laster/dp/111928497X">Professional Git</a> 에서 이 용어를 사용하는데 공식 용어인지는 확실치 않다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
+<li>kubernetes-event-exporter는 표준 출력(standard output)으로 이벤트의 로그를 남긴다. 로그는 JSON 형식이다.</li>
+<li>DaemonSet으로 실행되는 fluent-bit가 kubernetes-event-exporter 의 표준 출력을 CloudWatch Logs로 전송한다.</li>
+<li>CloudWatch Logs Insights 의 쿼리를 사용해 문제가 발생한 시점의 이벤트를 조회한다.</li>
 </ol>
-</section><div id="disqus_thread"></div>
+<h1 id="helm-차트-설치-방법">Helm 차트 설치 방법</h1>
+<p>Bitnami에서 제공하는 Helm 차트를 설치하는 방법이다.</p>
+<p><a href="https://github.com/bitnami/charts/tree/main/bitnami/kubernetes-event-exporter">https://github.com/bitnami/charts/tree/main/bitnami/kubernetes-event-exporter</a></p>
+<p><em>Note:</em> 차트 버전 1.5.2 에서 테스트했다. 이 포스트를 쓰는 시점의 최신 차트 버전인 2.0.0 까지는 같은 방식으로 설치해야 하는 것을 확인했다.</p>
+<p>아래 명령으로 설치할 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln"> 1</span>helm repo add bitnami https://charts.bitnami.com/bitnami
+<span class="ln"> 2</span>
+<span class="ln"> 3</span>helm upgrade event-exporter bitnami/kubernetes-event-exporter \
+<span class="ln"> 4</span>  --install \
+<span class="ln"> 5</span>  --create-namespace \
+<span class="ln"> 6</span>  --namespace event-exporter \
+<span class="ln"> 7</span>  --version 1.5.2 \     
+<span class="ln"> 8</span>  --values values.yaml
+<span class="ln"> 9</span>
+<span class="ln">10</span>kubectl apply -f more-rbac.yaml
+<span class="ln">11</span>
+</code></pre></div><p><code>values.yaml</code> :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">image</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 2</span><span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">public.ecr.aws/bitnami/kubernetes-event-exporter</span><span class="w">
+</span><span class="ln"> 3</span><span class="w"></span><span class="nt">rbac</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">  </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="c"># view ClusterRole 을 바인딩하는데 이 권한만으론 부족함. more-rbac.yaml에서  권한을 추가로 부여한다.</span><span class="w">
+</span><span class="ln"> 5</span><span class="w"> 
+</span><span class="ln"> 6</span><span class="w"></span><span class="nt">config</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">  </span><span class="nt">logLevel</span><span class="p">:</span><span class="w"> </span><span class="l">info</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">  </span><span class="nt">route</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">    </span><span class="nt">routes</span><span class="p">:</span><span class="w">
+</span><span class="ln">10</span><span class="w">      </span>- <span class="nt">match</span><span class="p">:</span><span class="w">
+</span><span class="ln">11</span><span class="w">          </span>- <span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dump&#34;</span><span class="w">
+</span><span class="ln">12</span><span class="w">  </span><span class="nt">receivers</span><span class="p">:</span><span class="w">
+</span><span class="ln">13</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dump&#34;</span><span class="w">
+</span><span class="ln">14</span><span class="w">      </span><span class="nt">stdout</span><span class="p">:</span><span class="w"> </span>{<span class="w"> </span>}<span class="w">
+</span><span class="ln">15</span><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln">16</span><span class="w">  </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span><span class="ln">17</span><span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l">10m</span><span class="w">
+</span><span class="ln">18</span><span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l">100Mi</span><span class="w">
+</span></code></pre></div><p><code>more-rbac.yaml</code> :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln"> 5</span><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 6</span><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">  </span>- <span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">  </span>- <span class="l">nodes</span><span class="w">
+</span><span class="ln">10</span><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w">
+</span><span class="ln">11</span><span class="w">  </span>- <span class="l">get</span><span class="w">
+</span><span class="ln">12</span><span class="w">  </span>- <span class="l">list</span><span class="w">
+</span><span class="ln">13</span><span class="w">  </span>- <span class="l">watch</span><span class="w">
+</span><span class="ln">14</span><span class="w"></span><span class="nn">---</span><span class="w">
+</span><span class="ln">15</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span><span class="ln">16</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRoleBinding</span><span class="w">
+</span><span class="ln">17</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln">18</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln">19</span><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">
+</span><span class="ln">20</span><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io</span><span class="w">
+</span><span class="ln">21</span><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span><span class="ln">22</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln">23</span><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span><span class="ln">24</span><span class="w">  </span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span><span class="ln">25</span><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln">26</span><span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span></code></pre></div><h2 id="valuesyaml-내용-설명">values.yaml 내용 설명</h2>
+<p>쿠버네티스의 표준적인 방법대로 로그를 표준 출력으로 내보내게 설정한다. 아래 문서의 가이드대로 config 차트 파라미터를 설정하고 있다.</p>
+<p><a href="https://github.com/opsgenie/kubernetes-event-exporter#stdout">https://github.com/opsgenie/kubernetes-event-exporter#stdout</a></p>
+<p>이렇게 설정하면 로그가 아래처럼 JSON형식으로 출력된다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>{&#34;metadata&#34;:{&#34;name&#34;:&#34;kube-proxy-hcctq.171fa332d0d2fca1&#34;,&#34;namespace&#34;:&#34;kube-system&#34;,&#34;uid&#34;:&#34;813df6a8-d912-49a1-9fa6-2d74b061a66f&#34;,&#34;resourceVersion&#34;:&#34;311176937&#34;,&#34;creationTimestamp&#34;:&#34;2022-10-20T01:37:05Z&#34;},&#34;reason&#34;:&#34;NodeNotReady&#34;,&#34;message&#34;:&#34;Node is not ready&#34;,&#34;source&#34;:{&#34;component&#34;:&#34;node-controller&#34;},&#34;firstTimestamp&#34;:&#34;2022-10-20T01:37:05Z&#34;,&#34;lastTimestamp&#34;:&#34;2022-10-20T01:37:05Z&#34;,&#34;count&#34;:1,&#34;type&#34;:&#34;Warning&#34;,&#34;eventTime&#34;:null,&#34;reportingComponent&#34;:&#34;&#34;,&#34;reportingInstance&#34;:&#34;&#34;,&#34;involvedObject&#34;:{&#34;kind&#34;:&#34;Pod&#34;,&#34;namespace&#34;:&#34;kube-system&#34;,&#34;name&#34;:&#34;kube-proxy-hcctq&#34;,&#34;uid&#34;:&#34;19adea83-7bec-4bd4-918d-ddc39e6c4c45&#34;,&#34;apiVersion&#34;:&#34;v1&#34;,&#34;resourceVersion&#34;:&#34;311176399&#34;,&#34;labels&#34;:{&#34;controller-revision-hash&#34;:&#34;f6b68b794&#34;,&#34;k8s-app&#34;:&#34;kube-proxy&#34;,&#34;pod-template-generation&#34;:&#34;4&#34;}}} 
+</code></pre></div><p><em>Note</em> 만약 <code>config</code> 파라미터를 설정하지 않으면 아래와 같이 로그의 내용이 빈 상태로 출력된다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>{}
+</code></pre></div><p>Helm 차트를 설치하면, 아래처럼 기본 설정으로 이벤트를 표준 출력에 덤프한다는 메시지가 출력된다. 이 내용에 따르면 차트 파라미터를 따로 설정할 필요가 없는 것처럼 보이지만 실제로는 그렇지 않으니 주의해야 한다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>By default, the kubernetes-event-exporter will dump events to stdout.
+<span class="ln">2</span>To configure additional endpoints, redeploy the chart overwritting the field &#39;config&#39; at your &#39;values.yml&#39;.
+</code></pre></div><h2 id="more-rbacyaml-내용-설명">more-rbac.yaml 내용 설명</h2>
+<p>values.yaml에서 rbac 파라미터를 true로 설정하면 view ClusterRole을 사용한다. 그런데 그것만으론 권한이 부족헤 로그에 아래와 같은 에러가 남은다. 부족한 권한을 more-rbace.yaml 로 부여하는 것이다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>2022-10-12T23:35:24Z ERR bitnami/blacksmith-sandox/kubernetes-event-exporter-0.11.0/src/github.com/opsgenie/kubernetes-event-exporter/pkg/kube/watcher.go:75 &gt; Cannot list labels of the object error=&#34;nodes \&#34;ip-10-255-14-142.ap-northeast-2.compute.internal\&#34; is forbidden: User \&#34;system:serviceaccount:event-exporter:event-exporter-kubernetes-event-exporter\&#34; cannot get resource \&#34;nodes\&#34; in API group \&#34;\&#34; at the cluster scope&#34;
+</code></pre></div><p>예제에선 nodes에 대한 권한을 부여하고 있는데 추가로 권한을 부여해야 할 수 있다. 부족한 권한은 event-exporter 의 에러 로그를 통해 알 수 있다.</p>
+<h1 id="fluentbbit-로-aws-cloudwatch-logs-로-로그-전송">FluentBbit 로 AWS CloudWatch Logs 로 로그 전송</h1>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html</a></p>
+<p>AWS CloudWatch Logs 에 application 로그를 전송하려면 위 가이드대로 하면 된다.</p>
+<p>이 가이드대로 FluentBit를 설정하면 <mark>로그 내용이 JSON 형식일 때 그 내용을 log_processed 필드로 쿼리할 수 있다</mark>. 아래 쿼리 예제를 참고하면 된다.</p>
+<h1 id="cloudwatch-logs-에서-로그를-조회하는-예제">CloudWatch Logs 에서 로그를 조회하는 예제</h1>
+<p>아래처럼 CloudWatch Logs Insights 쿼리로 검색할 수 있다.</p>
+<p>우선 조회할 로그 그룹을 /aws/containerinsights/<code>&lt;cluster-name&gt;</code>/application 으로 설정한다.</p>
+<figure><img src="/post/img/log_group.png"/>
+</figure>
+
+<p>아래처럼 쿼리를 실행하면 된다..</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>fields @timestamp, log_processed.involvedObject.kind as kind, log_processed.involvedObject.namespace as namespace, log_processed.involvedObject.name as object_name , log_processed.message as message 
+<span class="ln">2</span>| filter kubernetes.container_name = &#39;event-exporter&#39; and kind = &#39;Pod&#39;
+<span class="ln">3</span>| sort @timestamp asc
+</code></pre></div><figure><img src="/post/img/event-exporter-log-query-result.png"/>
+</figure>
+
+<p><em>Note:</em> 실제로 이벤트가 발생한 횟수보다 kubernetes-event-exporter 에 남는 로그 수가 더 적다. 쿠버네티스는 동일한 이벤트가 근접한 시간에 여러번 발생하면 기존에 etcd에 저장된 이벤트를 업데이트하는데 아마도 kubernetes-event-exporter가 이벤트가 새로 etcd에 생성되는 경우에만 로그를 남기기 때문인 것 같다.</p><div id="disqus_thread"></div>
 <script type="application/javascript">
     var disqus_config = function () {
     
@@ -352,9 +301,6 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://pseonghoon.github.io/post/kubernetes-event-exporter/" class="nav-link" title="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회하기">[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회하기</a>
-      </li>
-      <li>
         <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" class="nav-link" title="AWS CLI가 포함된 Lambda layer 만들기">AWS CLI가 포함된 Lambda layer 만들기</a>
       </li>
       <li>
@@ -362,6 +308,9 @@
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/testing-ansible-role/" class="nav-link" title="로컬에서 개발 중인 Ansible role 테스트하기">로컬에서 개발 중인 Ansible role 테스트하기</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이기">Git 직접 동기화로 재택근무 생산성 높이기</a>
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/eks-subnet/" class="nav-link" title="오해하기 쉬운 EKS 클러스터의 subnet 설정">오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
