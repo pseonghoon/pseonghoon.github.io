@@ -15,8 +15,7 @@
       <guid>https://pseonghoon.github.io/post/kubernetes-event-exporter/</guid>
       <description>
         
-          &lt;p&gt;쿠버네티스에서 &lt;a href=&#34;https://kubernetes.io/docs/tasks/debug/debug-application/&#34;&gt;애플리케이션을 트러블슈팅&lt;/a&gt;할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.&lt;/p&gt;
-&lt;p&gt;하지만 etcd의 저장 공간 제한 때문에 짧으면 몇시간, 보통 며칠 정도밖에 보관되지 않는 문제가 있다. 따라서 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워진다.&lt;/p&gt;
+          &lt;p&gt;쿠버네티스에서 &lt;a href=&#34;https://kubernetes.io/docs/tasks/debug/debug-application/&#34;&gt;애플리케이션 트러블슈팅&lt;/a&gt;을 할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.  하지만 etcd의 저장 공간 제한 때문에 길어도 며칠 정도밖에 보관되지 않아 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워지는 문제가 있다.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/opsgenie/kubernetes-event-exporter&#34;&gt;kubernetes-event-exporter&lt;/a&gt;를 활용하면 이벤트를 로그로 남겨 AWS CloudWatch Logs 나 Elasticsearch 같은 로그 처리 시스템에 저장하고 필요할 때 조회할 수 있다.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; 쿠버네티스 이벤트는 &lt;code&gt;kubectl get event&lt;/code&gt;, &lt;code&gt;kubectl describe&lt;/code&gt; 명령으로 확인할 수 있다.&lt;/p&gt;
 &lt;h1 id=&#34;kubernetes-event-exporter&#34;&gt;kubernetes-event-exporter&lt;/h1&gt;
