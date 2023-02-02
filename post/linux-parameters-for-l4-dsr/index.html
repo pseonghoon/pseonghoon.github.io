@@ -209,7 +209,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <p>여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.</p>
 <p><strong>ARP 패킷의 구조:</strong>
 <figure>
-    <img src="/images/arp.gif"/> 
+    <img src="/post/img/arp.gif"/> 
 </figure>
 </p>
 <p>이 parameter를 사용하는 목적은 아래와 같다.</p>
@@ -239,7 +239,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
 <p>참고로, 이런 테스트 환경은 <a href="https://www.vagrantup.com/">Vagrant</a>로 VM들의 로컬 네트워크를 구성하면 쉽게 만들수 있다.</p>
 <h1 id="참고-문서">참고 문서</h1>
 <ul>
-<li><a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/ documentation</a></li>
+<li><a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt</a></li>
 <li><a href="https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469">TCP/IP Illustrated, Volume 1</a>: Chapter 4 ARP</li>
 </ul><div id="disqus_thread"></div>
 <script type="application/javascript">
@@ -285,7 +285,10 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" class="nav-link" title="AWSCLI가 포함된 Lambda layer 만들기">AWSCLI가 포함된 Lambda layer 만들기</a>
+        <a href="https://pseonghoon.github.io/post/kubernetes-event-exporter/" class="nav-link" title="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회">[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" class="nav-link" title="AWS CLI가 포함된 Lambda layer 만들기">AWS CLI가 포함된 Lambda layer 만들기</a>
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" class="nav-link" title="[Kubernetes] Cluster Autocaler의 scale-down 튜닝">[Kubernetes] Cluster Autocaler의 scale-down 튜닝</a>
@@ -305,16 +308,13 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
       <li>
         <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기 (IaC)">코드로 인프라 관리하기 (IaC)</a>
       </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/oracle-myth/" class="nav-link" title="다시 생각하는 오라클 데이터베이스 운영">다시 생각하는 오라클 데이터베이스 운영</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
       <nav class="tags_nav">
         <a href='https://pseonghoon.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
-          <span class="button_tally">4</span>
+          <span class="button_tally">5</span>
         </a>
         
         <a href='https://pseonghoon.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
@@ -322,13 +322,13 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
           <span class="button_tally">4</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent" title="iac">
-          IAC
-          <span class="button_tally">3</span>
-        </a>
-        
         <a href='https://pseonghoon.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
           KUBERNETES
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent" title="iac">
+          IAC
           <span class="button_tally">3</span>
         </a>
         
@@ -353,7 +353,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
         <div class="post_tags">
           <div class="tags_list">
             
-            <a href='https://pseonghoon.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=4 title="aws">AWS<span class="button_tally">4</span>
+            <a href='https://pseonghoon.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=5 title="aws">AWS<span class="button_tally">5</span>
             </a>
             
             
@@ -377,7 +377,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
             </a>
             
             
-            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=3 title="kubernetes">KUBERNETES<span class="button_tally">3</span>
+            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=4 title="kubernetes">KUBERNETES<span class="button_tally">4</span>
             </a>
             
             

@@ -6,24 +6,147 @@
     <description>Recent content in Posts on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>2020</copyright>
-    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://pseonghoon.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>AWSCLI가 포함된 Lambda layer 만들기</title>
+      <title>[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회</title>
+      <link>https://pseonghoon.github.io/post/kubernetes-event-exporter/</link>
+      <pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://pseonghoon.github.io/post/kubernetes-event-exporter/</guid>
+      <description>
+        
+          &lt;p&gt;쿠버네티스에서 &lt;a href=&#34;https://kubernetes.io/docs/tasks/debug/debug-application/&#34;&gt;애플리케이션 트러블슈팅&lt;/a&gt;을 할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.  하지만 etcd의 저장 공간 제한 때문에 길어도 며칠 정도밖에 보관되지 않아 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워지는 문제가 있다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/opsgenie/kubernetes-event-exporter&#34;&gt;kubernetes-event-exporter&lt;/a&gt;를 활용하면 이벤트를 로그로 남겨 AWS CloudWatch Logs 나 Elasticsearch 같은 로그 처리 시스템에 저장하고 필요할 때 조회할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; 쿠버네티스 이벤트는 &lt;code&gt;kubectl get event&lt;/code&gt;, &lt;code&gt;kubectl describe&lt;/code&gt; 명령으로 확인할 수 있다.&lt;/p&gt;
+&lt;h1 id=&#34;kubernetes-event-exporter&#34;&gt;kubernetes-event-exporter&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md&#34;&gt;https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;위 가이드에선 이벤트를 모니터링해서 통보하는 설정을 좀 더 비중있게 다루고 있으나 이벤트는 로그로 남기는 것이 더 적합한 것 같다. 모니터링은 Prometehus metric 같은 것으로 하고 문제의 원인을 파악할 때 이벤트 로그를 꺼내보면 된다.&lt;/p&gt;
+&lt;h1 id=&#34;예제-구성&#34;&gt;예제 구성&lt;/h1&gt;
+&lt;p&gt;AWS의 CloudWatch Logs를 활용하는 예제이다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;kubernetes-event-exporter는 표준 출력(standard output)으로 이벤트의 로그를 남긴다. 로그는 JSON 형식이다.&lt;/li&gt;
+&lt;li&gt;DaemonSet으로 실행되는 fluent-bit가 kubernetes-event-exporter 의 표준 출력을 CloudWatch Logs로 전송한다.&lt;/li&gt;
+&lt;li&gt;CloudWatch Logs Insights 의 쿼리를 사용해 문제가 발생한 시점의 이벤트를 조회한다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;helm-차트-설치-방법&#34;&gt;Helm 차트 설치 방법&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/main/bitnami/kubernetes-event-exporter&#34;&gt;Bitnami에서 제공하는 Helm 차트&lt;/a&gt;를 설치하는 방법이다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; 차트 버전 1.5.2 에서 테스트했으며 이 포스트를 쓰는 시점의 최신 차트 버전인 2.0.0 까지는 같은 방식으로 해야 하는 것을 확인했다.&lt;/p&gt;
+&lt;p&gt;아래 명령으로 설치할 수 있다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;helm upgrade event-exporter bitnami/kubernetes-event-exporter \
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  --install \
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  --create-namespace \
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;  --namespace event-exporter \
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;  --version 1.5.2 \     
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;  --values values.yaml
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;kubectl apply -f more-rbac.yaml
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;values.yaml&lt;/code&gt; 내용 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;public.ecr.aws/bitnami/kubernetes-event-exporter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rbac&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# view ClusterRole 을 바인딩하는데 이 권한만으론 부족함. more-rbac.yaml에서  권한을 추가로 부여한다.&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;logLevel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;receiver&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;dump&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;receivers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;dump&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stdout&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;{&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cpu&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;10m&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;memory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;100Mi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;more-rbac.yaml&lt;/code&gt; 내용:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRole&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-exporter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;apiGroups&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;nodes&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;verbs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;watch&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRoleBinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-exporter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;roleRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRole&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-exporter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subjects&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-exporter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-exporter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;valuesyaml-설명&#34;&gt;values.yaml 설명&lt;/h2&gt;
+&lt;p&gt;쿠버네티스의 표준적인 방법대로 로그를 표준 출력으로 내보내게 설정한다. 아래 문서의 가이드대로 config 차트 파라미터를 설정하고 있다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md#stdout&#34;&gt;https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md#stdout&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 설정하면 로그가 아래처럼 JSON형식으로 출력된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;{&amp;#34;metadata&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;kube-proxy-hcctq.171fa332d0d2fca1&amp;#34;,&amp;#34;namespace&amp;#34;:&amp;#34;kube-system&amp;#34;,&amp;#34;uid&amp;#34;:&amp;#34;813df6a8-d912-49a1-9fa6-2d74b061a66f&amp;#34;,&amp;#34;resourceVersion&amp;#34;:&amp;#34;311176937&amp;#34;,&amp;#34;creationTimestamp&amp;#34;:&amp;#34;2022-10-20T01:37:05Z&amp;#34;},&amp;#34;reason&amp;#34;:&amp;#34;NodeNotReady&amp;#34;,&amp;#34;message&amp;#34;:&amp;#34;Node is not ready&amp;#34;,&amp;#34;source&amp;#34;:{&amp;#34;component&amp;#34;:&amp;#34;node-controller&amp;#34;},&amp;#34;firstTimestamp&amp;#34;:&amp;#34;2022-10-20T01:37:05Z&amp;#34;,&amp;#34;lastTimestamp&amp;#34;:&amp;#34;2022-10-20T01:37:05Z&amp;#34;,&amp;#34;count&amp;#34;:1,&amp;#34;type&amp;#34;:&amp;#34;Warning&amp;#34;,&amp;#34;eventTime&amp;#34;:null,&amp;#34;reportingComponent&amp;#34;:&amp;#34;&amp;#34;,&amp;#34;reportingInstance&amp;#34;:&amp;#34;&amp;#34;,&amp;#34;involvedObject&amp;#34;:{&amp;#34;kind&amp;#34;:&amp;#34;Pod&amp;#34;,&amp;#34;namespace&amp;#34;:&amp;#34;kube-system&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;kube-proxy-hcctq&amp;#34;,&amp;#34;uid&amp;#34;:&amp;#34;19adea83-7bec-4bd4-918d-ddc39e6c4c45&amp;#34;,&amp;#34;apiVersion&amp;#34;:&amp;#34;v1&amp;#34;,&amp;#34;resourceVersion&amp;#34;:&amp;#34;311176399&amp;#34;,&amp;#34;labels&amp;#34;:{&amp;#34;controller-revision-hash&amp;#34;:&amp;#34;f6b68b794&amp;#34;,&amp;#34;k8s-app&amp;#34;:&amp;#34;kube-proxy&amp;#34;,&amp;#34;pod-template-generation&amp;#34;:&amp;#34;4&amp;#34;}}} 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; 만약 &lt;code&gt;config&lt;/code&gt; 파라미터를 설정하지 않으면 아래와 같이 로그의 내용이 빈 상태로 출력된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;{}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Helm 차트를 설치하면 아래처럼 기본 설정으로 이벤트를 표준 출력에 덤프한다는 메시지가 출력된다. 이 내용에 따르면 차트 파라미터를 따로 설정할 필요가 없는 것처럼 보이지만 실제로는 그렇지 않으니 주의해야 한다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;By default, the kubernetes-event-exporter will dump events to stdout.
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;To configure additional endpoints, redeploy the chart overwritting the field &amp;#39;config&amp;#39; at your &amp;#39;values.yml&amp;#39;.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;more-rbacyaml-설명&#34;&gt;more-rbac.yaml 설명&lt;/h2&gt;
+&lt;p&gt;values.yaml에서 rbac 파라미터를 true로 설정하면 view ClusterRole을 사용한다. 그런데 그것만으론 권한이 부족헤 kubernetes-event-exporter의 로그에 아래와 같은 에러가 남은다. 부족한 권한을 more-rbace.yaml 로 부여하는 것이다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;2022-10-12T23:35:24Z ERR bitnami/blacksmith-sandox/kubernetes-event-exporter-0.11.0/src/github.com/opsgenie/kubernetes-event-exporter/pkg/kube/watcher.go:75 &amp;gt; Cannot list labels of the object error=&amp;#34;nodes \&amp;#34;ip-10-255-14-142.ap-northeast-2.compute.internal\&amp;#34; is forbidden: User \&amp;#34;system:serviceaccount:event-exporter:event-exporter-kubernetes-event-exporter\&amp;#34; cannot get resource \&amp;#34;nodes\&amp;#34; in API group \&amp;#34;\&amp;#34; at the cluster scope&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;more-rbac.yaml의 예제에선 nodes에 대한 권한을 부여하고 있는데 클러스터 설정에 따라 권한을 더 부여해야 할 수도 있다.&lt;/p&gt;
+&lt;h1 id=&#34;fluentbbit-로-aws-cloudwatch-logs-로-로그-전송&#34;&gt;FluentBbit 로 AWS CloudWatch Logs 로 로그 전송&lt;/h1&gt;
+&lt;p&gt;AWS CloudWatch Logs 에 application 로그를 전송하려면 아래 가이드를 따르면 된다.
+&lt;a href=&#34;https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html&#34;&gt;https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;이 가이드대로 FluentBit를 설정하면 로그 내용이 JSON 형식일 때 그 내용을 &lt;code&gt;log_processed&lt;/code&gt; 필드로 쿼리할 수 있다. 다음 섹션의 쿼리 예제를 참고한다.&lt;/p&gt;
+&lt;h1 id=&#34;cloudwatch-logs-에서-로그를-조회하는-예제&#34;&gt;CloudWatch Logs 에서 로그를 조회하는 예제&lt;/h1&gt;
+&lt;p&gt;아래처럼 CloudWatch Logs Insights 쿼리로 검색할 수 있다.&lt;/p&gt;
+&lt;p&gt;우선 조회할 로그 그룹을 /aws/containerinsights/&lt;code&gt;&amp;lt;cluster-name&amp;gt;&lt;/code&gt;/application 으로 설정한다.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://pseonghoon.github.io/post/img/log_group.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;아래처럼 쿼리를 실행하면 된다.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;fields @timestamp, log_processed.involvedObject.kind as kind,
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt; log_processed.involvedObject.namespace as namespace,
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt; log_processed.involvedObject.name as object_name, log_processed.message as message 
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;| filter kubernetes.container_name = &amp;#39;event-exporter&amp;#39; and kind = &amp;#39;Pod&amp;#39;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;| sort @timestamp asc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;결과는 아래와 같다.
+&lt;figure&gt;
+    &lt;img src=&#34;https://pseonghoon.github.io/post/img/event-exporter-log-query-result.png&#34;/&gt; 
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; 실제로 이벤트가 발생한 횟수보다 kubernetes-event-exporter 에 남는 로그 수가 더 적다. 쿠버네티스는 동일한 이벤트가 근접한 시간에 여러번 발생하면 기존에 etcd에 저장된 이벤트를 업데이트하는데 아마도 kubernetes-event-exporter가 이벤트가 새로 etcd에 생성되는 경우에만 로그를 남기기 때문인 것 같다.&lt;/p&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>AWS CLI가 포함된 Lambda layer 만들기</title>
       <link>https://pseonghoon.github.io/post/awscli-in-labmda-layer/</link>
       <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://pseonghoon.github.io/post/awscli-in-labmda-layer/</guid>
       <description>
         
-          &lt;p&gt;Python으로 작성된 Lambda function이 AWSCLI를 실행할 수 있도록 AWSCLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWSCLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.&lt;/p&gt;
+          &lt;p&gt;Python으로 작성된 Lambda function이 AWS CLI를 실행할 수 있도록 AWS CLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWS CLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.&lt;/p&gt;
 &lt;h1 id=&#34;lambda-layer&#34;&gt;Lambda layer&lt;/h1&gt;
 &lt;p&gt;Lambda layer는 AWS Lambda 서비스에서 Lambda function이 필요로 하는 라이브러리 코드를 재활용하기 위한 도구이다. 자세한 내용은 &lt;a href=&#34;https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html&#34;&gt;https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html&lt;/a&gt; 에서 찾을 수 있다.&lt;/p&gt;
 &lt;p&gt;Python 모듈을 Lambda function의 deployment package 안에 직접 넣는 것보다 Lambda layer를 만드는 것이 편리하다. 해당 모듈을 사용하는 여러 Lambda function에서 layer를 가져다 쓰면서 재활용할 수 있기 때문이다.&lt;/p&gt;
-&lt;h1 id=&#34;lambda-function에서-awscli를-써야-하는-경우&#34;&gt;Lambda function에서 AWSCLI를 써야 하는 경우&lt;/h1&gt;
+&lt;h1 id=&#34;lambda-function에서-aws-cli를-써야-하는-경우&#34;&gt;Lambda function에서 AWS CLI를 써야 하는 경우&lt;/h1&gt;
 &lt;p&gt;Python runtime을 사용하는 Lambda function에서 AWS API 호출을 하려면
-AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 것이 더 좋은 방법이다.
+AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 것이 더 좋은 방법이다.
 코딩하기도 편하고 boto3는 Python runtime에 포함되어 있기 때문에 바로 사용할 수 있다.&lt;/p&gt;
-&lt;p&gt;AWSCLI는 아래처럼 boto3에서 해당 기능을 지원하지 않는 명령에만 사용하는 것이 좋다.&lt;/p&gt;
+&lt;p&gt;AWS CLI는 아래처럼 boto3에서 해당 기능을 지원하지 않는 명령에만 사용하는 것이 좋다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;aws eks update-kubeconfig&lt;/li&gt;
 &lt;li&gt;aws s3 sync&lt;/li&gt;
@@ -692,7 +815,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 &lt;p&gt;여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;ARP 패킷의 구조:&lt;/strong&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;https://pseonghoon.github.io/images/arp.gif&#34;/&gt; 
+    &lt;img src=&#34;https://pseonghoon.github.io/post/img/arp.gif&#34;/&gt; 
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;이 parameter를 사용하는 목적은 아래와 같다.&lt;/p&gt;
@@ -722,7 +845,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
 &lt;p&gt;참고로, 이런 테스트 환경은 &lt;a href=&#34;https://www.vagrantup.com/&#34;&gt;Vagrant&lt;/a&gt;로 VM들의 로컬 네트워크를 구성하면 쉽게 만들수 있다.&lt;/p&gt;
 &lt;h1 id=&#34;참고-문서&#34;&gt;참고 문서&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;https://www.kernel.org/ documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469&#34;&gt;TCP/IP Illustrated, Volume 1&lt;/a&gt;: Chapter 4 ARP&lt;/li&gt;
 &lt;/ul&gt;
         

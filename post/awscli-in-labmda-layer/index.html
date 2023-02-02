@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page" data-mode="lit">
   <head>
-<title>AWSCLI가 포함된 Lambda layer 만들기 | 박성훈의 블로그</title>
+<title>AWS CLI가 포함된 Lambda layer 만들기 | 박성훈의 블로그</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Python으로 작성된 Lambda function이 AWSCLI를 실행할 수 있도록 AWSCLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWSCLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.">
+<meta name="description" content="Python으로 작성된 Lambda function이 AWS CLI를 실행할 수 있도록 AWS CLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWS CLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="AWSCLI가 포함된 Lambda layer 만들기" />
+<meta name="twitter:title" content="AWS CLI가 포함된 Lambda layer 만들기" />
 <meta property="og:url" content="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" />
-<meta property="og:title" content="AWSCLI가 포함된 Lambda layer 만들기" />
-<meta property="og:description" content="Python으로 작성된 Lambda function이 AWSCLI를 실행할 수 있도록 AWSCLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWSCLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다." />
+<meta property="og:title" content="AWS CLI가 포함된 Lambda layer 만들기" />
+<meta property="og:description" content="Python으로 작성된 Lambda function이 AWS CLI를 실행할 수 있도록 AWS CLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWS CLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다." />
 <meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
@@ -108,7 +108,7 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content" style="word-wrap:break-word;">
-    <h1 class="post_title">AWSCLI가 포함된 Lambda layer 만들기</h1>
+    <h1 class="post_title">AWS CLI가 포함된 Lambda layer 만들기</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -122,12 +122,12 @@
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=AWSCLI%ea%b0%80%20%ed%8f%ac%ed%95%a8%eb%90%9c%20Lambda%20layer%20%eb%a7%8c%eb%93%a4%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fawscli-in-labmda-layer%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=AWS%20CLI%ea%b0%80%20%ed%8f%ac%ed%95%a8%eb%90%9c%20Lambda%20layer%20%eb%a7%8c%eb%93%a4%ea%b8%b0&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fawscli-in-labmda-layer%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fawscli-in-labmda-layer%2f&t=AWSCLI%ea%b0%80%20%ed%8f%ac%ed%95%a8%eb%90%9c%20Lambda%20layer%20%eb%a7%8c%eb%93%a4%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fawscli-in-labmda-layer%2f&t=AWS%20CLI%ea%b0%80%20%ed%8f%ac%ed%95%a8%eb%90%9c%20Lambda%20layer%20%eb%a7%8c%eb%93%a4%ea%b8%b0" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -147,15 +147,15 @@
   </div>
 
     
-    <p>Python으로 작성된 Lambda function이 AWSCLI를 실행할 수 있도록 AWSCLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWSCLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.</p>
+    <p>Python으로 작성된 Lambda function이 AWS CLI를 실행할 수 있도록 AWS CLI가 포함된 Lambda layer를 만드는 방법을 공유한다. AWS CLI는 다소 특이한 Python 모듈일 뿐이기 때문에 일반적인 Python 모듈의 경우에도 활용할 수 있다.</p>
 <h1 id="lambda-layer">Lambda layer</h1>
 <p>Lambda layer는 AWS Lambda 서비스에서 Lambda function이 필요로 하는 라이브러리 코드를 재활용하기 위한 도구이다. 자세한 내용은 <a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html">https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html</a> 에서 찾을 수 있다.</p>
 <p>Python 모듈을 Lambda function의 deployment package 안에 직접 넣는 것보다 Lambda layer를 만드는 것이 편리하다. 해당 모듈을 사용하는 여러 Lambda function에서 layer를 가져다 쓰면서 재활용할 수 있기 때문이다.</p>
-<h1 id="lambda-function에서-awscli를-써야-하는-경우">Lambda function에서 AWSCLI를 써야 하는 경우</h1>
+<h1 id="lambda-function에서-aws-cli를-써야-하는-경우">Lambda function에서 AWS CLI를 써야 하는 경우</h1>
 <p>Python runtime을 사용하는 Lambda function에서 AWS API 호출을 하려면
-AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 것이 더 좋은 방법이다.
+AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 것이 더 좋은 방법이다.
 코딩하기도 편하고 boto3는 Python runtime에 포함되어 있기 때문에 바로 사용할 수 있다.</p>
-<p>AWSCLI는 아래처럼 boto3에서 해당 기능을 지원하지 않는 명령에만 사용하는 것이 좋다.</p>
+<p>AWS CLI는 아래처럼 boto3에서 해당 기능을 지원하지 않는 명령에만 사용하는 것이 좋다.</p>
 <ul>
 <li>aws eks update-kubeconfig</li>
 <li>aws s3 sync</li>
@@ -254,6 +254,9 @@ AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 �
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://pseonghoon.github.io/post/kubernetes-event-exporter/" class="nav-link" title="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회">[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회</a>
+      </li>
+      <li>
         <a href="https://pseonghoon.github.io/post/ca-scale-down-optimization/" class="nav-link" title="[Kubernetes] Cluster Autocaler의 scale-down 튜닝">[Kubernetes] Cluster Autocaler의 scale-down 튜닝</a>
       </li>
       <li>
@@ -274,16 +277,13 @@ AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 �
       <li>
         <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해">L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</a>
       </li>
-      <li>
-        <a href="https://pseonghoon.github.io/post/oracle-myth/" class="nav-link" title="다시 생각하는 오라클 데이터베이스 운영">다시 생각하는 오라클 데이터베이스 운영</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
       <nav class="tags_nav">
         <a href='https://pseonghoon.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
-          <span class="button_tally">4</span>
+          <span class="button_tally">5</span>
         </a>
         
         <a href='https://pseonghoon.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
@@ -291,13 +291,13 @@ AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 �
           <span class="button_tally">4</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent" title="iac">
-          IAC
-          <span class="button_tally">3</span>
-        </a>
-        
         <a href='https://pseonghoon.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
           KUBERNETES
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://pseonghoon.github.io/tags/iac/' class="post_tag button button_translucent" title="iac">
+          IAC
           <span class="button_tally">3</span>
         </a>
         
@@ -322,7 +322,7 @@ AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 �
         <div class="post_tags">
           <div class="tags_list">
             
-            <a href='https://pseonghoon.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=4 title="aws">AWS<span class="button_tally">4</span>
+            <a href='https://pseonghoon.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=5 title="aws">AWS<span class="button_tally">5</span>
             </a>
             
             
@@ -346,7 +346,7 @@ AWSCLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 �
             </a>
             
             
-            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=3 title="kubernetes">KUBERNETES<span class="button_tally">3</span>
+            <a href='https://pseonghoon.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=4 title="kubernetes">KUBERNETES<span class="button_tally">4</span>
             </a>
             
             

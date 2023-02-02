@@ -75,7 +75,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 &lt;p&gt;여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;ARP 패킷의 구조:&lt;/strong&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;https://pseonghoon.github.io/images/arp.gif&#34;/&gt; 
+    &lt;img src=&#34;https://pseonghoon.github.io/post/img/arp.gif&#34;/&gt; 
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;이 parameter를 사용하는 목적은 아래와 같다.&lt;/p&gt;
@@ -105,7 +105,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
 &lt;p&gt;참고로, 이런 테스트 환경은 &lt;a href=&#34;https://www.vagrantup.com/&#34;&gt;Vagrant&lt;/a&gt;로 VM들의 로컬 네트워크를 구성하면 쉽게 만들수 있다.&lt;/p&gt;
 &lt;h1 id=&#34;참고-문서&#34;&gt;참고 문서&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;https://www.kernel.org/ documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&#34;&gt;https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469&#34;&gt;TCP/IP Illustrated, Volume 1&lt;/a&gt;: Chapter 4 ARP&lt;/li&gt;
 &lt;/ul&gt;
         

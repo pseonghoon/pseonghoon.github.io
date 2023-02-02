@@ -1,8 +1,8 @@
 
 <!DOCTYPE html>
-<html lang="en" data-figures="" data-mode="lit">
+<html lang="en" data-figures="" class="page" data-mode="lit">
   <head>
-<title>Series | 박성훈의 블로그</title>
+<title>[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회 | 박성훈의 블로그</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,24 +16,21 @@
 
 <meta property="og:locale" content="en" />
 
-<meta property="og:locale:alternate" content="ko" />
-
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="쿠버네티스에서 애플리케이션 트러블슈팅을 할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.  하지만 etcd의 저장 공간 제한 때문에 길어도 며칠 정도밖에 보관되지 않아 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워지는 문제가 있다. …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Series" />
-<meta property="og:url" content="https://pseonghoon.github.io/series/" />
-<meta property="og:title" content="Series" />
-<meta property="og:description" content="" />
+<meta name="twitter:title" content="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회" />
+<meta property="og:url" content="https://pseonghoon.github.io/post/kubernetes-event-exporter/" />
+<meta property="og:title" content="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회" />
+<meta property="og:description" content="쿠버네티스에서 애플리케이션 트러블슈팅을 할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.  하지만 etcd의 저장 공간 제한 때문에 길어도 며칠 정도밖에 보관되지 않아 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워지는 문제가 있다. …" />
 <meta property="og:image" content="https://pseonghoon.github.io/images/milkyway.jpg" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://pseonghoon.github.io/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://pseonghoon.github.io/icons/favicon-32x32.png">
 <link rel="manifest" href="https://pseonghoon.github.io/icons/site.webmanifest">
 
-<link rel="canonical" href="https://pseonghoon.github.io/series/">
-<link rel="alternate" type="application/rss+xml" href="https://pseonghoon.github.io/series/index.xml" title="박성훈의 블로그" />
+<link rel="canonical" href="https://pseonghoon.github.io/post/kubernetes-event-exporter/">
 
     
 
@@ -108,14 +105,179 @@
 </header>
 
     <main>
-
+  
 <div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-    <li>
+  <article class="post_content" style="word-wrap:break-word;">
+    <h1 class="post_title">[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회</h1>
+  <div class="post_meta">
+    <span><svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg></span>
+    <span class="post_date">
+      Nov 1, 2022</span><span>&nbsp;· <a href='https://pseonghoon.github.io/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
+        </a><a href='https://pseonghoon.github.io/tags/aws' title="AWS" class="post_tag button button_translucent">AWS
+        </a>
+    </span>
+    <span class="page_only">&nbsp;·
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=%5bkubernetes-event-exporter%5d%20%ec%98%a4%eb%9e%98%eb%90%9c%20%ec%bf%a0%eb%b2%84%eb%84%a4%ed%8b%b0%ec%8a%a4%20%ec%9d%b4%eb%b2%a4%ed%8a%b8%20%ec%a1%b0%ed%9a%8c&url=https%3a%2f%2fpseonghoon.github.io%2fpost%2fkubernetes-event-exporter%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpseonghoon.github.io%2fpost%2fkubernetes-event-exporter%2f&t=%5bkubernetes-event-exporter%5d%20%ec%98%a4%eb%9e%98%eb%90%9c%20%ec%bf%a0%eb%b2%84%eb%84%a4%ed%8b%b0%ec%8a%a4%20%ec%9d%b4%eb%b2%a4%ed%8a%b8%20%ec%a1%b0%ed%9a%8c" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://pseonghoon.github.io/post/kubernetes-event-exporter/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
+  </span>
+  </div>
 
+    
+    <p>쿠버네티스에서 <a href="https://kubernetes.io/docs/tasks/debug/debug-application/">애플리케이션 트러블슈팅</a>을 할 때 쿠버네티스 이벤트(Kubernetes event)가 단서를 제공하는 경우가 많다.  하지만 etcd의 저장 공간 제한 때문에 길어도 며칠 정도밖에 보관되지 않아 시간이 지나면 이벤트를 확인할 수 없어서 원인 파악이 어려워지는 문제가 있다.</p>
+<p><a href="https://github.com/opsgenie/kubernetes-event-exporter">kubernetes-event-exporter</a>를 활용하면 이벤트를 로그로 남겨 AWS CloudWatch Logs 나 Elasticsearch 같은 로그 처리 시스템에 저장하고 필요할 때 조회할 수 있다.</p>
+<p><em>Note:</em> 쿠버네티스 이벤트는 <code>kubectl get event</code>, <code>kubectl describe</code> 명령으로 확인할 수 있다.</p>
+<h1 id="kubernetes-event-exporter">kubernetes-event-exporter</h1>
+<p><a href="https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md">https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md</a></p>
+<p>위 가이드에선 이벤트를 모니터링해서 통보하는 설정을 좀 더 비중있게 다루고 있으나 이벤트는 로그로 남기는 것이 더 적합한 것 같다. 모니터링은 Prometehus metric 같은 것으로 하고 문제의 원인을 파악할 때 이벤트 로그를 꺼내보면 된다.</p>
+<h1 id="예제-구성">예제 구성</h1>
+<p>AWS의 CloudWatch Logs를 활용하는 예제이다.</p>
+<ol>
+<li>kubernetes-event-exporter는 표준 출력(standard output)으로 이벤트의 로그를 남긴다. 로그는 JSON 형식이다.</li>
+<li>DaemonSet으로 실행되는 fluent-bit가 kubernetes-event-exporter 의 표준 출력을 CloudWatch Logs로 전송한다.</li>
+<li>CloudWatch Logs Insights 의 쿼리를 사용해 문제가 발생한 시점의 이벤트를 조회한다.</li>
+</ol>
+<h1 id="helm-차트-설치-방법">Helm 차트 설치 방법</h1>
+<p><a href="https://github.com/bitnami/charts/tree/main/bitnami/kubernetes-event-exporter">Bitnami에서 제공하는 Helm 차트</a>를 설치하는 방법이다.</p>
+<p><em>Note:</em> 차트 버전 1.5.2 에서 테스트했으며 이 포스트를 쓰는 시점의 최신 차트 버전인 2.0.0 까지는 같은 방식으로 해야 하는 것을 확인했다.</p>
+<p>아래 명령으로 설치할 수 있다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln"> 1</span>helm repo add bitnami https://charts.bitnami.com/bitnami
+<span class="ln"> 2</span>
+<span class="ln"> 3</span>helm upgrade event-exporter bitnami/kubernetes-event-exporter \
+<span class="ln"> 4</span>  --install \
+<span class="ln"> 5</span>  --create-namespace \
+<span class="ln"> 6</span>  --namespace event-exporter \
+<span class="ln"> 7</span>  --version 1.5.2 \     
+<span class="ln"> 8</span>  --values values.yaml
+<span class="ln"> 9</span>
+<span class="ln">10</span>kubectl apply -f more-rbac.yaml
+<span class="ln">11</span>
+</code></pre></div><p><code>values.yaml</code> 내용 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">image</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 2</span><span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">public.ecr.aws/bitnami/kubernetes-event-exporter</span><span class="w">
+</span><span class="ln"> 3</span><span class="w"></span><span class="nt">rbac</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">  </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="c"># view ClusterRole 을 바인딩하는데 이 권한만으론 부족함. more-rbac.yaml에서  권한을 추가로 부여한다.</span><span class="w">
+</span><span class="ln"> 5</span><span class="w"> 
+</span><span class="ln"> 6</span><span class="w"></span><span class="nt">config</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">  </span><span class="nt">logLevel</span><span class="p">:</span><span class="w"> </span><span class="l">info</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">  </span><span class="nt">route</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">    </span><span class="nt">routes</span><span class="p">:</span><span class="w">
+</span><span class="ln">10</span><span class="w">      </span>- <span class="nt">match</span><span class="p">:</span><span class="w">
+</span><span class="ln">11</span><span class="w">          </span>- <span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dump&#34;</span><span class="w">
+</span><span class="ln">12</span><span class="w">  </span><span class="nt">receivers</span><span class="p">:</span><span class="w">
+</span><span class="ln">13</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;dump&#34;</span><span class="w">
+</span><span class="ln">14</span><span class="w">      </span><span class="nt">stdout</span><span class="p">:</span><span class="w"> </span>{<span class="w"> </span>}<span class="w">
+</span><span class="ln">15</span><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln">16</span><span class="w">  </span><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span><span class="ln">17</span><span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l">10m</span><span class="w">
+</span><span class="ln">18</span><span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l">100Mi</span><span class="w">
+</span></code></pre></div><p><code>more-rbac.yaml</code> 내용:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln"> 5</span><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 6</span><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">  </span>- <span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">  </span>- <span class="l">nodes</span><span class="w">
+</span><span class="ln">10</span><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w">
+</span><span class="ln">11</span><span class="w">  </span>- <span class="l">get</span><span class="w">
+</span><span class="ln">12</span><span class="w">  </span>- <span class="l">list</span><span class="w">
+</span><span class="ln">13</span><span class="w">  </span>- <span class="l">watch</span><span class="w">
+</span><span class="ln">14</span><span class="w"></span><span class="nn">---</span><span class="w">
+</span><span class="ln">15</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span><span class="ln">16</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRoleBinding</span><span class="w">
+</span><span class="ln">17</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="ln">18</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln">19</span><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">
+</span><span class="ln">20</span><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io</span><span class="w">
+</span><span class="ln">21</span><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span><span class="ln">22</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln">23</span><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span><span class="ln">24</span><span class="w">  </span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span><span class="ln">25</span><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span><span class="ln">26</span><span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">event-exporter</span><span class="w">
+</span></code></pre></div><h2 id="valuesyaml-설명">values.yaml 설명</h2>
+<p>쿠버네티스의 표준적인 방법대로 로그를 표준 출력으로 내보내게 설정한다. 아래 문서의 가이드대로 config 차트 파라미터를 설정하고 있다.</p>
+<p><a href="https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md#stdout">https://github.com/resmoio/kubernetes-event-exporter/blob/master/README.md#stdout</a></p>
+<p>이렇게 설정하면 로그가 아래처럼 JSON형식으로 출력된다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>{&#34;metadata&#34;:{&#34;name&#34;:&#34;kube-proxy-hcctq.171fa332d0d2fca1&#34;,&#34;namespace&#34;:&#34;kube-system&#34;,&#34;uid&#34;:&#34;813df6a8-d912-49a1-9fa6-2d74b061a66f&#34;,&#34;resourceVersion&#34;:&#34;311176937&#34;,&#34;creationTimestamp&#34;:&#34;2022-10-20T01:37:05Z&#34;},&#34;reason&#34;:&#34;NodeNotReady&#34;,&#34;message&#34;:&#34;Node is not ready&#34;,&#34;source&#34;:{&#34;component&#34;:&#34;node-controller&#34;},&#34;firstTimestamp&#34;:&#34;2022-10-20T01:37:05Z&#34;,&#34;lastTimestamp&#34;:&#34;2022-10-20T01:37:05Z&#34;,&#34;count&#34;:1,&#34;type&#34;:&#34;Warning&#34;,&#34;eventTime&#34;:null,&#34;reportingComponent&#34;:&#34;&#34;,&#34;reportingInstance&#34;:&#34;&#34;,&#34;involvedObject&#34;:{&#34;kind&#34;:&#34;Pod&#34;,&#34;namespace&#34;:&#34;kube-system&#34;,&#34;name&#34;:&#34;kube-proxy-hcctq&#34;,&#34;uid&#34;:&#34;19adea83-7bec-4bd4-918d-ddc39e6c4c45&#34;,&#34;apiVersion&#34;:&#34;v1&#34;,&#34;resourceVersion&#34;:&#34;311176399&#34;,&#34;labels&#34;:{&#34;controller-revision-hash&#34;:&#34;f6b68b794&#34;,&#34;k8s-app&#34;:&#34;kube-proxy&#34;,&#34;pod-template-generation&#34;:&#34;4&#34;}}} 
+</code></pre></div><p><em>Note:</em> 만약 <code>config</code> 파라미터를 설정하지 않으면 아래와 같이 로그의 내용이 빈 상태로 출력된다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>{}
+</code></pre></div><p>Helm 차트를 설치하면 아래처럼 기본 설정으로 이벤트를 표준 출력에 덤프한다는 메시지가 출력된다. 이 내용에 따르면 차트 파라미터를 따로 설정할 필요가 없는 것처럼 보이지만 실제로는 그렇지 않으니 주의해야 한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>By default, the kubernetes-event-exporter will dump events to stdout.
+<span class="ln">2</span>To configure additional endpoints, redeploy the chart overwritting the field &#39;config&#39; at your &#39;values.yml&#39;.
+</code></pre></div><h2 id="more-rbacyaml-설명">more-rbac.yaml 설명</h2>
+<p>values.yaml에서 rbac 파라미터를 true로 설정하면 view ClusterRole을 사용한다. 그런데 그것만으론 권한이 부족헤 kubernetes-event-exporter의 로그에 아래와 같은 에러가 남은다. 부족한 권한을 more-rbace.yaml 로 부여하는 것이다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>2022-10-12T23:35:24Z ERR bitnami/blacksmith-sandox/kubernetes-event-exporter-0.11.0/src/github.com/opsgenie/kubernetes-event-exporter/pkg/kube/watcher.go:75 &gt; Cannot list labels of the object error=&#34;nodes \&#34;ip-10-255-14-142.ap-northeast-2.compute.internal\&#34; is forbidden: User \&#34;system:serviceaccount:event-exporter:event-exporter-kubernetes-event-exporter\&#34; cannot get resource \&#34;nodes\&#34; in API group \&#34;\&#34; at the cluster scope&#34;
+</code></pre></div><p>more-rbac.yaml의 예제에선 nodes에 대한 권한을 부여하고 있는데 클러스터 설정에 따라 권한을 더 부여해야 할 수도 있다.</p>
+<h1 id="fluentbbit-로-aws-cloudwatch-logs-로-로그-전송">FluentBbit 로 AWS CloudWatch Logs 로 로그 전송</h1>
+<p>AWS CloudWatch Logs 에 application 로그를 전송하려면 아래 가이드를 따르면 된다.
+<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html</a></p>
+<p>이 가이드대로 FluentBit를 설정하면 로그 내용이 JSON 형식일 때 그 내용을 <code>log_processed</code> 필드로 쿼리할 수 있다. 다음 섹션의 쿼리 예제를 참고한다.</p>
+<h1 id="cloudwatch-logs-에서-로그를-조회하는-예제">CloudWatch Logs 에서 로그를 조회하는 예제</h1>
+<p>아래처럼 CloudWatch Logs Insights 쿼리로 검색할 수 있다.</p>
+<p>우선 조회할 로그 그룹을 /aws/containerinsights/<code>&lt;cluster-name&gt;</code>/application 으로 설정한다.</p>
+<figure>
+    <img src="/post/img/log_group.png"/> 
+</figure>
 
-    </li>
-  </ul>
+<p>아래처럼 쿼리를 실행하면 된다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>fields @timestamp, log_processed.involvedObject.kind as kind,
+<span class="ln">2</span> log_processed.involvedObject.namespace as namespace,
+<span class="ln">3</span> log_processed.involvedObject.name as object_name, log_processed.message as message 
+<span class="ln">4</span>| filter kubernetes.container_name = &#39;event-exporter&#39; and kind = &#39;Pod&#39;
+<span class="ln">5</span>| sort @timestamp asc
+</code></pre></div><p>결과는 아래와 같다.
+<figure>
+    <img src="/post/img/event-exporter-log-query-result.png"/> 
+</figure>
+</p>
+<p><em>Note:</em> 실제로 이벤트가 발생한 횟수보다 kubernetes-event-exporter 에 남는 로그 수가 더 적다. 쿠버네티스는 동일한 이벤트가 근접한 시간에 여러번 발생하면 기존에 etcd에 저장된 이벤트를 업데이트하는데 아마도 kubernetes-event-exporter가 이벤트가 새로 etcd에 생성되는 경우에만 로그를 남기기 때문인 것 같다.</p><div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "pseonghoon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
         <h2>Park SeongHoon</h2>
@@ -141,9 +303,6 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://pseonghoon.github.io/post/kubernetes-event-exporter/" class="nav-link" title="[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회">[kubernetes-event-exporter] 오래된 쿠버네티스 이벤트 조회</a>
-      </li>
-      <li>
         <a href="https://pseonghoon.github.io/post/awscli-in-labmda-layer/" class="nav-link" title="AWS CLI가 포함된 Lambda layer 만들기">AWS CLI가 포함된 Lambda layer 만들기</a>
       </li>
       <li>
@@ -163,6 +322,9 @@
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/infrastructure-as-code/" class="nav-link" title="코드로 인프라 관리하기 (IaC)">코드로 인프라 관리하기 (IaC)</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해">L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</a>
       </li>
     </ul>
     <div>
@@ -260,9 +422,8 @@
   </section>
 </aside>
 
+  
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
