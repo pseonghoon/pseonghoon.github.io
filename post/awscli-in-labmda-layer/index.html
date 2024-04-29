@@ -37,8 +37,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -165,32 +165,32 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
 <p>우선 <a href="https://github.com/pyenv/pyenv">pyenv</a>와 <a href="https://virtualenv.pypa.io/en/latest/installation.html">virutalenv</a>를 설치해야 한다.</p>
 <p>pyenv로 Lambda runtime에 맞는 Python 버전을 설치한다.
 예를 들어 python3.8 용 layer를 생성하기 위해 3.8.11 을 설치할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>pyenv install 3.8.11 
-</code></pre></div><p><a href="https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc">zip-lambda-layer-awscli.sh</a> 스크립트를 다운로드한 후 아래처럼 layer를 구성하는 zip 파일을 만든다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>$ sh zip-lambda-layer-awscli.sh 3.8.11 
-<span class="ln">2</span>
-<span class="ln">3</span><span class="c1"># 생성되는 파일은 아래와 같다.</span>
-<span class="ln">4</span>$ ls *.zip
-<span class="ln">5</span>lambda-layer-awscli-python38.zip
-</code></pre></div><p>Terraform으로 아래처럼 Lambda layer와 function을 만들 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hcl" data-lang="hcl"><span class="ln"> 1</span><span class="c1">
-</span><span class="ln"> 2</span><span class="c1"># 실제로는 아래처럼 aws_lambda_layer_version을 직접 만들지 말고, 이것을 생성하는 테라폼 모듈을 만들어서 재사용해야 한다.
-</span><span class="ln"> 3</span><span class="c1"></span><span class="k">resource</span> <span class="s2">&#34;aws_lambda_layer_version&#34; &#34;awscli_python38&#34;</span> {
-<span class="ln"> 4</span><span class="n">  filename</span>   <span class="o">=</span> <span class="s2">&#34;./lambda-layer-awscli-python38.zip&#34;</span>
-<span class="ln"> 5</span><span class="n">  compatible_runtimes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;python3.8&#34;</span><span class="p">]</span>
-<span class="ln"> 6</span>  <span class="p">...</span>
-<span class="ln"> 7</span>  }
-<span class="ln"> 8</span>
-<span class="ln"> 9</span><span class="k">resource</span> <span class="s2">&#34;aws_lambda_function&#34; &#34;main&#34;</span> {
-<span class="ln">10</span>
-<span class="ln">11</span><span class="n">  runtime</span>          <span class="o">=</span> <span class="s2">&#34;python3.8&#34;</span>
-<span class="ln">12</span><span class="n">  layers</span>           <span class="o">=</span> <span class="p">[</span><span class="k">aws_lambda_layer_version</span><span class="p">.</span><span class="k">awscli_python38</span><span class="p">.</span><span class="k">arn</span><span class="p">]</span>
-<span class="ln">13</span>  <span class="p">...</span>
-<span class="ln">14</span>}
-</code></pre></div><p>Lambda function을 구성하는 Python 스크립트에서 아래처럼 사용하면 된다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln">1</span><span class="c1"># PATH 환경 변수에 포함된 /opt/bin/ 아래에 aws가 있어서 경로 지정을 하지 않아도 된다.</span>
-<span class="ln">2</span><span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;aws --version&#39;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</code></pre></div><h1 id="zip-lambda-layer-awsclish-스크립트">zip-lambda-layer-awscli.sh 스크립트</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">pyenv install 3.8.11 
+</span></span></code></pre></div><p><a href="https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc">zip-lambda-layer-awscli.sh</a> 스크립트를 다운로드한 후 아래처럼 layer를 구성하는 zip 파일을 만든다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">$ sh zip-lambda-layer-awscli.sh 3.8.11 
+</span></span><span class="line"><span class="ln">2</span><span class="cl">
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="c1"># 생성되는 파일은 아래와 같다.</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">$ ls *.zip
+</span></span><span class="line"><span class="ln">5</span><span class="cl">lambda-layer-awscli-python38.zip
+</span></span></code></pre></div><p>Terraform으로 아래처럼 Lambda layer와 function을 만들 수 있다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hcl" data-lang="hcl"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1">
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="c1"># 실제로는 아래처럼 aws_lambda_layer_version을 직접 만들지 말고, 이것을 생성하는 테라폼 모듈을 만들어서 재사용해야 한다.
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="c1"></span><span class="k">resource</span> <span class="s2">&#34;aws_lambda_layer_version&#34; &#34;awscli_python38&#34;</span> {
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="n">  filename</span>   <span class="o">=</span> <span class="s2">&#34;./lambda-layer-awscli-python38.zip&#34;</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="n">  compatible_runtimes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;python3.8&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">  }
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="k">resource</span> <span class="s2">&#34;aws_lambda_function&#34; &#34;main&#34;</span> {
+</span></span><span class="line"><span class="ln">10</span><span class="cl">
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="n">  runtime</span>          <span class="o">=</span> <span class="s2">&#34;python3.8&#34;</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="n">  layers</span>           <span class="o">=</span> <span class="p">[</span><span class="k">aws_lambda_layer_version</span><span class="p">.</span><span class="k">awscli_python38</span><span class="p">.</span><span class="k">arn</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">}
+</span></span></code></pre></div><p>Lambda function을 구성하는 Python 스크립트에서 아래처럼 사용하면 된다.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># PATH 환경 변수에 포함된 /opt/bin/ 아래에 aws가 있어서 경로 지정을 하지 않아도 된다.</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;aws --version&#39;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span></code></pre></div><h1 id="zip-lambda-layer-awsclish-스크립트">zip-lambda-layer-awscli.sh 스크립트</h1>
 <p><a href="https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc">zip-lambda-layer-awscli.sh</a>의 내용은 아래와 같다.</p>
 <script type="application/javascript" src="https://gist.github.com/pseonghoon/89a9421536016f52dff5d34a20e832dc.js"></script>
 
@@ -209,7 +209,7 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
 <li><a href="https://bezdelev.com/hacking/aws-cli-inside-lambda-layer-aws-s3-sync/">https://bezdelev.com/hacking/aws-cli-inside-lambda-layer-aws-s3-sync/</a></li>
 </ul><div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -263,9 +263,6 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
         <a href="https://pseonghoon.github.io/post/testing-ansible-role/" class="nav-link" title="로컬에서 개발 중인 Ansible role 테스트하기">로컬에서 개발 중인 Ansible role 테스트하기</a>
       </li>
       <li>
-        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이기">Git 직접 동기화로 재택근무 생산성 높이기</a>
-      </li>
-      <li>
         <a href="https://pseonghoon.github.io/post/eks-subnet/" class="nav-link" title="오해하기 쉬운 EKS 클러스터의 subnet 설정">오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
       </li>
       <li>
@@ -276,6 +273,9 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해">L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/oracle-myth/" class="nav-link" title="다시 생각하는 오라클 데이터베이스 운영">다시 생각하는 오라클 데이터베이스 운영</a>
       </li>
     </ul>
     <div>
@@ -306,13 +306,13 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
           <span class="button_tally">2</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/git/' class="post_tag button button_translucent" title="git">
-          GIT
+        <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent" title="index">
+          INDEX
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent" title="index">
-          INDEX
+        <a href='https://pseonghoon.github.io/tags/linux/' class="post_tag button button_translucent" title="linux">
+          LINUX
           <span class="button_tally">1</span>
         </a>
         
@@ -331,10 +331,6 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
             
             
             <a href='https://pseonghoon.github.io/tags/eks/' class=" post_tag button button_translucent" data-position=2 title="eks">EKS<span class="button_tally">2</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/git/' class=" post_tag button button_translucent" data-position=1 title="git">GIT<span class="button_tally">1</span>
             </a>
             
             
@@ -450,7 +446,7 @@ AWS CLI를 실행하는 것보다 AWS의 Python SDK인 boto3 mo을 사용하는 
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

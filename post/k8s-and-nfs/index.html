@@ -37,8 +37,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -150,33 +150,33 @@
     <p>Pod에서 NFS를 volume으로 사용하기 위해 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">공식 문서</a>의 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>를 참고하는 경우가 많을 것인데, 보완 설명을 하려고 한다. AWS EFS를 NFS 서버로 사용할 때 편리하게 쓸 수 있는 efs-provisioner 도 간략하게 소개한다.</p>
 <p>공식 문서에서 소개하는 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>는 클러스터 내부에서 NFS 서버를 운영한다. 그리고 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>(PersistentVolume)와 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml">PVC</a>(PersistentVolumeClaim)를 정의해서 Pod이 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-web-rc.yaml#L29-L30">PVC를 volume으로 지정</a>하는 방식을 쓰고 있다.</p>
 <p>더 실용적이고 간단한 방법은 PV와 PVC를 만들지 않고 아래처럼 Pod의 volume으로 NFS를 직접 지정하는 것이다. NFS 서버도 클러스터 밖에서 운영하는 것이 좋다. AWS라면 <a href="https://aws.amazon.com/efs/">EFS 서비스</a>를 사용하면 된다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
-</span><span class="ln"> 2</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
-</span><span class="ln"> 3</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="ln"> 4</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
-</span><span class="ln"> 5</span><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="ln"> 6</span><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w"> 
-</span><span class="ln"> 7</span><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
-</span><span class="ln"> 8</span><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
-</span><span class="ln"> 9</span><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
-</span><span class="ln">10</span><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
-</span><span class="ln">11</span><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
-</span><span class="ln">12</span><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
-</span><span class="ln">13</span><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
-</span><span class="ln">14</span><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
-</span><span class="ln">15</span><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w">
-</span><span class="ln">16</span><span class="w">      </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">nginx</span><span class="w">
-</span><span class="ln">17</span><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nginx</span><span class="w">
-</span><span class="ln">18</span><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
-</span><span class="ln">19</span><span class="w">           </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/nfs</span><span class="w">
-</span><span class="ln">20</span><span class="w">             </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">efs-vol</span><span class="w">
-</span><span class="hl"><span class="ln">21</span><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
-</span></span><span class="hl"><span class="ln">22</span><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">efs-vol</span><span class="w">
-</span></span><span class="hl"><span class="ln">23</span><span class="w">        </span><span class="nt">nfs</span><span class="p">:</span><span class="w">
-</span></span><span class="hl"><span class="ln">24</span><span class="w">          </span><span class="c"># 예제로 EFS를 사용했지만 일반적인 NFS 서버면 된다.</span><span class="w">
-</span></span><span class="hl"><span class="ln">25</span><span class="w">          </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l">fs-f9352198.efs.ap-northeast-2.amazonaws.com </span><span class="w">
-</span></span><span class="hl"><span class="ln">26</span><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/</span><span class="w">
-</span></span><span class="hl"><span class="ln">27</span><span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w"> 
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
+</span></span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">nfs-example</span><span class="w">
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="w">      </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">nginx</span><span class="w">
+</span></span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nginx</span><span class="w">
+</span></span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">19</span><span class="cl"><span class="w">           </span>- <span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l">/nfs</span><span class="w">
+</span></span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="w">             </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">efs-vol</span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">21</span><span class="cl"><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">22</span><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">efs-vol</span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">23</span><span class="cl"><span class="w">        </span><span class="nt">nfs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">24</span><span class="cl"><span class="w">          </span><span class="c"># 예제로 EFS를 사용했지만 일반적인 NFS 서버면 된다.</span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">25</span><span class="cl"><span class="w">          </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l">fs-f9352198.efs.ap-northeast-2.amazonaws.com </span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">26</span><span class="cl"><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/</span><span class="w">
+</span></span></span><span class="line hl"><span class="ln">27</span><span class="cl"><span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre></div>
 <p><em>nfs 타입의 volume에서 설정할 수 있는 field는 <a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#nfsvolumesource-v1-core">API reference</a>를 참고했다.</em></p>
 <h1 id="official-nfs-example">공식 문서 예제 보완 설명</h1>
 <p>먼저 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/">예제</a>의 내용을 따라하면서 충분히 이해한 후 이 포스트를 읽으면 더 도움이 될 것이다.
@@ -207,19 +207,19 @@
 <p>Helm chart를 설치할 때 EFS filesystem ID를 알려주면, 이것과 연계된 StorageClass를 생성한다.
 여러 Pod들이 공유해야 하는 데이터가 있으면 이 StorageClass를 사용하는 PVC를 생성한 후 여러 Pod들이 동일하게 이 PVC를 volume으로 지정하면 된다.
 그러면 efs-provisioner가 EFS filesystem 내에 각 PVC별로 전용 디렉토리를 만들어 제공하는 방식이다.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
+<li id="fn:1">
 <p>참조하는 코드는 2020년 10월 10일 기준 master branch가 가리키는 commit으로 고정했다.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
+<li id="fn:2">
 <p>공식문서의 예제에선 PVC에 이미 존재하는 PV를 binding 했다. 이것을 위해 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pvc.yaml#L8">PVC의 storageClassName 설정</a>을 “”로 했는데 <a href="https://github.com/kubernetes/examples/blob/bbe33f4997d781cffe9e310281e5ab4da07a07d5/staging/volumes/nfs/nfs-pv.yaml">PV</a>는 storageClassName을 정의하지 않았기 때문에 binding이 된 것 같다. 이런 일을 정확히 하려면 PV에 label을 달고 PVC에 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector">label selector</a>를 설정해야 할 것이다.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section><div id="disqus_thread"></div>
+</div><div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -273,9 +273,6 @@
         <a href="https://pseonghoon.github.io/post/testing-ansible-role/" class="nav-link" title="로컬에서 개발 중인 Ansible role 테스트하기">로컬에서 개발 중인 Ansible role 테스트하기</a>
       </li>
       <li>
-        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이기">Git 직접 동기화로 재택근무 생산성 높이기</a>
-      </li>
-      <li>
         <a href="https://pseonghoon.github.io/post/eks-subnet/" class="nav-link" title="오해하기 쉬운 EKS 클러스터의 subnet 설정">오해하기 쉬운 EKS 클러스터의 subnet 설정</a>
       </li>
       <li>
@@ -283,6 +280,9 @@
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해">L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/oracle-myth/" class="nav-link" title="다시 생각하는 오라클 데이터베이스 운영">다시 생각하는 오라클 데이터베이스 운영</a>
       </li>
     </ul>
     <div>
@@ -313,13 +313,13 @@
           <span class="button_tally">2</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/git/' class="post_tag button button_translucent" title="git">
-          GIT
+        <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent" title="index">
+          INDEX
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent" title="index">
-          INDEX
+        <a href='https://pseonghoon.github.io/tags/linux/' class="post_tag button button_translucent" title="linux">
+          LINUX
           <span class="button_tally">1</span>
         </a>
         
@@ -338,10 +338,6 @@
             
             
             <a href='https://pseonghoon.github.io/tags/eks/' class=" post_tag button button_translucent" data-position=2 title="eks">EKS<span class="button_tally">2</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/git/' class=" post_tag button button_translucent" data-position=1 title="git">GIT<span class="button_tally">1</span>
             </a>
             
             
@@ -457,7 +453,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

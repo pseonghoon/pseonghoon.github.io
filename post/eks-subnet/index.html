@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -181,22 +181,22 @@ At this time, you can not update the subnets or security group IDs for an existi
 <p>범용으로 사용하는 private subnet (private_subnet이라 하자)과 eks worker 전용 subnet (eks_worker_subnet)을 따로 만들었다고 가정하자.</p>
 <p>EKS 클러스터에는 private_subnet을 설정하면 된다.</p>
 <p><strong>Terraform 코드 예제</strong>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hcl" data-lang="hcl"><span class="ln"> 1</span><span class="k">resource</span> <span class="s2">&#34;aws_eks_cluster&#34; &#34;main&#34;</span> {
-<span class="ln"> 2</span><span class="n">  name</span>     <span class="o">=</span> <span class="s2">&#34;main&#34;</span>
-<span class="ln"> 3</span><span class="n">  role_arn</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_iam</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">common_role_arn</span><span class="p">.</span><span class="k">eks_master</span>
-<span class="ln"> 4</span>
-<span class="ln"> 5</span>  <span class="k">vpc_config</span> {
-<span class="ln"> 6</span><span class="n">    security_group_ids</span> <span class="o">=</span> <span class="p">[</span><span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_sg</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">eks_sg_ids</span><span class="p">.</span><span class="k">eks_master</span><span class="p">]</span><span class="c1">
-</span><span class="ln"> 7</span><span class="c1">    # 2개 이상의 AZ를 포함하기만 하면 되므로 2개만 잘라서 쓴다. 
-</span><span class="ln"> 8</span><span class="c1">    # 2개로 고정했기 때문에 나중에 만약 private_subnet_ids에 새로운 subnet이 추가되어도 여기를 수정하지 않아도 된다.
-</span><span class="hl"><span class="ln"> 9</span><span class="c1"></span><span class="n">    subnet_ids</span> <span class="o">=</span> <span class="k">slice</span><span class="p">(</span><span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_vpc</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">private_subnet_ids</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
-</span><span class="ln">10</span>  }
-<span class="ln">11</span>}</code></pre></div></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hcl" data-lang="hcl"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="k">resource</span> <span class="s2">&#34;aws_eks_cluster&#34; &#34;main&#34;</span> {
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="n">  name</span>     <span class="o">=</span> <span class="s2">&#34;main&#34;</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="n">  role_arn</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_iam</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">common_role_arn</span><span class="p">.</span><span class="k">eks_master</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">  <span class="k">vpc_config</span> {
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="n">    security_group_ids</span> <span class="o">=</span> <span class="p">[</span><span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_sg</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">eks_sg_ids</span><span class="p">.</span><span class="k">eks_master</span><span class="p">]</span><span class="c1">
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c1">    # 2개 이상의 AZ를 포함하기만 하면 되므로 2개만 잘라서 쓴다. 
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="c1">    # 2개로 고정했기 때문에 나중에 만약 private_subnet_ids에 새로운 subnet이 추가되어도 여기를 수정하지 않아도 된다.
+</span></span></span><span class="line hl"><span class="ln"> 9</span><span class="cl"><span class="c1"></span><span class="n">    subnet_ids</span> <span class="o">=</span> <span class="k">slice</span><span class="p">(</span><span class="k">data</span><span class="p">.</span><span class="k">terraform_remote_state</span><span class="p">.</span><span class="k">tf_vpc</span><span class="p">.</span><span class="k">outputs</span><span class="p">.</span><span class="k">private_subnet_ids</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">  }
+</span></span><span class="line"><span class="ln">11</span><span class="cl">}</span></span></code></pre></div></p>
 <p>eks_woker_subnet은 worker node를 생성하는 Auto Scaling Group에 설정하면 된다.
 Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#vpc_zone_identifier">vpc_zone_identifier</a>에 설정하면 된다.</p>
 <p>이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.</p><div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -250,9 +250,6 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
         <a href="https://pseonghoon.github.io/post/testing-ansible-role/" class="nav-link" title="로컬에서 개발 중인 Ansible role 테스트하기">로컬에서 개발 중인 Ansible role 테스트하기</a>
       </li>
       <li>
-        <a href="https://pseonghoon.github.io/post/working-from-home-with-git/" class="nav-link" title="Git 직접 동기화로 재택근무 생산성 높이기">Git 직접 동기화로 재택근무 생산성 높이기</a>
-      </li>
-      <li>
         <a href="https://pseonghoon.github.io/post/k8s-and-nfs/" class="nav-link" title="Kubernetes에서 NFS 사용하기">Kubernetes에서 NFS 사용하기</a>
       </li>
       <li>
@@ -260,6 +257,9 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
       </li>
       <li>
         <a href="https://pseonghoon.github.io/post/linux-parameters-for-l4-dsr/" class="nav-link" title="L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해">L4 DSR 에서 arp_ignore, arp_announce 설정의 정확한 이해</a>
+      </li>
+      <li>
+        <a href="https://pseonghoon.github.io/post/oracle-myth/" class="nav-link" title="다시 생각하는 오라클 데이터베이스 운영">다시 생각하는 오라클 데이터베이스 운영</a>
       </li>
     </ul>
     <div>
@@ -290,13 +290,13 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
           <span class="button_tally">2</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/git/' class="post_tag button button_translucent" title="git">
-          GIT
+        <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent" title="index">
+          INDEX
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://pseonghoon.github.io/tags/index/' class="post_tag button button_translucent" title="index">
-          INDEX
+        <a href='https://pseonghoon.github.io/tags/linux/' class="post_tag button button_translucent" title="linux">
+          LINUX
           <span class="button_tally">1</span>
         </a>
         
@@ -315,10 +315,6 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
             
             
             <a href='https://pseonghoon.github.io/tags/eks/' class=" post_tag button button_translucent" data-position=2 title="eks">EKS<span class="button_tally">2</span>
-            </a>
-            
-            
-            <a href='https://pseonghoon.github.io/tags/git/' class=" post_tag button button_translucent" data-position=1 title="git">GIT<span class="button_tally">1</span>
             </a>
             
             
@@ -434,7 +430,7 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>
