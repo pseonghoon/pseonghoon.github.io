@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>linux on 박성훈의 블로그</title>
+    <title>Linux on 박성훈의 블로그</title>
     <link>https://pseonghoon.github.io/tags/linux/</link>
-    <description>Recent content in linux on 박성훈의 블로그</description>
+    <description>Recent content in Linux on 박성훈의 블로그</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>2020</copyright>
@@ -40,7 +40,7 @@ L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destina
 &lt;p&gt;destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.
 이렇게 하면 real sever가 VIP를 자신의 IP처럼 인식한다.&lt;/p&gt;
 &lt;p&gt;하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다. 만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.&lt;/p&gt;
-&lt;p&gt;이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.&lt;/p&gt;
+&lt;p&gt;이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸런서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.&lt;/p&gt;
 &lt;p&gt;real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.&lt;/p&gt;
 &lt;p&gt;이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.
 그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.&lt;/p&gt;
@@ -76,7 +76,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 &lt;p&gt;ARP request를 보낼 때 &amp;lsquo;sender IP 주소&amp;rsquo;에 어떤 값을 쓸지 정하는 parameter이다.&lt;/p&gt;
 &lt;p&gt;여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;ARP 패킷의 구조:&lt;/strong&gt;
-&lt;figure&gt;&lt;img src=&#34;https://pseonghoon.github.io/post/img/arp.gif&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;https://pseonghoon.github.io/post/img/arp.gif&#34;&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;이 parameter를 사용하는 목적은 아래와 같다.&lt;/p&gt;

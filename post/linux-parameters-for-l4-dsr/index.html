@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
-    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.969df663ae4b6a21c284723bd37673618f039041a1dc44a6c3c4589729121d5d1d461b7234e3c48013e3cf68ae9c326ef5235a404febbb02245a5eae2b43f8d5.js" as="script" integrity=
+    "sha512-lp32Y65LaiHChHI703ZzYY8DkEGh3ESmw8RYlykSHV0dRhtyNOPEgBPjz2iunDJu9SNaQE/ruwIkWl6uK0P41Q==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -172,7 +172,7 @@ L4 로드 밸런서는 클라이언트에서 받은 패킷의 source IP, destina
 <p>destination IP가 VIP인 이 패킷을 real server가 수신하게 하려고 loopback interface에 VIP를 추가한다.
 이렇게 하면 real sever가 VIP를 자신의 IP처럼 인식한다.</p>
 <p>하지만 real server가 VIP를 자신의 것으로 인식하는 것은 L4 로드 밸런서가 보낸 패킷을 받는 경우에만 국한되어야 한다. 만약 다른 호스트가 L4 로드 밸런서에 보낸 패킷까지 real server가 수신하고 응답하면 통신이 엉망이 된다.</p>
-<p>이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸랜서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
+<p>이런 문제를 막으려면, 같은 L2 network에 있는 호스트와 라우터가 VIP에 해당하는 MAC address를 L4 로드 밸런서의 것으로 정확히 알고 있어야 한다. 즉, L4 로드 밸런서의 것이 아닌 real server의 MAC address로 잘못 알면 안된다.</p>
 <p>real server에 arp_ignore, arp_announce parameter를 설정하는 이유가 바로 이 때문이다.</p>
 <p>이 parameter들로 VIP에 대한 real sever의 ARP 관련 동작을 정하는 것이다.
 그런데 VIP를 loopback interface에 설정하니 이 parameter를 loopback interface에 설정하는 것이 언뜻 자연스러워보인다. 그래서 정확하지 않은 내용이 널리 알려지게 된 것 같다.</p>
@@ -208,7 +208,7 @@ all에 설정된 값과 interface별로 설정된 값 중에 실제로 어떤 �
 <p>ARP request를 보낼 때 &lsquo;sender IP 주소&rsquo;에 어떤 값을 쓸지 정하는 parameter이다.</p>
 <p>여기서 sender IP 주소는 IP header의 source IP가 아니라 ARP request 내용(payload)의  일부분이다. ARP는 L2(Ethernet 등)에서 통신하는 protocol이기 때문에 IP 헤더가 없다.</p>
 <p><strong>ARP 패킷의 구조:</strong>
-<figure><img src="/post/img/arp.gif"/>
+<figure><img src="/post/img/arp.gif">
 </figure>
 </p>
 <p>이 parameter를 사용하는 목적은 아래와 같다.</p>
@@ -241,7 +241,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
 <li><a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt</a></li>
 <li><a href="https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469">TCP/IP Illustrated, Volume 1</a>: Chapter 4 ARP</li>
 </ul><div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -476,7 +476,7 @@ host A가 real server 역할이고 10.41.66.100이 VIP이다. host B는 L4 로�
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.969df663ae4b6a21c284723bd37673618f039041a1dc44a6c3c4589729121d5d1d461b7234e3c48013e3cf68ae9c326ef5235a404febbb02245a5eae2b43f8d5.js" integrity="sha512-lp32Y65LaiHChHI703ZzYY8DkEGh3ESmw8RYlykSHV0dRhtyNOPEgBPjz2iunDJu9SNaQE/ruwIkWl6uK0P41Q==" crossorigin="anonymous"></script>
     
   </body>
 </html>

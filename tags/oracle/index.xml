@@ -32,7 +32,7 @@
 IOT의 개념에 대해서는 독자가 이미 알고 있거나, 다른 곳에서 잘 정리된 설명을 쉽게 찾을 수 있을 것이니 여기선 자세한 설명보다 그 유용성을 강조하려고 한다.&lt;/p&gt;
 &lt;p&gt;아래 &amp;lt;그림1&amp;gt;은 지난 2005년에  IOT로 성능 개선 효과를 본 사례이다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&amp;lt;그림1&amp;gt; 친구 목록 데이터에 대해 IOT 적용 전후 CPU 사용량 비교&lt;/strong&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;../img/iot.png&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;../img/iot.png&#34;&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;하지만 IOT는 아직 소극적으로 사용되는 경우가 많은데, 효과에 대해서는 덜 알려지고 약점은 실제보다 부각되었기 때문이다&lt;/p&gt;

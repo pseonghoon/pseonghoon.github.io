@@ -35,7 +35,7 @@ VPC 내의 subnet들은 서로 라우팅이 되니 &lt;mark&gt; VPC 내의 priva
 EKS에선 Pod들도 실제 VPC의 IP를 사용하니 많은 IP가 필요하다.&lt;/p&gt;
 &lt;p&gt;처음에 클러스터의 규모를 작게 예상해서 worker node가 사용하는 subnet에 작은 크기의 IP 대역을 할당할 수 있다.
 이후에 IP가 부족하면 subnet을 늘려야 하는데, 설정의 의미를 오해하면 EKS cluster(master)의 subnet도 그에 맞게 변경해야 한다고 생각하게 된다.&lt;/p&gt;
-&lt;p&gt;문제는 &lt;a href=&#34;(https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html)&#34;&gt;AWS EKS API&lt;/a&gt;가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.&lt;/p&gt;
+&lt;p&gt;문제는 &lt;a href=&#34;https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html&#34;&gt;AWS EKS API&lt;/a&gt;가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html&#34;&gt;API 문서&lt;/a&gt;에서도 아래처럼 알려주고 있다. (2020년 10월 16일 기준)&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Important&lt;/strong&gt;

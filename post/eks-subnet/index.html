@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
-    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.969df663ae4b6a21c284723bd37673618f039041a1dc44a6c3c4589729121d5d1d461b7234e3c48013e3cf68ae9c326ef5235a404febbb02245a5eae2b43f8d5.js" as="script" integrity=
+    "sha512-lp32Y65LaiHChHI703ZzYY8DkEGh3ESmw8RYlykSHV0dRhtyNOPEgBPjz2iunDJu9SNaQE/ruwIkWl6uK0P41Q==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -168,7 +168,7 @@ VPC 내의 subnet들은 서로 라우팅이 되니 <mark> VPC 내의 private sub
 EKS에선 Pod들도 실제 VPC의 IP를 사용하니 많은 IP가 필요하다.</p>
 <p>처음에 클러스터의 규모를 작게 예상해서 worker node가 사용하는 subnet에 작은 크기의 IP 대역을 할당할 수 있다.
 이후에 IP가 부족하면 subnet을 늘려야 하는데, 설정의 의미를 오해하면 EKS cluster(master)의 subnet도 그에 맞게 변경해야 한다고 생각하게 된다.</p>
-<p>문제는 <a href="(https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html)">AWS EKS API</a>가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.</p>
+<p>문제는 <a href="https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html">AWS EKS API</a>가 subnetIds 속성의 변경을 허용하지 않는다는 것이다.</p>
 <p><a href="https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterConfig.html">API 문서</a>에서도 아래처럼 알려주고 있다. (2020년 10월 16일 기준)</p>
 <blockquote>
 <p><strong>Important</strong>
@@ -195,7 +195,7 @@ At this time, you can not update the subnets or security group IDs for an existi
 <p>eks_woker_subnet은 worker node를 생성하는 Auto Scaling Group에 설정하면 된다.
 Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#vpc_zone_identifier">vpc_zone_identifier</a>에 설정하면 된다.</p>
 <p>이 argument는 Auto Scaling Group 재생성 없이 업데이트가 가능하기 때문에 Pod이 사용할 IP가 모자라면 쉽게 subnet을 추가해서 해결할 수 있다.</p><div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -430,7 +430,7 @@ Terraform 이라면 aws_autoscaling_group의 <a href="https://registry.terraform
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.969df663ae4b6a21c284723bd37673618f039041a1dc44a6c3c4589729121d5d1d461b7234e3c48013e3cf68ae9c326ef5235a404febbb02245a5eae2b43f8d5.js" integrity="sha512-lp32Y65LaiHChHI703ZzYY8DkEGh3ESmw8RYlykSHV0dRhtyNOPEgBPjz2iunDJu9SNaQE/ruwIkWl6uK0P41Q==" crossorigin="anonymous"></script>
     
   </body>
 </html>

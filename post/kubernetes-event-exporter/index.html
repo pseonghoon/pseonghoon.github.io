@@ -37,8 +37,8 @@
     
     
     <link rel="preload" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
-    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
+    <link rel="preload" href="https://pseonghoon.github.io/js/bundle.min.969df663ae4b6a21c284723bd37673618f039041a1dc44a6c3c4589729121d5d1d461b7234e3c48013e3cf68ae9c326ef5235a404febbb02245a5eae2b43f8d5.js" as="script" integrity=
+    "sha512-lp32Y65LaiHChHI703ZzYY8DkEGh3ESmw8RYlykSHV0dRhtyNOPEgBPjz2iunDJu9SNaQE/ruwIkWl6uK0P41Q==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://pseonghoon.github.io/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -163,16 +163,16 @@
 <p><a href="https://github.com/bitnami/charts/tree/main/bitnami/kubernetes-event-exporter">Bitnami에서 제공하는 Helm 차트</a>를 설치하는 방법이다.</p>
 <p><em>Note:</em> 차트 버전 1.5.2 에서 테스트했으며 이 포스트를 쓰는 시점의 최신 차트 버전인 2.0.0 까지는 같은 방식으로 해야 하는 것을 확인했다.</p>
 <p>아래 명령으로 설치할 수 있다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln"> 1</span><span class="cl">helm repo add bitnami https://charts.bitnami.com/bitnami
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="n">helm</span> <span class="n">repo</span> <span class="n">add</span> <span class="n">bitnami</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">charts</span><span class="o">.</span><span class="n">bitnami</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">bitnami</span>
 </span></span><span class="line"><span class="ln"> 2</span><span class="cl">
-</span></span><span class="line"><span class="ln"> 3</span><span class="cl">helm upgrade event-exporter bitnami/kubernetes-event-exporter \
-</span></span><span class="line"><span class="ln"> 4</span><span class="cl">  --install \
-</span></span><span class="line"><span class="ln"> 5</span><span class="cl">  --create-namespace \
-</span></span><span class="line"><span class="ln"> 6</span><span class="cl">  --namespace event-exporter \
-</span></span><span class="line"><span class="ln"> 7</span><span class="cl">  --version 1.5.2 \     
-</span></span><span class="line"><span class="ln"> 8</span><span class="cl">  --values values.yaml
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="n">helm</span> <span class="n">upgrade</span> <span class="n">event</span><span class="o">-</span><span class="n">exporter</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">kubernetes</span><span class="o">-</span><span class="n">event</span><span class="o">-</span><span class="n">exporter</span> \
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">  <span class="o">--</span><span class="n">install</span> \
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">  <span class="o">--</span><span class="n">create</span><span class="o">-</span><span class="n">namespace</span> \
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">  <span class="o">--</span><span class="n">namespace</span> <span class="n">event</span><span class="o">-</span><span class="n">exporter</span> \
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">  <span class="o">--</span><span class="n">version</span> <span class="mf">1.5</span><span class="o">.</span><span class="mi">2</span> \     
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">  <span class="o">--</span><span class="n">values</span> <span class="n">values</span><span class="o">.</span><span class="n">yaml</span>
 </span></span><span class="line"><span class="ln"> 9</span><span class="cl">
-</span></span><span class="line"><span class="ln">10</span><span class="cl">kubectl apply -f more-rbac.yaml
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">more</span><span class="o">-</span><span class="n">rbac</span><span class="o">.</span><span class="n">yaml</span>
 </span></span></code></pre></div><p><code>values.yaml</code> 내용 :</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nt">image</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">public.ecr.aws/bitnami/kubernetes-event-exporter</span><span class="w">
@@ -227,11 +227,11 @@
 </span></span></code></pre></div><p><em>Note:</em> 만약 <code>config</code> 파라미터를 설정하지 않으면 아래와 같이 로그의 내용이 빈 상태로 출력된다.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">{}
 </span></span></code></pre></div><p>Helm 차트를 설치하면 아래처럼 기본 설정으로 이벤트를 표준 출력에 덤프한다는 메시지가 출력된다. 이 내용에 따르면 차트 파라미터를 따로 설정할 필요가 없는 것처럼 보이지만 실제로는 그렇지 않으니 주의해야 한다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">By default, the kubernetes-event-exporter will dump events to stdout.
-</span></span><span class="line"><span class="ln">2</span><span class="cl">To configure additional endpoints, redeploy the chart overwritting the field &#39;config&#39; at your &#39;values.yml&#39;.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="ln">1</span><span class="cl"><span class="n">By</span> <span class="n">default</span><span class="p">,</span> <span class="n">the</span> <span class="n">kubernetes</span><span class="o">-</span><span class="n">event</span><span class="o">-</span><span class="n">exporter</span> <span class="n">will</span> <span class="n">dump</span> <span class="n">events</span> <span class="n">to</span> <span class="n">stdout</span><span class="o">.</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="n">To</span> <span class="n">configure</span> <span class="n">additional</span> <span class="n">endpoints</span><span class="p">,</span> <span class="n">redeploy</span> <span class="n">the</span> <span class="n">chart</span> <span class="n">overwritting</span> <span class="n">the</span> <span class="n">field</span> <span class="s1">&#39;config&#39;</span> <span class="n">at</span> <span class="n">your</span> <span class="s1">&#39;values.yml&#39;</span><span class="o">.</span>
 </span></span></code></pre></div><h2 id="more-rbacyaml-설명">more-rbac.yaml 설명</h2>
 <p>values.yaml에서 rbac 파라미터를 true로 설정하면 view ClusterRole을 사용한다. 그런데 그것만으론 권한이 부족헤 kubernetes-event-exporter의 로그에 아래와 같은 에러가 남은다. 부족한 권한을 more-rbace.yaml 로 부여하는 것이다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">2022-10-12T23:35:24Z ERR bitnami/blacksmith-sandox/kubernetes-event-exporter-0.11.0/src/github.com/opsgenie/kubernetes-event-exporter/pkg/kube/watcher.go:75 &gt; Cannot list labels of the object error=&#34;nodes \&#34;ip-10-255-14-142.ap-northeast-2.compute.internal\&#34; is forbidden: User \&#34;system:serviceaccount:event-exporter:event-exporter-kubernetes-event-exporter\&#34; cannot get resource \&#34;nodes\&#34; in API group \&#34;\&#34; at the cluster scope&#34;
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="ln">1</span><span class="cl"><span class="mi">2022</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span><span class="n">T23</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mi">24</span><span class="n">Z</span> <span class="n">ERR</span> <span class="n">bitnami</span><span class="o">/</span><span class="n">blacksmith</span><span class="o">-</span><span class="n">sandox</span><span class="o">/</span><span class="n">kubernetes</span><span class="o">-</span><span class="n">event</span><span class="o">-</span><span class="n">exporter</span><span class="o">-</span><span class="mf">0.11</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">opsgenie</span><span class="o">/</span><span class="n">kubernetes</span><span class="o">-</span><span class="n">event</span><span class="o">-</span><span class="n">exporter</span><span class="o">/</span><span class="n">pkg</span><span class="o">/</span><span class="n">kube</span><span class="o">/</span><span class="n">watcher</span><span class="o">.</span><span class="n">go</span><span class="p">:</span><span class="mi">75</span> <span class="o">&gt;</span> <span class="n">Cannot</span> <span class="n">list</span> <span class="n">labels</span> <span class="n">of</span> <span class="n">the</span> <span class="n">object</span> <span class="n">error</span><span class="o">=</span><span class="s2">&#34;nodes </span><span class="se">\&#34;</span><span class="s2">ip-10-255-14-142.ap-northeast-2.compute.internal</span><span class="se">\&#34;</span><span class="s2"> is forbidden: User </span><span class="se">\&#34;</span><span class="s2">system:serviceaccount:event-exporter:event-exporter-kubernetes-event-exporter</span><span class="se">\&#34;</span><span class="s2"> cannot get resource </span><span class="se">\&#34;</span><span class="s2">nodes</span><span class="se">\&#34;</span><span class="s2"> in API group </span><span class="se">\&#34;\&#34;</span><span class="s2"> at the cluster scope&#34;</span>
 </span></span></code></pre></div><p>more-rbac.yaml의 예제에선 nodes에 대한 권한을 부여하고 있는데 클러스터 설정에 따라 권한을 더 부여해야 할 수도 있다.</p>
 <h1 id="fluentbbit-로-aws-cloudwatch-logs-로-로그-전송">FluentBbit 로 AWS CloudWatch Logs 로 로그 전송</h1>
 <p>AWS CloudWatch Logs 에 application 로그를 전송하려면 아래 가이드를 따르면 된다.
@@ -240,21 +240,21 @@
 <h1 id="cloudwatch-logs-에서-로그를-조회하는-예제">CloudWatch Logs 에서 로그를 조회하는 예제</h1>
 <p>아래처럼 CloudWatch Logs Insights 쿼리로 검색할 수 있다.</p>
 <p>우선 조회할 로그 그룹을 /aws/containerinsights/<code>&lt;cluster-name&gt;</code>/application 으로 설정한다.</p>
-<figure><img src="/post/img/log_group.png"/>
+<figure><img src="/post/img/log_group.png">
 </figure>
 
 <p>아래처럼 쿼리를 실행하면 된다.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">fields @timestamp, log_processed.involvedObject.kind as kind,
-</span></span><span class="line"><span class="ln">2</span><span class="cl"> log_processed.involvedObject.namespace as namespace,
-</span></span><span class="line"><span class="ln">3</span><span class="cl"> log_processed.involvedObject.name as object_name, log_processed.message as message 
-</span></span><span class="line"><span class="ln">4</span><span class="cl">| filter kubernetes.container_name = &#39;event-exporter&#39; and kind = &#39;Pod&#39;
-</span></span><span class="line"><span class="ln">5</span><span class="cl">| sort @timestamp asc
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="ln">1</span><span class="cl"><span class="n">fields</span> <span class="err">@</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">log_processed</span><span class="o">.</span><span class="n">involvedObject</span><span class="o">.</span><span class="n">kind</span> <span class="n">as</span> <span class="n">kind</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl"> <span class="n">log_processed</span><span class="o">.</span><span class="n">involvedObject</span><span class="o">.</span><span class="n">namespace</span> <span class="n">as</span> <span class="n">namespace</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl"> <span class="n">log_processed</span><span class="o">.</span><span class="n">involvedObject</span><span class="o">.</span><span class="n">name</span> <span class="n">as</span> <span class="n">object_name</span><span class="p">,</span> <span class="n">log_processed</span><span class="o">.</span><span class="n">message</span> <span class="n">as</span> <span class="n">message</span> 
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="o">|</span> <span class="n">filter</span> <span class="n">kubernetes</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="s1">&#39;event-exporter&#39;</span> <span class="ow">and</span> <span class="n">kind</span> <span class="o">=</span> <span class="s1">&#39;Pod&#39;</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="o">|</span> <span class="n">sort</span> <span class="err">@</span><span class="n">timestamp</span> <span class="n">asc</span>
 </span></span></code></pre></div><p>결과는 아래와 같다.
-<figure><img src="/post/img/event-exporter-log-query-result.png"/>
+<figure><img src="/post/img/event-exporter-log-query-result.png">
 </figure>
 </p>
 <p><em>Note:</em> 실제로 이벤트가 발생한 횟수보다 kubernetes-event-exporter 에 남는 로그 수가 더 적다. 쿠버네티스는 동일한 이벤트가 근접한 시간에 여러번 발생하면 기존에 etcd에 저장된 이벤트를 업데이트하는데 아마도 kubernetes-event-exporter가 이벤트가 새로 etcd에 생성되는 경우에만 로그를 남기기 때문인 것 같다.</p><div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -492,7 +492,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://pseonghoon.github.io/js/bundle.min.969df663ae4b6a21c284723bd37673618f039041a1dc44a6c3c4589729121d5d1d461b7234e3c48013e3cf68ae9c326ef5235a404febbb02245a5eae2b43f8d5.js" integrity="sha512-lp32Y65LaiHChHI703ZzYY8DkEGh3ESmw8RYlykSHV0dRhtyNOPEgBPjz2iunDJu9SNaQE/ruwIkWl6uK0P41Q==" crossorigin="anonymous"></script>
     
   </body>
 </html>
